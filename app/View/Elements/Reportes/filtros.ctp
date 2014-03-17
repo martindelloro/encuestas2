@@ -1,10 +1,14 @@
 <div class="contenedor-filtros">
 <span class="label label-titular">PASO 3</span>
-<span class="label label-titular">Seleccione filtros (opcional)</span>
+<div class="botonera-filtros">
+    <span class="label label-titular">Seleccione filtros (opcional)</span>
+    <a href="#" class="btn btn-mini" id="agregarFiltro"><i class="icon-plus"></i> Agregar</a>
+</div>
+
 <div class="row-fluid">
 	<div class="span12">
 		<span class="label label-titular">Filtro 1</span>
-		<?php echo @$this->Form->input("SubReporte.0.Filtro.0.pregunta_id",array("type"=>"select","options"=>$preguntas,"label"=>false,"empty"=>true,"class"=>"FiltroPregunta","data-n"=>0)) ?>
+		<?php echo @$this->Form->input("SubReporte.Filtro.0.pregunta_id",array("type"=>"select","options"=>$preguntas,"label"=>false,"empty"=>true,"class"=>"FiltroPregunta","data-n"=>0)) ?>
 		<div class="contenedor-opciones" id="filtro0">
 		
 		</div>		

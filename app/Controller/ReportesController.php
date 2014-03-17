@@ -49,7 +49,7 @@ class ReportesController extends AppController{
     	$this->set("preguntas",$preguntas);
     	switch($seccion){
     		case "variables":
-    			$this->render("/Elements/Reportes/variables");
+    			$this->render("/Elements/Reportes/graficoVariables");
     			break;
     		case "filtros":
     			$this->render("/Elements/Reportes/filtros");

@@ -62,6 +62,20 @@ class SubReportesController extends AppController{
 		//debug($datos_y);
 	
 	}
+	
+	function variablesGrafico(){
+		$this->autoRender = false;
+		$encuesta_id = $this->data["Reporte"]["encuesta_id"];
+		$preguntas = $this->SubReporte->Reporte->Encuesta->EncuestaPregunta->find("list",array("conditions"=>array("encuesta_id"=>$encuesta_id)));
+		$this->set("preguntas",$preguntas);
+		
+		switch($this->data["SubReporte"]["grafico_tipo"]){
+			case 1:
+				$this->render("/Elements/Reportes/barras");		
+				break;
+			
+		}
+	}
 }
 
 

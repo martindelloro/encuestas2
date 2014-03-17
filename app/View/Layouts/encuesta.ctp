@@ -65,11 +65,11 @@ echo $this->Helpers->Html->script("d3.min");
                                 //echo "entro acá";
                                 echo $this->element("Usuarios/menu_usuario");
                                 echo $this->element("Encuestas/encuesta");
-                                echo $this->element("Reportes/reportes");
+                                echo $this->element("BarraMenu/reportes");
                                 echo $this->element("../Usuarios/login");
                                 break;
                             case "direccion" :
-                                echo $this->element("Reportes/reportes");
+                                echo $this->element("BarraMenu/reportes");
                                 echo $this->element("../usuarios/login");
                                 break;
                             case "graduado":

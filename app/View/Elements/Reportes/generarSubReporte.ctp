@@ -1,4 +1,4 @@
-<div class="tab-pane active" id="reportesVariables">
+<div class="tab-pane active" id="generarSubReporte">
 
 	<?php echo $this->Form->create("Reporte") ?>
 	<div class="well contenedor-well">
@@ -8,7 +8,7 @@
 	</div>
 
 	<div class="well contenedor-well" id="paso2">
-		<?php echo $this->element("/Reportes/variables"); ?>
+		<?php echo $this->element("/Reportes/graficoVariables"); ?>
 	</div>
 
 	<div class="well contenedor-well" id="paso3">
