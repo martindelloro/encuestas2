@@ -1,0 +1,47 @@
+@CHARSET "UTF-8";
+
+root { 
+    display: block;
+}
+
+#legajos .tab-pane{
+    visibility: visible;
+    display:inline;
+}
+
+.modal-header {
+    display: none;
+}
+
+.modal-body {
+    max-height: 100%;
+}
+
+.tab-content{
+	overflow:hidden !important;
+}
+
+#mapa{
+	width:500px;
+	height:500px;
+	display: inline-block !important;
+}
+
+
+#mapa_openlayer{
+	width:500px;
+	height:500px;
+}
+
+#capas_de_fondo{
+	display:none;
+}
+
+.barra-nav{
+	display:none;
+}
+
+.matricula{
+	display:inline-block !important;
+	width:850px;	
+}
