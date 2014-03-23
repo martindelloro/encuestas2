@@ -21,13 +21,28 @@ body .ancho-100{
 /****************   BANNER  *****************/
 /*************************************************/
 
+
+
 .banner{
-    background-image: url("../img/banner2.PNG");
-    
-    border: 1px solid #CCCCCC;
-    width: 1024px;
-    height: 149px;
-    margin: 0 auto;
+    width: 100%;
+    height: 90px;
+    background: #ffffff; /* Old browsers */
+/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM5MDE2MzAiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+background: -moz-linear-gradient(left,  #ffffff 0%, #901630 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, right top, color-stop(0%,#ffffff), color-stop(100%,#901630)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(left,  #ffffff 0%,#901630 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(left,  #ffffff 0%,#901630 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(left,  #ffffff 0%,#901630 100%); /* IE10+ */
+background: linear-gradient(to right,  #ffffff 0%,#901630 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#901630',GradientType=1 ); /* IE6-8 */
+}
+
+.banner .logo{
+	position:relative;
+	float:left;
+	margin-left:5px;
+	margin-top:5px;
 }
 
 /*************************************************/
@@ -115,6 +130,8 @@ body .mensaje-contenido{
 
 .contenedor-well{
 	padding: 2px !important;
+	margin-bottom: 10px !important;
+	margin-top:10px !important;
 		
 }
 
@@ -128,6 +145,52 @@ body .mensaje-contenido{
 .top-30{
 	margin-top:30px !important;
 }
+
+.top-20{
+	margin-top:20px !important;
+}
+
+.color-1{
+	background-color: #B8AE9C !important;
+	color: #FCFAE6 !important;
+}
+
+.color-2{
+	background-color:#E7E9D1 !important;
+	color: #444444 !important; 
+}
+
+.color-3{
+	background-color:#8A0917 !important;
+	color:white !important;
+}
+
+.fondo-1{
+	background-color: white !important;
+	border: 1px solid #444444 !important;
+}
+
+.fondo-titular{
+	background-color: #FFFFFF !important;
+    border-bottom: 2px solid #8A0917;
+    color: #8A0917 !important;
+    height: 40px !important;
+    margin-bottom: 7px;
+    padding: 0 !important;
+    width: 100% !important;
+}
+
+.fondo-titular span{
+	display: block;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 35px;
+    position: relative;
+    text-align: center !important;
+}
+
+
+
 
 /***************************************************************/
 /****************** USUARIOS INDEX/LISTADO *********************/
@@ -595,14 +658,6 @@ body .mensaje-contenido{
 	width:100% !important;
 }
 
-/*************************************************/
-/*********        AGREGAR FILTRO        **********/
-/*************************************************/
-
-.botonera-filtros a{
-	position:relative;
-	float:right;
-}
 
 /*************************************************/
 /*********  FICHA CREAR USUARIO GRUPO   **********/
@@ -793,6 +848,94 @@ body .mensaje-contenido{
 	margin-top:70px;
 }
 
+#generarReporte .label-titular{
+	height: 25px !important;
+    line-height: 25px !important;
+    margin-bottom: 2px !important;
+}
+
+#generarReporte .tab-content{
+	min-height:800px !important;
+}
+
+/*************************************************/
+/*********        AGREGAR FILTRO        **********/
+/*************************************************/
+
+.botonera-filtros a{
+	float: right;
+    margin-right: 5px !important;
+    margin-top: -27px !important;
+    position: relative;
+}
+
+.contenedor-opciones .checkbox{
+	border: 1px solid #000000 !important;
+    float: left;
+    margin-left: 5px !important;
+    margin-top: 5px !important;
+    min-width: 150px !important;
+    width: 45%;
+	background: #ffffff; /* Old browsers */
+background: rgb(184,174,156); /* Old browsers */
+/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2I4YWU5YyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjY4JSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+background: -moz-linear-gradient(left,  rgba(184,174,156,1) 0%, rgba(255,255,255,1) 68%, rgba(255,255,255,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(184,174,156,1)), color-stop(68%,rgba(255,255,255,1)), color-stop(100%,rgba(255,255,255,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(left,  rgba(184,174,156,1) 0%,rgba(255,255,255,1) 68%,rgba(255,255,255,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(left,  rgba(184,174,156,1) 0%,rgba(255,255,255,1) 68%,rgba(255,255,255,1) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(left,  rgba(184,174,156,1) 0%,rgba(255,255,255,1) 68%,rgba(255,255,255,1) 100%); /* IE10+ */
+background: linear-gradient(to right,  rgba(184,174,156,1) 0%,rgba(255,255,255,1) 68%,rgba(255,255,255,1) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b8ae9c', endColorstr='#ffffff',GradientType=1 ); /* IE6-8 */
+-webkit-border-radius: 2px;
+-moz-border-radius: 2px;
+border-radius: 2px;
+}
+
+/*************************************************/
+/*********     SUBREPORTES GENERADOS    **********/
+/*************************************************/
+
+#generados .labelPregunta{
+	width:100%;
+}
+
+#generados .contenedor-filtros{
+	padding:2px !important;
+	background-color: 
+}
 
 
+
+/*************************************************/
+/*********     ESTILO GRAFICO BARRAS    **********/
+/*************************************************/
+
+.grafico {
+	width:100% !important;
+	height:400px;
+}
+
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
+.axis {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
 

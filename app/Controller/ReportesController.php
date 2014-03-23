@@ -26,10 +26,11 @@ class ReportesController extends AppController{
     }
     
     
-    function generarFiltro($pregunta_id){
+    function generarFiltro($pregunta_id =null,$n = null){
     
     	$this->loadModel("Pregunta");
     	$pregunta = $this->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$pregunta_id),"contain"=>array("Opcion")));
+    	$this->set("n",$n);
     	switch($pregunta["Pregunta"]["tipo_id"]){
     		case 4:
     			$this->set("opciones",$this->Pregunta->Opcion->find("list",array("conditions"=>array("Opcion.pregunta_id"=>$pregunta_id))));

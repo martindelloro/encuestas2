@@ -28,6 +28,7 @@ echo $this->Helpers->Html->script("bootstrap.min");
 echo $this->Helpers->Html->script("hogan");
 echo $this->Helpers->Html->script("bootstrap-modal");
 echo $this->Helpers->Html->script("bootstrap-modalmanager");
+echo $this->Helpers->Html->script("bootstrap-tab");
 echo $this->Helpers->Html->script("typeahead");
 echo $this->Helpers->Html->script("bootstrap-tooltip");
 echo $this->Helpers->Html->script("jquery.blockUI");
@@ -41,8 +42,10 @@ echo $this->Helpers->Html->script("d3.min");
 <body>
     
     <?php echo $this->element("mensaje_sistema"); ?>
-    
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="banner">
+          <?php echo $this->Helpers->Html->image("lanus.png",array("class"=>"logo")) ?>
+    </div>
+    <div class="navbar navbar-top">
         <div class="navbar-inner">
             <div class="container">
                 <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -91,8 +94,8 @@ echo $this->Helpers->Html->script("d3.min");
       
     <div class="container">
         <div class="row-fluid">
-            <div class="span2"></div>
-            <div class="span8" id="contenedor-paginador">
+            <div class="span1"></div>
+            <div class="span10" id="contenedor-paginador">
                <?php echo $this->fetch("content") ?>
                    <?php
                            /* if(isset($OUsuario)){
@@ -103,7 +106,7 @@ echo $this->Helpers->Html->script("d3.min");
                         //debug($this->data);
                         ?>
             </div> <!-- FIN DIV CONTENEDOR-PAGINADOR -->
-            <div class="span2"><br/> </div>
+            <div class="span1"><br/> </div>
         </div> <!-- FIN DIV ROW-FLUID -->
     </div> <!-- FIN DIV CONTAINER -->
         

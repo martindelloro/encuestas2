@@ -3,8 +3,8 @@ $this->Form->create("Reporte"); /**** SIN ECHO SOLO INICIALIZO HELPER ****/
 $graficos = array("1"=>"Barras","2"=>"Stacked BAR","3"=>"Burbujas");
 	
 ?>
-<span class="label label-titular">PASO 2</span>
-<span class="label label-titular">Seleccione tipo de Grafico</span>
+<span class="label label-titular color-1">PASO 2</span>
+<span class="label label-titular color-2">Seleccione tipo de Grafico</span>
 <div class="row-fluid">
 	<div class="span12"><?php echo @$this->Form->input("SubReporte.grafico_tipo",array("type"=>"select","options"=>$graficos,"label"=>false,"empty"=>true))?> </div>
 </div>

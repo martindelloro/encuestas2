@@ -1,21 +1,21 @@
 <div class="tab-pane active" id="generarSubReporte">
 
 	<?php echo $this->Form->create("Reporte") ?>
-	<div class="well contenedor-well">
-		<span class="label label-titular">PASO 1</span> <span
-			class="label label-titular">Seleccione una encuesta</span>
+	<div class="well contenedor-well fondo-1">
+		<span class="label label-titular color-1">PASO 1</span> <span
+			class="label label-titular color-2">Seleccione una encuesta</span>
 		<?php echo $this->Form->input("encuesta_id",array("type"=>"select","options"=>$encuestas,"label"=>false,"empty"=>true)) ?>
 	</div>
 
-	<div class="well contenedor-well" id="paso2">
+	<div class="well contenedor-well fondo-1" id="paso2">
 		<?php echo $this->element("/Reportes/graficoVariables"); ?>
 	</div>
 
-	<div class="well contenedor-well" id="paso3">
+	<div class="well contenedor-well fondo-1" id="paso3">
 		<?php echo $this->element("/Reportes/filtros") ?>
 	</div>
 
-	<?php echo $this->Js->submit("Crear subreporte",array("url"=>array("controller"=>"subReportes","action"=>"crear"),"type"=>"post","before"=>"inicia_ajax()","update"=>"#generados","complete"=>"fin_ajax()","class"=>"btn btn-inverse")); ?>
+	<?php echo $this->Js->submit("Crear subreporte",array("url"=>array("controller"=>"subReportes","action"=>"crear"),"type"=>"post","before"=>"inicia_ajax();$('#BotonSubReporteGenerados').trigger('click')","update"=>"#generados","complete"=>"fin_ajax()","class"=>"btn btn-inverse")); ?>
 	
 	<?php echo $this->Form->end() ?>
 	
