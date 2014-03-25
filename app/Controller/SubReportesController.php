@@ -12,22 +12,40 @@ class SubReportesController extends AppController{
 		foreach($this->data["SubReporte"]["Filtro"] as $index=>$filtro){
 			switch($filtro["tipo"]){
 				case 4:
+					if(empty($filtro["FiltrosOpciones"])) break;
 					$encuesta_id = $this->data["Reporte"]["encuesta_id"];
 					$pregunta_id = $filtro["pregunta_id"];
 					$opciones_id = implode(',',$filtro["FiltrosOpciones"]);
 					$joins[0] = array("table"=>"respuestas_opciones","alias"=>"Opciones","type"=>"right","conditions"=>"Opciones.respuesta_id = Respuesta.id AND Opciones.opcion_id IN ($opciones_id) ");
-					$resultados = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.encuesta_id"=>$this->data["Reporte"]["encuesta_id"],"Respuesta.pregunta_id"=>$filtro["pregunta_id"]),"joins"=>$joins,"recursive"=>-1,"fields"=>array("Respuesta.usuario_id")));
+					$resultados[$index] = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.encuesta_id"=>$this->data["Reporte"]["encuesta_id"],"Respuesta.pregunta_id"=>$filtro["pregunta_id"]),"joins"=>$joins,"recursive"=>-1,"fields"=>array("Respuesta.usuario_id")));
 					$opcionesNombre = $this->Respuesta->Pregunta->Opcion->find("list",array("conditions"=>array("Opcion.id"=>$filtro["FiltrosOpciones"])));
 					$pregunta = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$pregunta_id),"contain"=>array("Tipo"),"recursive"=>-1));
 					$filtrosInfo[$index] = array("Pregunta"=>array("nombre"=>$pregunta["Pregunta"]["nombre"],"tipo"=>$pregunta["Tipo"]["nombre"]),"opciones"=>$opcionesNombre);	
 			}
 		}
-			
+		
+		$tmp  = array();
+		$tmp2 = array();
 		foreach($resultados as $index=>$resultado){
-			$tmp[$index] = $resultado["Respuesta"]["usuario_id"];
+			foreach($resultado as $index2 =>$tmpResultado){
+				$tmp2[$index2] = $tmpResultado["Respuesta"]["usuario_id"];
+			}
+			$tmp[$index] = array_unique($tmp2);
 		}
-		$usuarios_id = array_unique($tmp);
-				
+		$loops = count($tmp);
+		if($loops > 1){
+		for($i=1; $i < $loops;$i++){
+			if($i==1){
+				$tmp3 =   array_intersect($tmp[$i], $tmp[$i+1]);	
+			}else{
+				$tmp3 =   array_intersect($tmp3, $tmp[$i+1]);
+			}
+		}
+		$usuarios_id = $tmp3;
+		}
+		else{
+			$usuarios_id = $tmp[1];
+		}		
 		switch($this->data["SubReporte"]["grafico_tipo"]){
 			case 1:
 				$datos_x = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.usuario_id"=>$usuarios_id,"Respuesta.pregunta_id"=>$this->data["SubReporte"]["variable_x"])));

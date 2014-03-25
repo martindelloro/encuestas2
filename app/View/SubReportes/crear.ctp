@@ -31,12 +31,6 @@
 
 <div id="graficoBarras" class="grafico" >
 </div>
-<?php debug($datosInfo); debug($filtrosInfo) ?>
-<style>
-
-
-
-</style>
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
