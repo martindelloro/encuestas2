@@ -9,18 +9,23 @@ class SubReportesController extends AppController{
 		$resultados = array();
 		
 		$filtrosInfo = array();
+		$encuesta_id = $this->data["Reporte"]["encuesta_id"];
 		foreach($this->data["SubReporte"]["Filtro"] as $index=>$filtro){
+			$pregunta_id = $filtro["pregunta_id"];
+			$pregunta = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$pregunta_id),"contain"=>array("Tipo"),"recursive"=>-1));
 			switch($filtro["tipo"]){
 				case 4:
 					if(empty($filtro["FiltrosOpciones"])) break;
-					$encuesta_id = $this->data["Reporte"]["encuesta_id"];
-					$pregunta_id = $filtro["pregunta_id"];
 					$opciones_id = implode(',',$filtro["FiltrosOpciones"]);
 					$joins[0] = array("table"=>"respuestas_opciones","alias"=>"Opciones","type"=>"right","conditions"=>"Opciones.respuesta_id = Respuesta.id AND Opciones.opcion_id IN ($opciones_id) ");
 					$resultados[$index] = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.encuesta_id"=>$this->data["Reporte"]["encuesta_id"],"Respuesta.pregunta_id"=>$filtro["pregunta_id"]),"joins"=>$joins,"recursive"=>-1,"fields"=>array("Respuesta.usuario_id")));
 					$opcionesNombre = $this->Respuesta->Pregunta->Opcion->find("list",array("conditions"=>array("Opcion.id"=>$filtro["FiltrosOpciones"])));
-					$pregunta = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$pregunta_id),"contain"=>array("Tipo"),"recursive"=>-1));
 					$filtrosInfo[$index] = array("Pregunta"=>array("nombre"=>$pregunta["Pregunta"]["nombre"],"tipo"=>$pregunta["Tipo"]["nombre"]),"opciones"=>$opcionesNombre);	
+					break;
+				case 6:
+					$resultados[$index] = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.pregunta_id"=>$filtro["pregunta_id"],"Respuesta.respuesta_sino"=>$filtro["boolean"]),"recursive"=>-1,"fields"=>array("Respuesta.usuario_id")));
+					$filtrosInfo[$index] = array("Pregunta"=>array("nombre"=>$pregunta["Pregunta"]["nombre"],"tipo"=>$pregunta["Tipo"]["nombre"]),"boolean"=>$filtro["boolean"]);
+					break;
 			}
 		}
 		
@@ -46,26 +51,46 @@ class SubReportesController extends AppController{
 		else{
 			$usuarios_id = $tmp[1];
 		}		
+		
+		$preguntaGrafico = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_x"]),"contain"=>array("Tipo"),"recursive"=>-1));
 		switch($this->data["SubReporte"]["grafico_tipo"]){
 			case 1:
 				$datos_x = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.usuario_id"=>$usuarios_id,"Respuesta.pregunta_id"=>$this->data["SubReporte"]["variable_x"])));
-				$opciones = $this->Opcion->find("list",array("conditions"=>array("Opcion.pregunta_id"=>$this->data["SubReporte"]["variable_x"])));
-				foreach($opciones as $opcion_id => $nombre){
-					$cont_opciones[$opcion_id] = array("nombre"=>$nombre,"contador"=>0);
-				}
-				foreach($datos_x as $dato){
-					foreach($dato["Opciones"] as $opcion){
-						$opcion_id = $opcion["id"];
-						$cont_opciones[$opcion_id]["contador"] += 1;
-					}
-				}
-				$preguntaGrafico = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_x"]),"contain"=>array("Tipo"),"recursive"=>-1));
 				$datosInfo = array("Pregunta"=>array("nombre"=>$preguntaGrafico["Pregunta"]["nombre"],"tipo"=>$preguntaGrafico["Tipo"]["nombre"]));
-				foreach($cont_opciones as $opcion_id=>$tmp){
-					$nombre = $opciones[$opcion_id];
-					$datosInfo["Resultados"]["Opciones"][$nombre] = $tmp["contador"];
+				switch($preguntaGrafico["Pregunta"]["tipo_id"]){
+					case 4:
+						$opciones = $this->Opcion->find("list",array("conditions"=>array("Opcion.pregunta_id"=>$this->data["SubReporte"]["variable_x"])));
+						foreach($opciones as $opcion_id => $nombre){
+							$cont_opciones[$opcion_id] = array("nombre"=>$nombre,"contador"=>0);
+						}
+						foreach($datos_x as $dato){
+							foreach($dato["Opciones"] as $opcion){
+								$opcion_id = $opcion["id"];
+								$cont_opciones[$opcion_id]["contador"] += 1;
+							}
+						}
+						foreach($cont_opciones as $opcion_id=>$tmp){
+							$nombre = $opciones[$opcion_id];
+							$datosInfo["Resultados"]["Opciones"][$nombre] = $tmp["contador"];
+						}
+						$datosInfo["Resultados"]["total"] = count($datos_x);
+						break;
+					case 6:
+						$cont_opciones["SI"]["contador"] = 0;
+						$cont_opciones["SI"]["nombre"] = "SI";
+						$cont_opciones["NO"]["contador"] = 0;
+						$cont_opciones["NO"]["nombre"] = "NO";
+						foreach($datos_x as $dato){
+							$boolean = $dato["Respuesta"]["respuesta_sino"]?"SI":"NO";
+							$cont_opciones[$boolean]["contador"] += 1;
+						}
+						$datosInfo["Resultados"]["Opciones"]["NO"] = $cont_opciones["NO"]["contador"];
+						$datosInfo["Resultados"]["Opciones"]["SI"] = $cont_opciones["SI"]["contador"];
+						$datosInfo["Resultados"]["total"] = $cont_opciones["NO"]["contador"] + $cont_opciones["SI"]["contador"];
 				}
-				$datosInfo["Resultados"]["total"] = count($datos_x);
+				
+				
+				
 				break;
 			case 2:
 				$datos_x = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.usuario_id"=>$usuarios_id,"Respuesta.pregunta_id"=>$this->data["SubReporte"][0]["variable_x"])));

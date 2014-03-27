@@ -31,11 +31,14 @@ class ReportesController extends AppController{
     	$this->loadModel("Pregunta");
     	$pregunta = $this->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$pregunta_id),"contain"=>array("Opcion")));
     	$this->set("n",$n);
+    	$this->set("nombrePregunta",$pregunta["Pregunta"]["nombre"]);
     	switch($pregunta["Pregunta"]["tipo_id"]){
     		case 4:
     			$this->set("opciones",$this->Pregunta->Opcion->find("list",array("conditions"=>array("Opcion.pregunta_id"=>$pregunta_id))));
     			$this->render("/Elements/Reportes/generarFiltro/tipo_4");
     			break;
+    		case 6:
+    			$this->render("/Elements/Reportes/generarFiltro/tipo_6");
     	}
     	 
     }
@@ -46,16 +49,20 @@ class ReportesController extends AppController{
     function buscarPreguntas($seccion){
     	$this->autoRender = false;
     	$encuesta_id = $this->data["Reporte"]["encuesta_id"];
-    	$preguntas = $this->Reporte->Encuesta->EncuestaPregunta->find("list",array("conditions"=>array("encuesta_id"=>$encuesta_id)));
-    	$this->set("preguntas",$preguntas);
+    	
     	switch($seccion){
     		case "variables":
+    			$preguntas = $this->Reporte->Encuesta->EncuestaPregunta->find("list",array("conditions"=>array("encuesta_id"=>$encuesta_id)));
+    			$this->set("preguntas",$preguntas);
     			$this->render("/Elements/Reportes/graficoVariables");
     			break;
     		case "filtros":
+    			$preguntas = $this->Reporte->Encuesta->EncuestaPregunta->find("list",array("conditions"=>array("encuesta_id"=>$encuesta_id,"tipo_id"=>array(4,6))));
+    			$this->set("preguntas",$preguntas);
     			$this->render("/Elements/Reportes/filtros");
     			break;
     	}
+    	
     }
     
     

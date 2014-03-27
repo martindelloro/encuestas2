@@ -4,14 +4,19 @@
 
 <?php foreach($filtrosInfo as $filtroInfo): ?>
 <div class="well contenedor-filtros">
+	
 	<div class="row-fluid">
-		<div class="span8"><div class="label labelPregunta">Pregunta:</div><?php echo $filtroInfo["Pregunta"]["nombre"] ?></div>
-		<div class="span4"><div class="label labelPregunta">Tipo pregunta:</div><?php echo $filtroInfo["Pregunta"]["tipo"] ?></div>
+		<div class="span12"><div class="label labelPregunta">Pregunta:</div><?php echo $filtroInfo["Pregunta"]["nombre"] ?></div>
 	</div>
 	<div class="contenedor-opciones">
+		<?php if($filtroInfo["Pregunta"]["tipo"] == "Seleccione una opcion"): ?>
 		<?php foreach($filtroInfo["opciones"] as $opcion): ?>
 			<div class="opcion-filtro label label-info"><?php echo $opcion ?></div>
 		<?php endforeach; ?>
+		<?php endif; ?>
+		<?php if($filtroInfo["Pregunta"]["tipo"] == "SI/NO"): ?>
+		  	<div class="label label-info"><?php echo $filtroInfo["boolean"]?"SI":"NO" ?></div> 
+		<?php endif; ?>
 	</div>
 </div>
 <?php endforeach; ?>
@@ -97,7 +102,7 @@ function type(d) {
 
 
 <?php
-//debug($resultados);
+
 //echo $this->element("sql_dump");
 
 ?>
