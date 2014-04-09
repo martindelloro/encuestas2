@@ -1,5 +1,5 @@
+<?php $anios = array("2010"=>"2010","2011"=>"2011","2012"=>"2012","2013"=>"2013","2014"=>"2014","2015"=>"2015","2016"=>"2016") ?>
 <div id="encuesta" class="tab-pane active">
-	<?php $anios = array("2010"=>"2010","2011"=>"2011","2012"=>"2012","2013"=>"2013","2014"=>"2014","2015"=>"2015","2016"=>"2016") ?>
 	<div class="well titulo-general">
 		<span>Datos Encuesta</span>
 	</div>
@@ -18,8 +18,6 @@
 	<div class="well titulo-general">
 		<span>Preguntas</span>
 	</div>
-
-
 	<div class="row-fluid">
 		<div class="span8 preguntas-label">
 			<div class="label">Nombre de la pregunta</div>
@@ -31,13 +29,14 @@
 			<?php echo $this->Form->input("id",array("type"=>"hidden")) ?>
 			<input id="EncuestaPreguntas" type="hidden" name="data[Preguntas]"
 				value="" />
-			<?php echo $this->Ajax->link("<i class='icon-plus'> Agregar Pregunta</i>",array("controller"=>"preguntas","action"=>"listar"),array("class"=>"btn btn-inverse btn-mini","before"=>"modales('listarPreguntas','modal-ficha');preSeleccionadas = {}","complete"=>"fin_ajax('listarPreguntas')","update"=>"listarPreguntas","escape"=>false)); ?>
+			<?php echo $this->Js->link("<i class='icon-plus'> Agregar Pregunta</i>",array("controller"=>"preguntas","action"=>"listar"),array("class"=>"btn btn-inverse btn-mini","before"=>"modales('listarPreguntas','modal-ficha');preSeleccionadas = {}","complete"=>"fin_ajax('listarPreguntas')","update"=>"#listarPreguntas","escape"=>false)); ?>
 		</div>
 	</div>
-	<div class="contenedor-preguntas well">
+	<div class="contenedor-preguntas well color-2 top-5">
 
 		<div style="position: absolute; bottom: 0px;"></div>
 	</div>
+	<?php echo $this->Js->link("<i class='icon-save icon-white'> Guardar</i>",array("controller"=>"encuestas","action"=>"crear"),array("class"=>"btn btn-inverse","update"=>"#exec_js","before"=>"inicia_ajax()","complete"=>"fin_ajax()","data"=>"$(this).parents('form:first').serialize()","escape"=>false,"method"=>"POST","dataExpression"=>true)) ?>
 
 </div>
 

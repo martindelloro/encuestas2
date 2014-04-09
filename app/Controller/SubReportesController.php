@@ -5,11 +5,12 @@ class SubReportesController extends AppController{
 	
 
 	function crear(){
-			
-		$resultados = array();
-		
-		$filtrosInfo = array();
 		$encuesta_id = $this->data["Reporte"]["encuesta_id"];
+		
+		// PROCESO FILTROS
+		$resultados = array();
+		$filtrosInfo = array();
+		if(!empty($this->data["SubReporte"]["Filtro"])){
 		foreach($this->data["SubReporte"]["Filtro"] as $index=>$filtro){
 			$pregunta_id = $filtro["pregunta_id"];
 			$pregunta = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$pregunta_id),"contain"=>array("Tipo"),"recursive"=>-1));
@@ -28,34 +29,46 @@ class SubReportesController extends AppController{
 					break;
 			}
 		}
-		
+		$resultados = array_values($resultados); // RESETEO EL INDEX DEL ARRAY YA QUE EL INDEX DE FILTROS PUEDE CAMBIAR DEPENDIENDO DE SI SE BORRAR UN FILTRO 
+				
+		// ORDENO LOS USUARIO_ID EN UN ARRAY X CADA RESULTADO DE FILTRO APLICADO
 		$tmp  = array();
 		$tmp2 = array();
 		foreach($resultados as $index=>$resultado){
 			foreach($resultado as $index2 =>$tmpResultado){
 				$tmp2[$index2] = $tmpResultado["Respuesta"]["usuario_id"];
 			}
-			$tmp[$index] = array_unique($tmp2);
+			$tmp[$index] = array_unique($tmp2); // FILTRO POR SI QUEDARON USUARIOS_ID DUPLICADOS, PROBABLE EN UNA PREGUNTA DE TIPO MULTIPLECHOICE
 		}
-		$loops = count($tmp);
+		
+		$loops = count($tmp); // LOOPS = CANTIDAD DE FILTROS APLICADOS
 		if($loops > 1){
-		for($i=1; $i < $loops;$i++){
-			if($i==1){
-				$tmp3 =   array_intersect($tmp[$i], $tmp[$i+1]);	
+		// JUNTOS SOLO LOS USUARIOS_ID QUE SE INTERSECTAN EN LOS RESULTADOS = INNER JOIN SQL	
+		for($i=0; $i < ($loops-1);$i++){
+			if($i==1){ // INICIALIZO TMP3
+				$tmp3 =   array_intersect($tmp[$i], $tmp[$i+1]); // INTERSECTO LOS VALORES DE FILTRO 1 CON LOS DEL FILTRO 2, INICIALIZADO TMP3 CON EL RESULTADOS PARA EL SIGUIENTE BUCLE	
 			}else{
-				$tmp3 =   array_intersect($tmp3, $tmp[$i+1]);
+				$tmp3 =   array_intersect($tmp3, $tmp[$i+1]); // INTERSECTO LOS VALORES RESULTANTES DE TMP3 CON EL SIGUIENTE FILTRO SIN PROCESAR EJ: $I = 2 intersecta TMP3 con FILTRO 3;
 			}
 		}
 		$usuarios_id = $tmp3;
 		}
 		else{
-			$usuarios_id = $tmp[1];
+			$usuarios_id = $tmp[0]; // SI SOLO HAY 1 FILTRO NO HAY QUE INTERSECTAR NADA..
 		}		
+		} // FIN IF SI VIENE CON FILTROS...
+			
 		
-		$preguntaGrafico = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_x"]),"contain"=>array("Tipo"),"recursive"=>-1));
 		switch($this->data["SubReporte"]["grafico_tipo"]){
 			case 1:
-				$datos_x = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.usuario_id"=>$usuarios_id,"Respuesta.pregunta_id"=>$this->data["SubReporte"]["variable_x"])));
+				$preguntaGrafico = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_x"]),"contain"=>array("Tipo"),"recursive"=>-1));
+				if(!empty($this->data["SubReporte"]["Filtro"])){ // SIN HAY FITROS APLICADOS FILTRO X $USUARIOS_ID intersectados
+					$datos_x = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.usuario_id"=>$usuarios_id,"Respuesta.pregunta_id"=>$this->data["SubReporte"]["variable_x"])));
+				}
+				else{ // SI NO HAY FILTRO SOLO BUSCO LAS RESPUESTAS DE TODOS LOS USARIOS
+					$datos_x = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.pregunta_id"=>$this->data["SubReporte"]["variable_x"])));
+				}
+				
 				$datosInfo = array("Pregunta"=>array("nombre"=>$preguntaGrafico["Pregunta"]["nombre"],"tipo"=>$preguntaGrafico["Tipo"]["nombre"]));
 				switch($preguntaGrafico["Pregunta"]["tipo_id"]){
 					case 4:
@@ -87,14 +100,52 @@ class SubReportesController extends AppController{
 						$datosInfo["Resultados"]["Opciones"]["NO"] = $cont_opciones["NO"]["contador"];
 						$datosInfo["Resultados"]["Opciones"]["SI"] = $cont_opciones["SI"]["contador"];
 						$datosInfo["Resultados"]["total"] = $cont_opciones["NO"]["contador"] + $cont_opciones["SI"]["contador"];
+				} // fin switch pregunta tipo_id
+				break;
+			case 2:  // Normalized stacked bars.
+				$preguntaGraficoX = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_x"]),"contain"=>array("Tipo"),"recursive"=>-1));
+				$preguntaGraficoY = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_y"]),"contain"=>array("Tipo"),"recursive"=>-1));
+				if(!empty($this->data["SubReporte"]["Filtro"])){ // SIN HAY FITROS APLICADOS FILTRO X $USUARIOS_ID intersectados
+					$datos_x = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.usuario_id"=>$usuarios_id,"Respuesta.pregunta_id"=>$this->data["SubReporte"]["variable_x"])));
+					$datos_y = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.usuario_id"=>$usuarios_id,"Respuesta.pregunta_id"=>$this->data["SubReporte"][0]["variable_y"])));
+				}
+				else{ // SI NO HAY FILTRO SOLO BUSCO LAS RESPUESTAS DE TODOS LOS USARIOS
+					$datos_x = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.pregunta_id"=>$this->data["SubReporte"]["variable_x"])));
+					$datos_y = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.pregunta_id"=>$this->data["SubReporte"]["variable_y"])));
 				}
 				
-				
-				
-				break;
-			case 2:
-				$datos_x = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.usuario_id"=>$usuarios_id,"Respuesta.pregunta_id"=>$this->data["SubReporte"][0]["variable_x"])));
-				$datos_y = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.usuario_id"=>$usuarios_id,"Respuesta.pregunta_id"=>$this->data["SubReporte"][0]["variable_y"])));
+				switch($preguntaGrafico["Pregunta"]["tipo_id"]){
+					case 4:
+						$opciones = $this->Opcion->find("list",array("conditions"=>array("Opcion.pregunta_id"=>$this->data["SubReporte"]["variable_x"])));
+						foreach($opciones as $opcion_id => $nombre){
+							$cont_opciones[$opcion_id] = array("nombre"=>$nombre,"contador"=>0);
+						}
+						foreach($datos_x as $dato){
+							foreach($dato["Opciones"] as $opcion){
+								$opcion_id = $opcion["id"];
+								$cont_opciones[$opcion_id]["contador"] += 1;
+							}
+						}
+						foreach($cont_opciones as $opcion_id=>$tmp){
+							$nombre = $opciones[$opcion_id];
+							$datosInfo["Resultados"]["Opciones"][$nombre] = $tmp["contador"];
+						}
+						$datosInfo["Resultados"]["total"] = count($datos_x);
+						break;
+					case 6:
+						$cont_opciones["SI"]["contador"] = 0;
+						$cont_opciones["SI"]["nombre"] = "SI";
+						$cont_opciones["NO"]["contador"] = 0;
+						$cont_opciones["NO"]["nombre"] = "NO";
+						foreach($datos_x as $dato){
+							$boolean = $dato["Respuesta"]["respuesta_sino"]?"SI":"NO";
+							$cont_opciones[$boolean]["contador"] += 1;
+						}
+						$datosInfo["Resultados"]["Opciones"]["NO"] = $cont_opciones["NO"]["contador"];
+						$datosInfo["Resultados"]["Opciones"]["SI"] = $cont_opciones["SI"]["contador"];
+						$datosInfo["Resultados"]["total"] = $cont_opciones["NO"]["contador"] + $cont_opciones["SI"]["contador"];
+				} // fin switch pregunta tipo_id
+			
 		}
 		
 		
@@ -112,8 +163,10 @@ class SubReportesController extends AppController{
 		
 		switch($this->data["SubReporte"]["grafico_tipo"]){
 			case 1:
-				$this->render("/Elements/Reportes/barras");		
+				$this->render("/Elements/Reportes/tipoGrafico/barras");		
 				break;
+			case 2:
+				$this->render("/Elements/Reportes/tipoGrafico/stacked");
 			
 		}
 	}

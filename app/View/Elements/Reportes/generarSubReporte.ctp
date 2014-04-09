@@ -29,8 +29,11 @@
 	<script type="text/javascript">
 	$("#paso2").block({message:null});
  	$("#paso3").block({message:null}); 
-
-</script>
+	$("#generarReporte").on("click",".boton-borrar",function(){
+		n = $(this).data("n");
+		$("#filtro"+n).remove();
+	});
+ 	</script>
 
 </div>
 

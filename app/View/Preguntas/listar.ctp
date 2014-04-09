@@ -1,6 +1,6 @@
 <div class="modal-header header-ficha azul">
     <div class="botonera-header">
-        <?php echo $this->Ajax->link("<i class='icon-plus'> Crear Pregunta</i>",array("controller"=>"preguntas","action"=>"crear"),array("class"=>"btn btn-inverse","before"=>"modales('crearPregunta','modal-ficha')","complete"=>"fin_ajax('crearPregunta')","update"=>"crearPregunta","escape"=>false)); ?>
+        <?php echo $this->Js->link("<i class='icon-plus'> Crear Pregunta</i>",array("controller"=>"preguntas","action"=>"crear"),array("class"=>"btn btn-inverse","before"=>"modales('crearPregunta','modal-ficha')","complete"=>"fin_ajax('crearPregunta')","update"=>"#crearPregunta","escape"=>false)); ?>
         <button class="btn btn-inverse btnGuardarSelecc"><i class='icon-save icon-white'></i> Guardar Seleccion</button>
         <?php echo $this->Html->link("<i class='icon-white icon-remove-sign'></i>","#",array("class"=>"btn btn-inverse","data-dismiss"=>"modal","escape"=>false)) ?>
     </div>
@@ -14,8 +14,8 @@
 <div class="modal-body">
 	 <div class="tabbable">
 	    <div class="tab-content">
-    			<?php echo $this->element("preguntas/buscar") ?>
-				<?php echo $this->element("preguntas/preseleccion") ?>
+    			<?php echo $this->element("Preguntas/buscar") ?>
+				<?php echo $this->element("Preguntas/preseleccion") ?>
 		</div>
      </div>
 </div>
@@ -23,7 +23,7 @@
 
 <?php 
 $sustituye = array("\r\n", "\n\r", "\n", "\r");
-$elemento = str_replace($sustituye, "", $this->element("preguntas/agregar_menu"));
+$elemento = str_replace($sustituye, "", $this->element("Preguntas/agregar_menu"));
 $elemento = str_replace("</script>","<\/script>",$elemento);
 ?>
 

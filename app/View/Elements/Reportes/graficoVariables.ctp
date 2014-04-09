@@ -1,6 +1,6 @@
 <?php 
 $this->Form->create("Reporte"); /**** SIN ECHO SOLO INICIALIZO HELPER ****/
-$graficos = array("1"=>"Barras","2"=>"Stacked BAR","3"=>"Burbujas");
+$graficos = array("1"=>"Barras","2"=>"Normalized stacked bars","3"=>"Burbujas");
 	
 ?>
 <span class="label label-titular color-1">PASO 2</span>
@@ -8,7 +8,7 @@ $graficos = array("1"=>"Barras","2"=>"Stacked BAR","3"=>"Burbujas");
 <div class="row-fluid">
 	<div class="span12"><?php echo @$this->Form->input("SubReporte.grafico_tipo",array("type"=>"select","options"=>$graficos,"label"=>false,"empty"=>true))?> </div>
 </div>
-<div class="row-fluid" style="display:none" id="SubReporteVariables">
+<div style="display:none" id="SubReporteVariables">
 </div>
 
 <?php 

@@ -47,7 +47,7 @@
 <!-- fin div tab-pane -->
 
 <script type="text/javascript">
-	var templateValidaciones = "<?php echo trim(str_replace("\"","'",preg_replace('/\s+/', ' ', $this->element("preguntas/validaciones"))));  ?>";
+	var templateValidaciones = "<?php echo trim(str_replace("\"","'",preg_replace('/\s+/', ' ', $this->element("Preguntas/validaciones"))));  ?>";
 	var contVal = 0;
 	$("#validaciones .boton-agregar").bind("click",function(){
 		var data = {n_val:contVal};

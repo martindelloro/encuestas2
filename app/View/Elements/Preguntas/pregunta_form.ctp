@@ -12,8 +12,8 @@
 
 <script type="text/javascript">
 var cont_preguntas = 0;
-var codigoOpciones = "<?php echo trim(str_replace("\"","'",preg_replace('/\s+/', ' ', $this->element("preguntas/opciones"))));  ?>";
-var templateOpciones = "<?php echo trim(str_replace("\"","'",preg_replace('/\s+/', ' ', $this->element("preguntas/opcionesTemplate")))); ?>";
+var codigoOpciones = "<?php echo trim(str_replace("\"","'",preg_replace('/\s+/', ' ', $this->element("Preguntas/opciones"))));  ?>";
+var templateOpciones = "<?php echo trim(str_replace("\"","'",preg_replace('/\s+/', ' ', $this->element("Preguntas/opcionesTemplate")))); ?>";
 
 var contOpciones = 0;
 $("#crearPregunta").on("click",".borrar-opcion",function(){

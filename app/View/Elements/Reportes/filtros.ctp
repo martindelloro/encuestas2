@@ -20,11 +20,7 @@
 <script type="text/javascript">
     var contadorFiltro = 1;
     var templateFiltro = "<?php echo trim(str_replace("\"","'",preg_replace('/\s+/', ' ', $elemento))); ?>";
-    var data = {n:contadorFiltro};
-	template = Hogan.compile(templateFiltro);
-	procesado = template.render(data);
-	$(".contenedor-filtros").prepend(procesado);
-
+   
 	$('#agregarFiltro').bind("click",function(){
 		inicia_ajax();
 		++contadorFiltro;

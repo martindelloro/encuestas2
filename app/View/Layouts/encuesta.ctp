@@ -12,7 +12,7 @@
 <script type="text/javascript">var Hogan = {};</script>
 <?php
 
-echo $this->Html->css('estilo');
+echo $this->Helpers->Html->css('estilo');
 echo $this->Helpers->Html->css('bootstrap-combined.no-icons.min');
 echo $this->Helpers->Html->css('bootstrap-responsive');
 echo $this->Helpers->Html->css('font-awesome');
@@ -47,47 +47,34 @@ echo $this->Helpers->Html->script("d3.min");
     </div>
     <div class="navbar navbar-top">
         <div class="navbar-inner">
-            <div class="container">
                 <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <div class="nav-collapse collapse">
+                <div class="nav-collapse">
+                <ul class="nav">
                      <?php
-                      unset($OUsuario);
-                      $OUsuario=$this->Session->read('Usuario');
-                      
-                      // debug($OUsuario);
-                      
-                      if (!$OUsuario){
-                          echo $this->element("../Usuarios/login");
-                      }else{    
                         switch ($OUsuario['rol']){
-                            case "admin" :
-                                //echo "entro acá";
-                                echo $this->element("Usuarios/menu_usuario");
-                                echo $this->element("Encuestas/encuesta");
+                        	case "admin" :
+                                echo $this->element("BarraMenu/menu_usuario");
+                                echo $this->element("BarraMenu/encuesta");
                                 echo $this->element("BarraMenu/reportes");
-                                echo $this->element("../Usuarios/login");
                                 break;
                             case "direccion" :
                                 echo $this->element("BarraMenu/reportes");
-                                echo $this->element("../usuarios/login");
                                 break;
                             case "graduado":
-                                echo $this->element("Usuarios/datos_usuario");
-                                echo $this->element("../Usuarios/login");
+                                echo $this->element("BarraMenu/datos_usuario");
                                 break;
                         }
-                      
-                      }
-                      
-                        
-                     ?>
-                                         
+                      ?>
+                </ul>
+                <ul class="nav pull-right">
+                	<?php echo $this->element("BarraMenu/login"); ?>
+                </ul>
                 </div> <!-- FIN DIV NAV-COLLAPSE -->
-                </div> <!-- FIN DIV CONTAINER -->
+               
             </div> <!--  FIN DIV NAVBAR-INNER -->
         </div> <!-- FIN DIV NAVBAR -->
     

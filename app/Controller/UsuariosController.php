@@ -39,34 +39,17 @@ class UsuariosController extends AppController {
          $this->set('localidades',$localidades);
     }
 
-    function login(){        
-        try{
-          //$this->OUsuario = Login($this->data['User']['usuario'],md5($this->data['User']['password']));
-            $OUsuario=$this->Usuario->findByUsuario($this->data['User']['usuario']);
-           //debug($usuario);
-            if ($OUsuario != null){
-                if(md5($this->data['User']['password']) == $OUsuario['Usuario']['password']){
-                    //echo "esta todo bien"; //acá tiene que cargar los menues para distintos tipos de usuario
-                    $this->Session->Write($OUsuario);
-                    $this->set('OUsuario',$OUsuario);
-                    //$this->render('../pages/inicio');
-                }else{
-                    $this->Session->setFlash("ERROR-Verifique usuario/contraseña",null,null,"mensaje_sistema");
-                }
-            }else{
-                    $this->Session->setFlash("ERROR-Verifique usuario/contraseña",null,null,"mensaje_sistema");
-            }
-            
-        }catch(LoginException $e){
-          $this->Session->setFlash($e->getMessage(),'error_usuario',null,'mensaje_sistema');
+    function login(){
+    	$this->autoRender = false;
+        $OUsuario=$this->Usuario->findByUsuario($this->data['Usuario']['usuario']);
+        if($OUsuario == null || md5($this->data['Usuario']['password']) != $OUsuario['Usuario']['password']){
+        	$this->Session->setFlash("ERROR-Verifique usuario/contraseña",null,null,"mensaje_sistema");
         }
-
-        if($OUsuario != null ) {
-            $this->Session->Write($OUsuario);
-            $this->set('OUsuario',$OUsuario);
-            $this->set("redirect",true);
+        else{
+        	$this->Session->setFlash("Bienvenido ".$OUsuario["Usuario"]["nombre"]." ".$OUsuario["Usuario"]["apellido"],null,null,"mensaje_sistema");
+        	$this->Session->Write($OUsuario);
         }
-
+        $this->redirect(array("controller"=>"pages","action"=>"display","inicio"));
      }
 
      function logout(){

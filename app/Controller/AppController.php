@@ -35,4 +35,10 @@ class AppController extends Controller {
     var $helpers = array('Js' => array('Jquery'), 'Mensajes', 'Form', 'Paginator','Html');
     var $components = array('RequestHandler', 'Session');
     var $layout = "encuesta";
+    
+    function beforeRender(){
+    	$OUsuario=$this->Session->read('Usuario');
+    	$this->set("OUsuario",$OUsuario);
+    }
+    
 }

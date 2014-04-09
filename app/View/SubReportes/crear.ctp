@@ -24,16 +24,17 @@
 
 <div class="well label-titular color-3">Resultados</div>
 <?php foreach($datosInfo["Resultados"]["Opciones"] as $nombre=>$valor): ?>
-	<div class="row-fluid">
-		<div class="span6"><?php echo $nombre ?></div>
-		<div class="span6"><?php echo $valor ?></div>
+	<div class="row-fluid resumen-resultados">
+		<div class="span6 color-1 borde-1 borde-abajo"><span><?php echo $nombre ?></span></div>
+		<div class="span6 color-2 borde-1"><span><?php echo $valor ?></span></div>
 	</div>
 <?php endforeach;?>
-	<div class="row-fluid">
-		<div class="span6">Total</div>
-		<div class="span6"><?php echo $datosInfo["Resultados"]["total"] ?></div>
+	<div class="row-fluid resumen-resultados">
+		<div class="span6 color-1"><span>Total</span></div>
+		<div class="span6 color-2"><span><?php echo $datosInfo["Resultados"]["total"] ?></span></div>
 	</div>
 
+<div class="well label-titular color-3"><?php echo $datosInfo["Pregunta"]["nombre"] ?></div>
 <div id="graficoBarras" class="grafico" >
 </div>
 
@@ -56,49 +57,18 @@ var svg = d3.select("#graficoBarras").append("svg")
 .attr("height", height + margin.top + margin.bottom)
 .append("g")
 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-  
-  x.domain(datos.map(function(d) { return d.nombre; }));
-  y.domain([0, d3.max(datos, function(d) { return d.contador; })]);
-
-  svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis).selectAll("text")  
-      .style("text-anchor", "end")
-      .attr("dx", "-.8em")
-      .attr("dy", ".15em")
-      .attr("transform", function(d) {
-          return "rotate(-65)" 
-          });;
-
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Cantidad");
-
-  svg.selectAll(".bar")
-      .data(datos)
-    .enter().append("rect")
-      .attr("class", "bar")
-      .attr("x", function(d) { return x(d.nombre); })
-      .attr("width", x.rangeBand())
-      .attr("y", function(d) { return y(d.contador); })
-      .attr("height", function(d) { return height - y(d.contador); });
-
-
-
-function type(d) {
-  d.contador = +d.contador;
-  return d;
-}
-
 </script>
+<?php 
+	switch($this->data["SubReporte"]["grafico_tipo"]){
+		case 1:
+			echo $this->Html->script("/js/graficos/barras.js");
+			break;
+		case 2:
+			echo $this->Html->script("/js/graficos/stacked.js");
+	}
+
+
+?>
 
 
 <?php

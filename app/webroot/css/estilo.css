@@ -61,10 +61,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', end
 
 body .modal-ficha{
     width:70%;
-	height:80% !important;
+	min-height:80% !important;
     margin-top: -16px;
     margin-left: 0px;
     left:15%;
+    height:auto !important;
 }
 
 body .modal-body{
@@ -189,7 +190,28 @@ body .mensaje-contenido{
     text-align: center !important;
 }
 
+.boton-borrar{
+	float: right;
+    margin-right: 5px;
+    margin-top: -29px !important;
+    position: relative;
+}
 
+.borde-1{
+	border: 1px solid #ccc;
+}
+
+.nav .btn{
+	padding: 4px 0;
+    width: 100%;
+}
+.nav .btn:last-child{
+	margin-bottom:20px;
+}
+
+.top-5{
+	margin-top:5px !important;
+}
 
 
 /***************************************************************/
@@ -500,7 +522,7 @@ body .mensaje-contenido{
 .contenedor-preguntas {
 	padding:2px !important;
 	height:100% !important;
-	min-height:300px !important;
+	min-height:600px !important;
 }
 
 .preguntas-label .label{
@@ -856,6 +878,7 @@ body .mensaje-contenido{
 
 #generarReporte .tab-content{
 	min-height:800px !important;
+	overflow:visible !important;
 }
 
 /*************************************************/
@@ -906,6 +929,16 @@ border-radius: 2px;
 }
 
 
+#generados .resumen-resultados{
+	text-align:center !important;
+	font-weight: bold;
+}
+
+#generados .resumen-resultados span{
+	 display: block;
+    position: relative;
+    top: 4px !important
+}
 
 /*************************************************/
 /*********     ESTILO GRAFICO BARRAS    **********/
