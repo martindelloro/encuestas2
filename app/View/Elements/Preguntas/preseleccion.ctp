@@ -12,17 +12,12 @@
 	
 	<?php 
 	echo $this->Js->writeBuffer();
-	$sustituye = array("\r\n", "\n\r", "\n", "\r");
-	$elemento = str_replace($sustituye, "", $this->element("Preguntas/preseleccionadas/template"));
-	$elemento = str_replace("</script>","<\/script>",$elemento);
-	$elemento = trim(str_replace("'","\"",$elemento));
 	?>
 
 	<script type="text/javascript">
-	templatePregunta = '<?php echo $elemento; ?>';
 	$.each(preSeleccionadas,function(index){
-			var templateP = Hogan.compile(templatePregunta);
-			var procesado = templateP.render(preSeleccionadas[index]);
+			preSeleccionadas.preseleccion = true;
+			procesado = pregTemplate.render(preSeleccionadas[index]);
 			$(procesado).appendTo("#preguntasPre");
 			++contPreguntas;
 	});

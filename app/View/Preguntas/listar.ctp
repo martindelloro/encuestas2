@@ -23,21 +23,28 @@
 
 <?php 
 $sustituye = array("\r\n", "\n\r", "\n", "\r");
-$elemento = str_replace($sustituye, "", $this->element("Preguntas/agregar_menu"));
-$elemento = str_replace("</script>","<\/script>",$elemento);
+$pregTemplate = str_replace($sustituye, "", $this->element("Preguntas/pregTemplate"));
+$pregTemplate = str_replace("</script>","<\/script>",$pregTemplate);
+$pregTemplate = trim(str_replace("\"","'",preg_replace('/\s+/', ' ', $pregTemplate)));
 ?>
 
 <script type="text/javascript">
-	var templateAgregarPreguntas = "<?php echo trim(str_replace("\"","'",preg_replace('/\s+/', ' ', $elemento)));  ?>";
+	var pregTemplate = "<?php echo $pregTemplate  ?>";
+	    pregTemplate = Hogan.compile(pregTemplate);
+
+	$.each(preSeleccionadas,function(index)){
+
+
+	}    
 
 	$(".btnGuardarSelecc").bind("click",function(){
 		$('#listarPreguntas').modalmanager('loading');
 		$.each(preSeleccionadas,function(index){
 			preSeleccionadas[index].orden = contPreguntas;
+			preSeleccionadas[index].preseleccion = false;
+			preSeleccionadas[index].seleccion = true;
 			contPreguntas += 1;
-			
-		    var template = Hogan.compile(templateAgregarPreguntas);
-			var procesado = template.render(preSeleccionadas[index]);
+			procesado = pregTemplate.render(preSeleccionadas[index]);
 			$(procesado).appendTo("#encuesta .contenedor-preguntas");
 		});
 		$("#listarPreguntas").modal("hide");

@@ -71,26 +71,22 @@
 
 	<?php echo $this->Js->writeBuffer(); ?>
 
-	<script type="text/javascript">
-
+<script type="text/javascript">
 	$("#preguntasListado").on("click",":checkbox",function(){
 		idPregunta = $(this).val();
 		if($(this).prop("checked") != false){
-			clonada = $(this).parents(".pregunta").clone();
-			$(clonada).find(":checkbox").remove();
-			$("#preguntasPre").append(clonada);
 			nombre = $(this).parents(".pregunta").data("nombre");
 			tipo   = $(this).parents(".pregunta").data("tipo"); 
-			preSeleccionadas[idPregunta]  = {id:idPregunta,pregunta_id:idPregunta, nombre:nombre, tipo:tipo};
-	    }
+			preSeleccionadas[idPregunta]  = {id:idPregunta,pregunta_id:idPregunta, nombre:nombre, tipo:tipo,preseleccion:true};
+			procesado = pregTemplate.render(preSeleccionadas[idPregunta]);
+			$("#preguntasPre").append(procesado);
+		}
 		else{
 			$("#preguntasPre").find("#Pregunta"+idPregunta).remove();
 			$(this).prop("checked",false);
 			preSeleccionadas.splice(idPregunta,1);
 			}
 		});
-	
-	 
 </script>
 
 </div>
