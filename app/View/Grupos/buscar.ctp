@@ -1,10 +1,8 @@
-<?php
-$paginator->options(array('update' => 'contenedorBusqueda',
-                          'indicator' => 'loadingbox',
+<?php $this->Paginator->options(array('update' => '#contenedorBusqueda','before'=>'inicia_ajax()','complete'=>'fin_ajax()',
                           'evalScripts' => true,
                           'url'=>array('controller'=>'grupos',
                                        'action'=>'buscar')));
-        //debug($reportes); 
+     
 ?>
 <div class="row-fluid centro">
 	<div class="span10 well paginador"><?php echo $this->Paginator->counter(array('format' => __('Página %page% de %pages%, mostrando %current% resultados de %count% en total.', true))); ?></div>
@@ -34,8 +32,8 @@ $paginator->options(array('update' => 'contenedorBusqueda',
         <div class="row-fluid resultados" table-hover>
             <div class='span10'><?php echo $grupo['Grupo']['nombre']; ?>&nbsp;</div>
 
-            <div class='span1'><?php echo $this->Ajax->link("<i class='icon-edit'></i>",array('controller'=>'grupos','action'=>'editar',$grupo["Grupo"]["id"]),array('escape'=>false,'class'=>'btn-mini btn-inverse','before'=>"modales('editarGrupo','modal-ficha')",'complete'=>"fin_ajax('editarGrupo')",'update'=>'editarGrupo')) ?>
-            <?php echo $this->Ajax->link("<i class='icon-eye-open'></i>",array('controller'=>'grupos','action'=>'ver',$grupo["Grupo"]["id"]),array('escape'=>false,'class'=>'btn-mini btn-inverse','before'=>"modales('verGrupo','modal-ficha')",'complete'=>"fin_ajax('verGrupo')",'update'=>'verGrupo')) ?></div>
+            <div class='span1'><?php echo $this->Js->link("<i class='icon-edit'></i>",array('controller'=>'grupos','action'=>'editar',$grupo["Grupo"]["id"]),array('escape'=>false,'class'=>'btn-mini btn-inverse','before'=>"modales('editarGrupo','modal-ficha')",'complete'=>"fin_ajax('editarGrupo')",'update'=>'#editarGrupo')) ?>
+            <?php echo $this->Js->link("<i class='icon-eye-open'></i>",array('controller'=>'grupos','action'=>'ver',$grupo["Grupo"]["id"]),array('escape'=>false,'class'=>'btn-mini btn-inverse','before'=>"modales('verGrupo','modal-ficha')",'complete'=>"fin_ajax('verGrupo')",'update'=>'#verGrupo')) ?></div>
         </div>
         
     <?php endforeach; ?>

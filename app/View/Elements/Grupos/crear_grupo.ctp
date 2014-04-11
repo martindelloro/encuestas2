@@ -8,8 +8,7 @@
 
 <ul class="nav nav-pills borde-abajo barra-nav" style="clear:both">
     <li class="active"><?php echo $this->Html->link("Grupo","#grupo",array("data-toggle"=>"tab")) ?></li>
-    <li><?php // echo $this->Html->link("Datos Usuario","#datosUser",array("data-toggle"=>"tab")) ?></li> 
-	
+    	
 </ul>
 
 <div class="modal-body">
@@ -17,9 +16,8 @@
 	    <?php echo $this->Form->create("Grupo") ?>
         <div class="tab-content">
                                
-				<?php echo $this->element("Grupos/buscar_grupo_form") ?>
-                 <?php //echo $this->element("usuarios/dato_user_form") ?>
-				
+				<?php echo $this->element("Grupos/grupo_form") ?>
+                                 
 		</div>
      
                 
