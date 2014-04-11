@@ -31,7 +31,7 @@
 
 	</div>
 	<div>
-		<?php echo $this->Ajax->link("<i class='icon-search icon-white'> Buscar</i>",array('controller'=>'usuarios','action'=>'buscar'),array('update'=>'resultado_busqueda','before'=>'inicia_ajax()','complete'=>'fin_ajax()','escape'=>false,"with"=>"$(this).parents('form:first').serialize()","class"=>"btn btn-inverse")); 
+		<?php echo $this->Js->link("<i class='icon-search icon-white'> Buscar</i>",array('controller'=>'usuarios','action'=>'buscar'),array('update'=>'#resultado_busqueda','before'=>'inicia_ajax()','complete'=>'fin_ajax()','escape'=>false,"with"=>"$(this).parents('form:first').serialize()","class"=>"btn btn-inverse")); 
 		echo $this->Form->End(); ?></div>
 </div>
 <div id="resultado_busqueda"></div>

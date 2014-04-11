@@ -2,13 +2,14 @@
 
 class PreguntasController extends AppController{
 	
-	function listar(){
+	function listar($modo = null){
 		$this->paginate = array(
 				"order"=>"Pregunta.nombre ASC",
 				'recursive' => 0,
 				'limit'=>"20"
 		);
 		$this->set("preguntas",$this->paginate("Pregunta"));
+		if($modo == "seleccionar") $this->render("/Elements/Preguntas/seleccionar/listar");
 	}
 	
 	function buscar(){

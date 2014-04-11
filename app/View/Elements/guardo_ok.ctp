@@ -1,4 +1,7 @@
-<?php
-echo $this->element("sql_dump");
-echo $this->Mensajes->mostrar();
-?>
+<?php echo $this->Mensajes->mostrar(); ?>
+
+<?php if(isset($id)):?>
+<script type="text/javascript">
+	$("<?php echo $id?>").modal("hide");
+</script>
+<?php endif;?>

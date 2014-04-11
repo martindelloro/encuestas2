@@ -1,5 +1,5 @@
-<?php echo $this->Mensajes->mostrar(); ?>
-<div id="crearEncuesta">
+<div id="crearEncuesta" >
+
 <?php echo $this->Form->create("Encuesta") ?>
 
 <ul class="nav nav-pills borde-abajo barra-nav" style="clear:both">
@@ -9,11 +9,14 @@
 
 
    <div class="tab-content">
-    	<?php echo $this->element("Encuestas/crear_form") ?>
-		<?php echo $this->element("Encuestas/grupo_form") ?>
+    	<?php echo $this->element("Encuestas/crear/formulario");?>
+		<?php echo $this->element("Encuestas/crear/grupo") ?>
    </div>
 
 <?php echo $this->Js->writeBUffer(); ?>
 <?php echo $this->Form->end() ?>
 
+<script type="text/javascript">
+	preSeleccionadas = {};
+</script>
 </div>

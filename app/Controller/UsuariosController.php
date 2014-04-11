@@ -7,7 +7,8 @@ class UsuariosController extends AppController {
     var $usuarios=null;
 
 
-    function  crear_usuario(){
+       
+       function  crear_usuario(){
         if(!empty($this->data)){
             if($this->data['Usuario']['password']==$this->data['Usuario']['password_rep']){
                 $this->data['Usuario']['password']=md5($this->data['Usuario']['password']); //lo seteo para que lo guarde con seguridad md5
@@ -56,11 +57,9 @@ class UsuariosController extends AppController {
         $this->Session->destroy();
         $this->redirect(array('controller'=>'pages','action'=>'display','inicio'));
      }
-     
-     function buscar_usuario(){
-         $tipo_usuario=array("admin"=>"Administrador",
-                             "graduado"=>"Graduado",
-                             "direccion"=>"Dirección");
+    
+ function buscar_usuario(){
+         $tipo_usuario=array("admin"=>"Administrador","graduado"=>"Graduado","direccion"=>"Dirección");
          $this->set('tipo_usuario',$tipo_usuario);
      }
 
@@ -73,8 +72,7 @@ class UsuariosController extends AppController {
               }
               $buscar = array();
               
-              //debug($this->data);
-             
+                          
               if(!empty($this->data['buscar']['usuario'])){
                   $buscar['Usuario.usuario ilike'] = '%'.$this->data['buscar']['usuario'].'%';
               }
@@ -97,13 +95,21 @@ class UsuariosController extends AppController {
      }
      function ver($id){
          $usuario=$this->Usuario->findById($id);
-         //debug($usuario);
          $this->set("usuario",$usuario);
      }
      function editar($id){
-         $usuario=$this->Usuario->findById($id);
-         //debug($usuario);
-         $this->set("usuario",$usuario);
+     	 if(!empty($this->data)){
+     	 	if($this->Usuario->save($this->data)){
+     	 		$this->Session->setFlash("Usuario editado con exito",null,null,"mensaje_sistema");
+     	 		$this->set("id","#editarUsuario");
+     	 		$this->render("/Elements/guardo_ok");
+     	 	}
+     	 	else{
+     	 		$this->Session->setFlash("Ocurrio un error al intentar editar el usuario",null,null,"mensaje_sistema");
+     	 	}
+     	 }else{
+     	 	$this->data=$this->Usuario->findById($id);
+     	 }
      }
 
 

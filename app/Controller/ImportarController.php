@@ -6,7 +6,12 @@ class ImportarController extends AppController{
 	private function buscarOpciones(){
 		
 	}
-		
+	
+	function agregar_excel() {
+		$grupos=$this->Grupo->find('list', array('fields'=>'Grupo.nombre'));
+		$this->set('grupos',$grupos);
+	}
+	
 	function crearPreguntas(){
 		$remplazar = array('à'=>'a','á'=>'a','è'=>'e','é'=>'e','ì'=>'i','í'=>'i','ò'=>'o','ó'=>'o','ù'=>'u','ú'=>'u');
 		$this->autoRender = false;
@@ -133,9 +138,10 @@ class ImportarController extends AppController{
 			$this->Pregunta->Respuesta->saveMany($respuesta,array("deep"=>true));
 	}
 	
-	function crearUsuario(){
+function crearUsuario($excel_name){
 		$this->autoRender = false;
-		$data = new Spreadsheet_Excel_Reader(WWW_ROOT.'/excels/importar.xls', false);
+		//$data = new Spreadsheet_Excel_Reader(WWW_ROOT.'/excels/importar.xls', false);
+                $data = new Spreadsheet_Excel_Reader('/var/www/excels/'.$excel_name, false);
 		$filas = $data->rowcount(0);
 		$columnas = $data->colcount(0);
 		

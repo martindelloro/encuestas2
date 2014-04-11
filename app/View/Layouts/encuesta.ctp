@@ -57,6 +57,7 @@ echo $this->Helpers->Html->script("d3.min");
                      <?php
                         switch ($OUsuario['rol']){
                         	case "admin" :
+                        		echo $this->element("BarraMenu/menu_grupo");
                                 echo $this->element("BarraMenu/menu_usuario");
                                 echo $this->element("BarraMenu/encuesta");
                                 echo $this->element("BarraMenu/reportes");

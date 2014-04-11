@@ -76,7 +76,8 @@
 		idPregunta = $(this).val();
 		if($(this).prop("checked") != false){
 			nombre = $(this).parents(".pregunta").data("nombre");
-			tipo   = $(this).parents(".pregunta").data("tipo"); 
+			tipo   = $(this).parents(".pregunta").data("tipo");
+			preSeleccionadas[idPregunta]  = null;
 			preSeleccionadas[idPregunta]  = {id:idPregunta,pregunta_id:idPregunta, nombre:nombre, tipo:tipo,preseleccion:true};
 			procesado = pregTemplate.render(preSeleccionadas[idPregunta]);
 			$("#preguntasPre").append(procesado);

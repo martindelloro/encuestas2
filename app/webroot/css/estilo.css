@@ -213,6 +213,9 @@ body .mensaje-contenido{
 	margin-top:5px !important;
 }
 
+#verUsuario .label{
+	width: 100% !important;
+}
 
 /***************************************************************/
 /****************** USUARIOS INDEX/LISTADO *********************/
@@ -768,6 +771,10 @@ body .mensaje-contenido{
 	background-color:#364659 !important;
 	color:white;
 	font-weight: bold;
+}
+
+.pagination ul{
+	margin:0 auto;
 }
 
 .pagination .Current a{
