@@ -24,7 +24,7 @@
 		<div class="span2 preguntas-label"><div class="label">Tipo de la pregunta</div></div>
 		<div class="span2">
 			<input id="EncuestaPreguntas" type="hidden" name="data[Preguntas]"	value="" />
-			<?php echo $this->Js->link("<i class='icon-plus'> Agregar Pregunta</i>",array("controller"=>"preguntas","action"=>"listar","seleccionar"),array("class"=>"btn btn-inverse btn-mini","before"=>"modales('listarPreguntas','modal-ficha')","complete"=>"fin_ajax('listarPreguntas')","update"=>"#listarPreguntas","escape"=>false)); ?>
+			<?php echo $this->Js->link("<i class='icon-plus'> Agregar Pregunta</i>",array("controller"=>"preguntas","action"=>"listar","seleccionar"),array("class"=>"btn btn-inverse btn-mini","before"=>"modales('listarPreguntas','modal-ficha');preSeleccionadas={}","complete"=>"fin_ajax('listarPreguntas')","update"=>"#listarPreguntas","escape"=>false)); ?>
 		</div>
 	</div>
 	
@@ -36,6 +36,7 @@
 </div>
 
 <script type="text/javascript">
+	seleccionadas = {};
 	var contPreguntas = 1;
 	$(".contenedor-preguntas").on("click",".icon-arrow-up",function(){
           var preguntaCambiar = $(this).parents('.pregunta');

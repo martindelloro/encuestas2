@@ -14,8 +14,8 @@
 <div class="modal-body">
 	 <div class="tabbable">
 	    <div class="tab-content">
-    			<?php echo $this->element("Preguntas/buscar") ?>
-				<?php echo $this->element("Preguntas/preseleccion") ?>
+    			<?php echo $this->element("Preguntas/seleccionar/buscar") ?>
+				<?php echo $this->element("Preguntas/seleccionar/preseleccion") ?>
 		</div>
      </div>
 </div>
@@ -24,20 +24,19 @@
 <?php 
 $sustituye = array("\r\n", "\n\r", "\n", "\r");
 $pregTemplate = str_replace($sustituye, "", $this->element("Preguntas/pregTemplate"));
+$pregTemplate = str_replace("%7B", "{", $pregTemplate);
+$pregTemplate = str_replace("%7D", "}", $pregTemplate);
 $pregTemplate = str_replace("</script>","<\/script>",$pregTemplate);
 $pregTemplate = trim(str_replace("\"","'",preg_replace('/\s+/', ' ', $pregTemplate)));
 ?>
 
 <script type="text/javascript">
 	var pregTemplate = "<?php echo $pregTemplate  ?>";
-	    pregTemplate = Hogan.compile(pregTemplate);
+        pregTemplate = Hogan.compile(pregTemplate);
 
-	$.each(preSeleccionadas,function(index){
-		preSeleccionadas[index].listado		 = false;
-		preSeleccionadas[index].seleccion    = false;
-		preSeleccionadas[index].preseleccion = true;
-	    procesado = pregTemplate.render(preSeleccionadas[index]);
-	    $("#preguntasPre").append(procesado);
+	$.each(seleccionadas,function(index){
+		id = seleccionadas[index].pregunta_id;
+		$("#preguntasListado #Pregunta"+id).find("input:checkbox").attr("disabled","disabled");
 	});    
 
 	$(".btnGuardarSelecc").bind("click",function(){
@@ -51,6 +50,7 @@ $pregTemplate = trim(str_replace("\"","'",preg_replace('/\s+/', ' ', $pregTempla
 			procesado = pregTemplate.render(preSeleccionadas[index]);
 			$(procesado).appendTo("#encuesta .contenedor-preguntas");
 		});
+		seleccionadas = preSeleccionadas;
 		$("#listarPreguntas").modal("hide");
 		
 	});

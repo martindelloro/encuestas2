@@ -10,6 +10,8 @@ class SubReportesController extends AppController{
 		// PROCESO FILTROS
 		$resultados = array();
 		$filtrosInfo = array();
+		$datosInfo   = array();
+		$cont_opciones = null;
 		if(!empty($this->data["SubReporte"]["Filtro"])){
 		foreach($this->data["SubReporte"]["Filtro"] as $index=>$filtro){
 			$pregunta_id = $filtro["pregunta_id"];
@@ -102,53 +104,73 @@ class SubReportesController extends AppController{
 						$datosInfo["Resultados"]["total"] = $cont_opciones["NO"]["contador"] + $cont_opciones["SI"]["contador"];
 				} // fin switch pregunta tipo_id
 				break;
+				
 			case 2:  // Normalized stacked bars.
-				$preguntaGraficoX = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_x"]),"contain"=>array("Tipo"),"recursive"=>-1));
-				$preguntaGraficoY = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_y"]),"contain"=>array("Tipo"),"recursive"=>-1));
+				$preguntaGraficoX = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_x"]),"contain"=>array("Tipo","Opcion"),"recursive"=>-1));
+				$preguntaGraficoY = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_y"]),"contain"=>array("Tipo","Opcion"),"recursive"=>-1));
 				if(!empty($this->data["SubReporte"]["Filtro"])){ // SIN HAY FITROS APLICADOS FILTRO X $USUARIOS_ID intersectados
 					$datos_x = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.usuario_id"=>$usuarios_id,"Respuesta.pregunta_id"=>$this->data["SubReporte"]["variable_x"])));
-					$datos_y = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.usuario_id"=>$usuarios_id,"Respuesta.pregunta_id"=>$this->data["SubReporte"][0]["variable_y"])));
+					$datos_y = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.usuario_id"=>$usuarios_id,"Respuesta.pregunta_id"=>$this->data["SubReporte"]["variable_y"])));
 				}
 				else{ // SI NO HAY FILTRO SOLO BUSCO LAS RESPUESTAS DE TODOS LOS USARIOS
 					$datos_x = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.pregunta_id"=>$this->data["SubReporte"]["variable_x"])));
 					$datos_y = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.pregunta_id"=>$this->data["SubReporte"]["variable_y"])));
 				}
+				$opcionesX = $preguntaGraficoX["Opcion"];
+				$opcionesY = $preguntaGraficoY["Opcion"];
 				
-				switch($preguntaGrafico["Pregunta"]["tipo_id"]){
-					case 4:
-						$opciones = $this->Opcion->find("list",array("conditions"=>array("Opcion.pregunta_id"=>$this->data["SubReporte"]["variable_x"])));
-						foreach($opciones as $opcion_id => $nombre){
-							$cont_opciones[$opcion_id] = array("nombre"=>$nombre,"contador"=>0);
-						}
-						foreach($datos_x as $dato){
-							foreach($dato["Opciones"] as $opcion){
-								$opcion_id = $opcion["id"];
-								$cont_opciones[$opcion_id]["contador"] += 1;
-							}
-						}
-						foreach($cont_opciones as $opcion_id=>$tmp){
-							$nombre = $opciones[$opcion_id];
-							$datosInfo["Resultados"]["Opciones"][$nombre] = $tmp["contador"];
-						}
-						$datosInfo["Resultados"]["total"] = count($datos_x);
-						break;
-					case 6:
-						$cont_opciones["SI"]["contador"] = 0;
-						$cont_opciones["SI"]["nombre"] = "SI";
-						$cont_opciones["NO"]["contador"] = 0;
-						$cont_opciones["NO"]["nombre"] = "NO";
-						foreach($datos_x as $dato){
-							$boolean = $dato["Respuesta"]["respuesta_sino"]?"SI":"NO";
-							$cont_opciones[$boolean]["contador"] += 1;
-						}
-						$datosInfo["Resultados"]["Opciones"]["NO"] = $cont_opciones["NO"]["contador"];
-						$datosInfo["Resultados"]["Opciones"]["SI"] = $cont_opciones["SI"]["contador"];
-						$datosInfo["Resultados"]["total"] = $cont_opciones["NO"]["contador"] + $cont_opciones["SI"]["contador"];
-				} // fin switch pregunta tipo_id
-			
+				$datos = array();
+				$categoriasY = array();
+				$categoriasX = array();
+				foreach($opcionesY as $opcionY){
+					$nombreY = $opcionY["nombre"];
+					$categoriasY[] = $nombreY;
+					$opcIdY  = $opcionY["id"];
+					$pregIdY     = $opcionY["pregunta_id"];
+					$joins   = null;
+					$joins[] = array("table"=>"respuestas_opciones","alias"=>"RespuestaOpcion","type"=>"inner","conditions"=>array("RespuestaOpcion.respuesta_id = Respuesta.id","RespuestaOpcion.opcion_id = $opcIdY"));
+					$tmpsY = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.pregunta_id"=>$pregIdY),"joins"=>$joins,"fields"=>"Respuesta.usuario_id","recursive"=>-1));
+					$usuariosY = array();
+					foreach($tmpsY as $tmpY){
+						$usuariosY[] = $tmpY["Respuesta"]["usuario_id"];
+					}
+					foreach($opcionesX as $opcionX){
+						$nombreX = $opcionX["nombre"];
+						$categoriasX[] = $nombreX;
+						$pregIdX = $opcionX["pregunta_id"];
+						$opcIdX  = $opcionX["id"];
+						$joins   = null;
+						
+						$joins[] = array("table"=>"respuestas_opciones","alias"=>"RespuestaOpcion","type"=>"inner","conditions"=>array("RespuestaOpcion.respuesta_id = Respuesta.id","RespuestaOpcion.opcion_id = $opcIdX"));
+						$datos[$nombreX]["Resultados"][$nombreY] = $this->Respuesta->find('count',array("conditions"=>array("Respuesta.pregunta_id"=>$pregIdX,"Respuesta.usuario_id"=>$usuariosY),"joins"=>$joins));
+					
+						$datos[$nombreX]["categoriaX"] = $nombreX;
+					}
+				}
+		} // FIN SWITCH GRAFICO TIPO
+		$datos = array_values($datos);
+		foreach($datos as $index=>$dato){
+			foreach($dato["Resultados"] as $nombreY => $valor){
+				if(!isset($datos[$index]["Total"])) $datos[$index]["Total"]= 0;
+				$datos[$index]["Total"] += $valor;
+			}
+			$offset = 0;
+			$fuck = 0;
+			foreach($dato["Resultados"] as $nombreY => $valor){
+				$datos[$index]["Resultados"][$nombreY] = null;
+				$datos[$index]["Resultados"][$nombreY]["categoriaY"] = $nombreY;
+				$datos[$index]["Resultados"][$nombreY]["offset"] = (float)$offset;
+				$datos[$index]["Resultados"][$nombreY]["altura"] = (float) ($valor+$fuck)  / $datos[$index]["Total"] ;
+				$fuck += $valor;
+				$offset = $datos[$index]["Resultados"][$nombreY]["altura"];
+			}
+				$datos[$index]["Resultados"] = array_values($datos[$index]["Resultados"]);
+				
 		}
-		
-		
+				
+		$this->set("datos",$datos);
+		$this->set("categoriasX",array_unique($categoriasX));
+		$this->set("categoriasY",$categoriasY);
 		$this->set("resultados",$resultados);
 		$this->set("cont_opciones",$cont_opciones);
 		$this->set("datosInfo",$datosInfo);

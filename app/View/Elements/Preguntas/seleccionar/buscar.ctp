@@ -1,6 +1,6 @@
 <?php 
 	$tipos = array("1"=>"Texto","2"=>"Select","3"=>"Multiple Select","4"=>"Checkbox","5"=>"Area de texto") ;
-	$this->Paginator->options(array("update"=>"#listarPreguntas","before"=>"$('body').modalmanager('loading')","complete"=>"$('body').modalmanager('loading');actualizarCheckbox()","evalScripts"=>true,"url"=>array("controller"=>"Preguntas","action"=>"listar")));
+	$this->Paginator->options(array("update"=>"#listarPreguntas","before"=>"$('body').modalmanager('loading')","complete"=>"$('body').modalmanager('loading');actualizarCheckbox()","evalScripts"=>true,"url"=>array("controller"=>"Preguntas","action"=>"listar","seleccionar")));
 ?>
 
 <div class="tab-pane active" id="preguntas">
@@ -85,7 +85,7 @@
 		else{
 			$("#preguntasPre").find("#Pregunta"+idPregunta).remove();
 			$(this).prop("checked",false);
-			preSeleccionadas.splice(idPregunta,1);
+			delete preSeleccionadas.idPregunta;
 			}
 		});
 </script>

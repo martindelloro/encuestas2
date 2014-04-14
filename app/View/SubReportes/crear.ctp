@@ -22,6 +22,7 @@
 <?php endforeach; ?>
 <?php endif; ?>
 
+<?php if(!empty($datosInfo)): ?>
 <div class="well label-titular color-3">Resultados</div>
 <?php foreach($datosInfo["Resultados"]["Opciones"] as $nombre=>$valor): ?>
 	<div class="row-fluid resumen-resultados">
@@ -35,12 +36,25 @@
 	</div>
 
 <div class="well label-titular color-3"><?php echo $datosInfo["Pregunta"]["nombre"] ?></div>
+<?php endif; ?>
+
 <div id="graficoBarras" class="grafico" >
 </div>
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
-datos = <?php echo json_encode(array_values($cont_opciones)); ?>;
+
+switch(<?php echo $this->data["SubReporte"]["grafico_tipo"] ?>){
+	case 1:
+		// datos = <?php echo json_encode(array_values($cont_opciones)); ?>;
+		break;
+	case 2:
+	    datos = <?php echo json_encode($datos); ?>;
+		categoriasX = <?php echo json_encode($categoriasX); ?>;
+		categoriasY = <?php echo json_encode($categoriasY); ?>;
+		break;
+}
+
 
 var margin = {top: 20, right: 20, bottom: 80, left: 40},
 width =  $(".grafico:first").width() - margin.left - margin.right,
@@ -57,6 +71,8 @@ var svg = d3.select("#graficoBarras").append("svg")
 .attr("height", height + margin.top + margin.bottom)
 .append("g")
 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
 </script>
 <?php 
 	switch($this->data["SubReporte"]["grafico_tipo"]){
