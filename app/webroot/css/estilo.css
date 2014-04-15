@@ -979,3 +979,10 @@ border-radius: 2px;
   display: none;
 }
 
+.leyenda {
+	width:100%;
+	height:250px;
+	float:right;
+	margin-top:20px;
+	margin-left:45px;
+}

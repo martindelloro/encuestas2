@@ -37,7 +37,9 @@
 
 <div class="well label-titular color-3"><?php echo $datosInfo["Pregunta"]["nombre"] ?></div>
 <?php endif; ?>
+<div id="leyenda" class="leyenda">
 
+</div>
 <div id="graficoBarras" class="grafico" >
 </div>
 
@@ -57,8 +59,8 @@ switch(<?php echo $this->data["SubReporte"]["grafico_tipo"] ?>){
 
 
 var margin = {top: 20, right: 20, bottom: 80, left: 40},
-width =  $(".grafico:first").width() - margin.left - margin.right,
-height = $(".grafico:first").height(); - margin.top - margin.bottom;
+width =  $(".grafico:first").width() - margin.left - margin.right;
+height = $(".grafico:first").height() - margin.top - margin.bottom;
 
 var x = d3.scale.ordinal().rangeRoundBands([0, width], .1);
 var y = d3.scale.linear().range([height, 0]);
