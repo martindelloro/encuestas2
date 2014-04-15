@@ -108,14 +108,7 @@ class SubReportesController extends AppController{
 			case 2:  // Normalized stacked bars.
 				$preguntaGraficoX = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_x"]),"contain"=>array("Tipo","Opcion"),"recursive"=>-1));
 				$preguntaGraficoY = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_y"]),"contain"=>array("Tipo","Opcion"),"recursive"=>-1));
-				if(!empty($this->data["SubReporte"]["Filtro"])){ // SIN HAY FITROS APLICADOS FILTRO X $USUARIOS_ID intersectados
-					$datos_x = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.usuario_id"=>$usuarios_id,"Respuesta.pregunta_id"=>$this->data["SubReporte"]["variable_x"])));
-					$datos_y = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.usuario_id"=>$usuarios_id,"Respuesta.pregunta_id"=>$this->data["SubReporte"]["variable_y"])));
-				}
-				else{ // SI NO HAY FILTRO SOLO BUSCO LAS RESPUESTAS DE TODOS LOS USARIOS
-					$datos_x = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.pregunta_id"=>$this->data["SubReporte"]["variable_x"])));
-					$datos_y = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.pregunta_id"=>$this->data["SubReporte"]["variable_y"])));
-				}
+				
 				$opcionesX = $preguntaGraficoX["Opcion"];
 				$opcionesY = $preguntaGraficoY["Opcion"];
 				
@@ -129,7 +122,12 @@ class SubReportesController extends AppController{
 					$pregIdY     = $opcionY["pregunta_id"];
 					$joins   = null;
 					$joins[] = array("table"=>"respuestas_opciones","alias"=>"RespuestaOpcion","type"=>"inner","conditions"=>array("RespuestaOpcion.respuesta_id = Respuesta.id","RespuestaOpcion.opcion_id = $opcIdY"));
-					$tmpsY = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.pregunta_id"=>$pregIdY),"joins"=>$joins,"fields"=>"Respuesta.usuario_id","recursive"=>-1));
+					if(!empty($this->data["SubReporte"]["Filtro"])){ // SIN HAY FITROS APLICADOS FILTRO X $USUARIOS_ID intersectados
+						$tmpsY = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.pregunta_id"=>$pregIdY,"Respuesta.usuario_id"=>$usuarios_id),"joins"=>$joins,"fields"=>"Respuesta.usuario_id","recursive"=>-1));
+					}
+					else{ // SI NO HAY FILTRO SOLO BUSCO LAS RESPUESTAS DE TODOS LOS USARIOS
+						$tmpsY = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.pregunta_id"=>$pregIdY),"joins"=>$joins,"fields"=>"Respuesta.usuario_id","recursive"=>-1));
+					}
 					$usuariosY = array();
 					foreach($tmpsY as $tmpY){
 						$usuariosY[] = $tmpY["Respuesta"]["usuario_id"];
@@ -148,6 +146,7 @@ class SubReportesController extends AppController{
 					}
 				}
 		} // FIN SWITCH GRAFICO TIPO
+		$datosInfoStacked = $datos;
 		$datos = array_values($datos);
 		foreach($datos as $index=>$dato){
 			foreach($dato["Resultados"] as $nombreY => $valor){
@@ -174,6 +173,7 @@ class SubReportesController extends AppController{
 		$this->set("resultados",$resultados);
 		$this->set("cont_opciones",$cont_opciones);
 		$this->set("datosInfo",$datosInfo);
+		$this->set("datosInfoStacked",$datosInfoStacked);
 		$this->set("filtrosInfo",$filtrosInfo);
  	}
 	

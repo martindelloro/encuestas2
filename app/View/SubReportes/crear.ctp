@@ -37,6 +37,7 @@
 
 <div class="well label-titular color-3"><?php echo $datosInfo["Pregunta"]["nombre"] ?></div>
 <?php endif; ?>
+
 <div id="leyenda" class="leyenda">
 
 </div>
