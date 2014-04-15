@@ -185,14 +185,16 @@ class SubReportesController extends AppController{
 	function variablesGrafico(){
 		$this->autoRender = false;
 		$encuesta_id = $this->data["Reporte"]["encuesta_id"];
-		$preguntas = $this->SubReporte->Reporte->Encuesta->EncuestaPregunta->find("list",array("conditions"=>array("encuesta_id"=>$encuesta_id)));
-		$this->set("preguntas",$preguntas);
-		
+				
 		switch($this->data["SubReporte"]["grafico_tipo"]){
 			case 1:
+				$preguntas = $this->SubReporte->Reporte->Encuesta->EncuestaPregunta->find("list",array("conditions"=>array("encuesta_id"=>$encuesta_id,"tipo_id"=>array(4,6))));
+				$this->set("preguntas",$preguntas);
 				$this->render("/Elements/Reportes/tipoGrafico/barras");		
 				break;
 			case 2:
+				$preguntas = $this->SubReporte->Reporte->Encuesta->EncuestaPregunta->find("list",array("conditions"=>array("encuesta_id"=>$encuesta_id,"tipo_id"=>array(4))));
+				$this->set("preguntas",$preguntas);
 				$this->render("/Elements/Reportes/tipoGrafico/stacked");
 			
 		}
