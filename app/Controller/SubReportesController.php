@@ -11,7 +11,8 @@ class SubReportesController extends AppController{
 		$resultados = array();
 		$filtrosInfo = array();
 		$datosInfo   = array();
-		$cont_opciones = null;
+		$cont_opciones = array();
+		$datosInfoStacked = null;
 		if(!empty($this->data["SubReporte"]["Filtro"])){
 		foreach($this->data["SubReporte"]["Filtro"] as $index=>$filtro){
 			$pregunta_id = $filtro["pregunta_id"];
@@ -44,20 +45,23 @@ class SubReportesController extends AppController{
 		}
 		
 		$loops = count($tmp); // LOOPS = CANTIDAD DE FILTROS APLICADOS
-		if($loops > 1){
-		// JUNTOS SOLO LOS USUARIOS_ID QUE SE INTERSECTAN EN LOS RESULTADOS = INNER JOIN SQL	
-		for($i=0; $i < ($loops-1);$i++){
-			if($i==1){ // INICIALIZO TMP3
-				$tmp3 =   array_intersect($tmp[$i], $tmp[$i+1]); // INTERSECTO LOS VALORES DE FILTRO 1 CON LOS DEL FILTRO 2, INICIALIZADO TMP3 CON EL RESULTADOS PARA EL SIGUIENTE BUCLE	
-			}else{
-				$tmp3 =   array_intersect($tmp3, $tmp[$i+1]); // INTERSECTO LOS VALORES RESULTANTES DE TMP3 CON EL SIGUIENTE FILTRO SIN PROCESAR EJ: $I = 2 intersecta TMP3 con FILTRO 3;
-			}
+		switch(true){
+			case ($loops == 1):
+				  $usuarios_id = $tmp[0]; // SI SOLO HAY 1 FILTRO NO HAY QUE INTERSECTAR NADA..
+				  break;
+			case ($loops == 2):
+				  $usuarios_id = array_intersect($tmp[0],$tmp[1]);
+				  break;
+			case ($loops >= 3):
+				  for($i=0; $i < ($loops-1);$i++){
+					if($i==0){ // INICIALIZO TMP3
+						$tmp3 =   array_intersect($tmp[$i], $tmp[$i+1]); // INTERSECTO LOS VALORES DE FILTRO 1 CON LOS DEL FILTRO 2, INICIALIZADO TMP3 CON EL RESULTADOS PARA EL SIGUIENTE BUCLE
+					}else{
+						$tmp3 =   array_intersect($tmp3, $tmp[$i+1]); // INTERSECTO LOS VALORES RESULTANTES DE TMP3 CON EL SIGUIENTE FILTRO SIN PROCESAR EJ: $I = 2 intersecta TMP3 con FILTRO 3;
+					}
+				  }
+				  $usuarios_id = $tmp3;
 		}
-		$usuarios_id = $tmp3;
-		}
-		else{
-			$usuarios_id = $tmp[0]; // SI SOLO HAY 1 FILTRO NO HAY QUE INTERSECTAR NADA..
-		}		
 		} // FIN IF SI VIENE CON FILTROS...
 			
 		
@@ -145,31 +149,32 @@ class SubReportesController extends AppController{
 						$datos[$nombreX]["categoriaX"] = $nombreX;
 					}
 				}
+				$datosInfoStacked = $datos;
+				$datos = array_values($datos);
+				foreach($datos as $index=>$dato){
+					foreach($dato["Resultados"] as $nombreY => $valor){
+						if(!isset($datos[$index]["Total"])) $datos[$index]["Total"]= 0;
+						$datos[$index]["Total"] += $valor;
+					}
+					$offset = 0;
+					$fuck = 0;
+					foreach($dato["Resultados"] as $nombreY => $valor){
+						$datos[$index]["Resultados"][$nombreY] = null;
+						$datos[$index]["Resultados"][$nombreY]["categoriaY"] = $nombreY;
+						$datos[$index]["Resultados"][$nombreY]["offset"] = (float)$offset;
+						$datos[$index]["Resultados"][$nombreY]["altura"] = (float) ($valor+$fuck)  / $datos[$index]["Total"] ;
+						$fuck += $valor;
+						$offset = $datos[$index]["Resultados"][$nombreY]["altura"];
+					}
+					$datos[$index]["Resultados"] = array_values($datos[$index]["Resultados"]);
+				
+				}
+				$this->set("categoriasX",array_unique($categoriasX));
+				$this->set("categoriasY",$categoriasY);
+				$this->set("datos",$datos);
+				break;
 		} // FIN SWITCH GRAFICO TIPO
-		$datosInfoStacked = $datos;
-		$datos = array_values($datos);
-		foreach($datos as $index=>$dato){
-			foreach($dato["Resultados"] as $nombreY => $valor){
-				if(!isset($datos[$index]["Total"])) $datos[$index]["Total"]= 0;
-				$datos[$index]["Total"] += $valor;
-			}
-			$offset = 0;
-			$fuck = 0;
-			foreach($dato["Resultados"] as $nombreY => $valor){
-				$datos[$index]["Resultados"][$nombreY] = null;
-				$datos[$index]["Resultados"][$nombreY]["categoriaY"] = $nombreY;
-				$datos[$index]["Resultados"][$nombreY]["offset"] = (float)$offset;
-				$datos[$index]["Resultados"][$nombreY]["altura"] = (float) ($valor+$fuck)  / $datos[$index]["Total"] ;
-				$fuck += $valor;
-				$offset = $datos[$index]["Resultados"][$nombreY]["altura"];
-			}
-				$datos[$index]["Resultados"] = array_values($datos[$index]["Resultados"]);
-				
-		}
-				
-		$this->set("datos",$datos);
-		$this->set("categoriasX",array_unique($categoriasX));
-		$this->set("categoriasY",$categoriasY);
+		
 		$this->set("resultados",$resultados);
 		$this->set("cont_opciones",$cont_opciones);
 		$this->set("datosInfo",$datosInfo);

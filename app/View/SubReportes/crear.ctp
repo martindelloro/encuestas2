@@ -1,4 +1,3 @@
-
 <?php if(!empty($filtrosInfo)):?>
 <div class="well label-titular color-3"> Filtros aplicados </div>
 
@@ -47,16 +46,16 @@
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 
-switch(<?php echo $this->data["SubReporte"]["grafico_tipo"] ?>){
-	case 1:
-		// datos = <?php echo json_encode(array_values($cont_opciones)); ?>;
-		break;
-	case 2:
-	    datos = <?php echo json_encode($datos); ?>;
+<?php switch($this->data["SubReporte"]["grafico_tipo"]): ?>
+<?php case 1: ?>
+		datos = <?php echo json_encode(array_values($cont_opciones)); ?>;	
+		<?php break; ?>
+<?php case 2: ?>
+		datos = <?php echo json_encode($datos); ?>;
 		categoriasX = <?php echo json_encode($categoriasX); ?>;
 		categoriasY = <?php echo json_encode($categoriasY); ?>;
-		break;
-}
+		<?php break; ?>
+<?php endswitch; ?>
 
 
 var margin = {top: 20, right: 20, bottom: 80, left: 40},

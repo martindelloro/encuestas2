@@ -6,6 +6,6 @@
 <?php $this->Form->end(); ?>
 
 <script type="text/javascript">
-	$("#SubReporteVariables").css('display','inline');
+	$("#SubReporteVariables").css('display','inline-block');
 
 </script>
