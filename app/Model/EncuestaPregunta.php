@@ -5,6 +5,7 @@ class EncuestaPregunta extends AppModel{
 	var $useTable = "v_encuestas_preguntas";
 	var $displayField = "nombre";
 	
+	
 	var $belongsTo = array("Pregunta"=>array("className"=>"Pregunta","foreignKey"=>"id"));
 }
 
