@@ -27,6 +27,7 @@
 	?>
 	
 	<div class="input">
+	    <?php echo $this->Form->input("Respuesta.$indice.id",array("type"=>"hidden","value"=>"")); ?>
 		<?php echo $this->Form->input("Respuesta.$indice.pregunta_id",array("type"=>"hidden","value"=>$pregunta["id"])); ?>
 		<?php echo $this->Form->input("Respuesta.$indice.encuesta_id",array("type"=>"hidden","value"=>$encuesta_id)); ?>
 		<?php echo $this->Form->input("Respuesta.$indice.tipo_id",array("type"=>"hidden","value"=>$pregunta["tipo_id"])); ?>

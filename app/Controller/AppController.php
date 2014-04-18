@@ -33,7 +33,7 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller {
     var $helpers = array('Js' => array('Jquery'), 'Mensajes', 'Form', 'Paginator','Html');
-    var $components = array('RequestHandler', 'Session');
+    var $components = array('RequestHandler', 'Session',"Paginator");
     var $layout = "encuesta";
     
     function beforeRender(){

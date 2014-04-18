@@ -12,6 +12,7 @@ class Pregunta extends AppModel{
 	
 	
 	
+	
 }
 
 ?>

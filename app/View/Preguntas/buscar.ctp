@@ -1,25 +1,8 @@
 <?php 
-	$tipos = array("1"=>"Texto","2"=>"Select","3"=>"Multiple Select","4"=>"Checkbox","5"=>"Area de texto") ;
-	$this->Paginator->options(array("update"=>"#listarPreguntas","before"=>"$('body').modalmanager('loading')","complete"=>"$('body').modalmanager('loading');actualizarCheckbox()","evalScripts"=>true,"url"=>array("controller"=>"Preguntas","action"=>"listar","seleccionar")));
+	$this->Paginator->options(array("update"=>"#listarPreguntas","before"=>"$('body').modalmanager('loading')","complete"=>"$('body').modalmanager('loading');actualizarCheckbox()","evalScripts"=>true,"url"=>array("controller"=>"Preguntas","action"=>"buscar")));
 ?>
-
-<div class="tab-pane active" id="preguntas">
-	<div class="well buscar-pregunta">
-		<?php echo $this->Form->create("Buscar"); ?>
-		<div class="row-fluid">
-			<div class="span8">
-				<?php echo $this->Form->input("nombre",array("type"=>"text","label"=>"Nombre")); ?>
-			</div>
-			<div class="span4">
-				<?php echo $this->Form->input("tipo_id",array("type"=>"select","options"=>$tipos,"label"=>"Tipo pregunta")) ?>
-			</div>
-		</div>
-		<?php echo $this->Js->link("Buscar",array("controller"=>"preguntas","action"=>"buscar"),array("before"=>"inicia_ajax()","update"=>"#preguntasListado","data"=>"$(this).parents('form:first').serialize()","method"=>"post","dataExpression"=>true,"complete"=>"fin_ajax()")) ?>
-
-		<?php echo $this->Form->end(); ?>
-	</div>
-
-	<div class="contenedor-preguntas" id="preguntasListado">
+		
+<div class="contenedor-preguntas" id="preguntasListado">		
 		<div class="pagination">
 		<ul>
 			<?php 
@@ -37,7 +20,6 @@
 			<div class="span2 preguntas-label"><div class="label">Tipo de la pregunta</div>
 			</div><div class="span2"></div>
 		</div>
-		
 		
 		<?php foreach($preguntas as $pregunta): ?>
 		<div class="row-fluid pregunta"
@@ -59,29 +41,6 @@
 			</div>
 		</div>
 		<?php endforeach; ?>
-	</div>
-
-
-	<?php echo $this->Js->writeBuffer(); ?>
-
-<script type="text/javascript">
-	$("#preguntasListado").on("click",":checkbox",function(){
-		alert("aca el probelma");
-		idPregunta = $(this).val();
-		if($(this).prop("checked") != false){
-			nombre = $(this).parents(".pregunta").data("nombre");
-			tipo   = $(this).parents(".pregunta").data("tipo");
-			preSeleccionadas[idPregunta]  = null;
-			preSeleccionadas[idPregunta]  = {id:idPregunta,pregunta_id:idPregunta, nombre:nombre, tipo:tipo,preseleccion:true};
-			procesado = pregTemplate.render(preSeleccionadas[idPregunta]);
-			$("#preguntasPre").append(procesado);
-		}
-		else{
-			$("#preguntasPre").find("#Pregunta"+idPregunta).remove();
-			$(this).prop("checked",false);
-			delete preSeleccionadas.idPregunta;
-			}
-		});
-</script>
-
+		<?php echo $this->Js->writeBuffer(); ?>
 </div>
+		

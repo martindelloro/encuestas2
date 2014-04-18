@@ -13,13 +13,8 @@ class PreguntasController extends AppController{
 	}
 	
 	function buscar(){
-		$this->paginate = array(
-				"order"=>"Pregunta.nombre ASC",
-				'recursive' => 0
-		);
-		
-		$busqueda = array();
-				
+		$this->paginate = array("order"=>"Pregunta.nombre ASC",'recursive' => 0);
+						
 		if(empty($this->data)) {
 			$this->data = $this->Session->read("busqueda");
 		}
@@ -27,6 +22,10 @@ class PreguntasController extends AppController{
 			$this->Session->write("busqueda", $this->data);
 		}
 		
+		if(!empty($this->data["Buscar"]["nombre"])) $condiciones["Pregunta.nombre ILIKE"]="%".$this->data["Buscar"]["nombre"]."%";
+		
+		$this->Paginator->settings = array("conditions"=>$condiciones);
+		$this->set("preguntas",$this->Paginator->paginate("Pregunta"));
 	}
 	
 	function crear(){
