@@ -1,4 +1,10 @@
-<?php $anios = array("2010"=>"2010","2011"=>"2011","2012"=>"2012","2013"=>"2013","2014"=>"2014","2015"=>"2015","2016"=>"2016") ?>
+<?php 
+$anios = array("2010"=>"2010","2011"=>"2011","2012"=>"2012","2013"=>"2013","2014"=>"2014","2015"=>"2015","2016"=>"2016");
+$rango = array();
+for($i=1;$i <= 100;$i++){
+	$rango[$i] = $i;
+}
+?>
 <div id="encuesta" class="tab-pane active">
 	<div class="well titulo-general">
 		<span>Datos Encuesta</span>
@@ -12,6 +18,13 @@
 		<div class="span2">
 			<div class="label label-general">Año Encuesta</div>
 			<?php echo $this->Form->input("anio",array("type"=>"select","options"=>$anios,"label"=>false,"empty"=>true)) ?>
+		</div>
+	</div>
+	
+	<div class="row-fluid">
+		<div class="span4">
+			<div class="label label-general">Cantidad de preguntas por pagina.</div>
+			<?php echo $this->Form->input("cantXpag",array("type"=>"select","options"=>$rango,"label"=>false,"empty"=>true)); ?>
 		</div>
 	</div>
 

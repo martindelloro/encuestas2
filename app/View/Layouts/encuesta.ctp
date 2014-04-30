@@ -55,7 +55,7 @@ echo $this->Helpers->Html->script("d3.min");
                 <div class="nav-collapse">
                 <ul class="nav">
                      <?php
-                        switch ($OUsuario['rol']){
+                        switch ($OUsuario["Usuario"]['rol']){
                         	case "admin" :
                         		echo $this->element("BarraMenu/menu_grupo");
                                 echo $this->element("BarraMenu/menu_usuario");

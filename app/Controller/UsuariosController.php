@@ -42,13 +42,13 @@ class UsuariosController extends AppController {
 
     function login(){
     	$this->autoRender = false;
-        $OUsuario=$this->Usuario->findByUsuario($this->data['Usuario']['usuario']);
+        $OUsuario=$this->Usuario->find("first",array("conditions"=>array("Usuario.usuario"=>$this->data["Usuario"]["usuario"]),"recursive"=>-1));
         if($OUsuario == null || md5($this->data['Usuario']['password']) != $OUsuario['Usuario']['password']){
         	$this->Session->setFlash("ERROR-Verifique usuario/contraseña",null,null,"mensaje_sistema");
         }
         else{
         	$this->Session->setFlash("Bienvenido ".$OUsuario["Usuario"]["nombre"]." ".$OUsuario["Usuario"]["apellido"],null,null,"mensaje_sistema");
-        	$this->Session->Write($OUsuario);
+        	$this->Session->Write("OUsuario",$OUsuario);
         }
         $this->redirect(array("controller"=>"pages","action"=>"display","inicio"));
      }
