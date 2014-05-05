@@ -4,6 +4,10 @@ class EncuestasController extends AppController{
 		
 	function crear(){
 		if(!empty($this->data)){
+			$cantPreg = count($this->data["Preguntas"]);
+			if($this->data["Encuesta"]["cantXpag"] != null){
+				$this->request->data["Encuesta"]["partes"] = ceil($cantPreg / $this->data["Encuesta"]["cantXpag"]);				
+			}
 			if($this->Encuesta->saveAll($this->data)){
 				$this->Session->setFlash("Encuesta creada con exito",null,null,"mensaje_sistema");
 				$this->render("/Elements/guardo_ok");
@@ -28,12 +32,12 @@ class EncuestasController extends AppController{
 		
 		if(!empty($this->data)){
 			$this->loadModel("Usuario");
-			$OUsuario=$this->Session->read('Usuario');
-			$this->data["Usuario"]["id"]= $OUsuario["Usuario"]["id"];		
+			$OUsuario=$this->Session->read('OUsuario');
+			$this->request->data["Usuario"]["id"]= $OUsuario["Usuario"]["id"];		
 			if($this->Usuario->saveAssociated($this->data,array("deep"=>true))){
 				$inserted_ids = $this->Usuario->Respuesta->inserted_ids;
 				foreach($this->data["Respuesta"] as $index=>$respuesta){
-					$this->data["Respuesta"][$index]["id"] = $inserted_ids[$index];					
+					$this->request->data["Respuesta"][$index]["id"] = $inserted_ids[$index];					
 				}
 				$this->Session->write("EncuestaParte$parte",$this->data);
 				$offset = $parte * $cantXpag;
@@ -57,7 +61,7 @@ class EncuestasController extends AppController{
 			$this->Encuesta->hasAndBelongsToMany["Preguntas"]["limit"]  = $limit;
 			$encuesta = $this->Encuesta->find("first",array("conditions"=>array("Encuesta.id"=>$encuesta_id),"contain"=>array("Preguntas"=>array("Opcion","Tipo","Validacion"))));
 			}else{
-				$this->data = $this->Session->read("EncuestaParte$parte");
+				$this->request->data = $this->Session->read("EncuestaParte$parte");
 				$offset   = ($parte -1) * $cantXpag;
 				$limit    = $parte * $cantXpag;
 				$this->Encuesta->hasAndBelongsToMany["Preguntas"]["offset"] = $offset;

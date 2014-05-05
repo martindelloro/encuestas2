@@ -37,7 +37,7 @@ class AppController extends Controller {
     var $layout = "encuesta";
     
     function beforeRender(){
-    	$OUsuario=$this->Session->read('Usuario');
+    	$OUsuario=$this->Session->read('OUsuario');
     	$this->set("OUsuario",$OUsuario);
     }
     
