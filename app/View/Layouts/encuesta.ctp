@@ -42,6 +42,7 @@ echo $this->Helpers->Html->script("d3.min");
 <body>
     
     <?php echo $this->element("mensaje_sistema"); ?>
+    <?php echo $this->Mensajes->mostrar(); ?>
     <div class="banner">
           <?php echo $this->Helpers->Html->image("lanus.png",array("class"=>"logo")) ?>
     </div>

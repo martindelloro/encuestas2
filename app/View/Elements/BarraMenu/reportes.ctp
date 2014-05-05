@@ -3,7 +3,7 @@
 	<?php echo $this->Html->link("Generar Reportes",array("controller"=>"reportes","action"=>"generar"),array("onClick"=>"inicia_ajax()","class"=>"btn btn-inverse")); ?>
 	<br>
 	<?php echo $this->Js->link("Buscar Reportes",array("controller"=>"usuarios","action"=>"buscar_usuario"),array("before"=>"modales('modificar_usuario','modal-ficha')","complete"=>"fin_ajax('buscar_usuario')","update"=>"#buscar_usuario","class"=>"btn btn-inverse")); ?>
-	<br>
+	<br><br>
 </div>
 </li>
 
