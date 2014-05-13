@@ -66,7 +66,7 @@
 
 <script type="text/javascript">
 	$("#preguntasListado").on("click",":checkbox",function(){
-		alert("aca el probelma");
+		
 		idPregunta = $(this).val();
 		if($(this).prop("checked") != false){
 			nombre = $(this).parents(".pregunta").data("nombre");

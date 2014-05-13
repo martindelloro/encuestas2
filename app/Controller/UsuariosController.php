@@ -5,7 +5,7 @@ class UsuariosController extends AppController {
     var $userData = array();
     var $OUsuario=null;
     var $usuarios=null;
-
+    var $hasAndBelongsToMany = array('Grupo'=>array('className'=>'Grupo'));
 
        
        function  crear_usuario(){
@@ -23,6 +23,7 @@ class UsuariosController extends AppController {
             }
         }
     }
+    
     
     function datos_usuario(){
         //echo "entro aca";

@@ -1,6 +1,6 @@
 <?php
 class Usuario extends AppModel {
-		
+    
     var $validate = array(
                         'fecha_nac' => array(
                             'rule' => 'date',

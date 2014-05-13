@@ -62,6 +62,7 @@ echo $this->Helpers->Html->script("d3.min");
                                 echo $this->element("BarraMenu/menu_usuario");
                                 echo $this->element("BarraMenu/encuesta");
                                 echo $this->element("BarraMenu/reportes");
+                                echo $this->element("BarraMenu/panel_control");
                                 break;
                             case "direccion" :
                                 echo $this->element("BarraMenu/reportes");
