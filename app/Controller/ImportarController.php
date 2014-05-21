@@ -138,9 +138,9 @@ class ImportarController extends AppController{
 			$this->Pregunta->Respuesta->saveMany($respuesta,array("deep"=>true));
 	}
 	
-function crearUsuario($excel_name){
+        function crearUsuario($excel_name){
 		$this->autoRender = false;
-		//$data = new Spreadsheet_Excel_Reader(WWW_ROOT.'/excels/importar.xls', false);
+		
                 $data = new Spreadsheet_Excel_Reader('/var/www/excels/'.$excel_name, false);
 		$filas = $data->rowcount(0);
 		$columnas = $data->colcount(0);
@@ -203,7 +203,7 @@ function crearUsuario($excel_name){
 			$usuario["Usuario"]["hashActivador"] = md5($usuario["Usuario"]["usuario"]);
 			$usuario["Usuario"]["activado"] = false;
 			$usuario["Usuario"]["rol"] = "graduado";
-			$this->Pregunta->Usuario->save($usuario["Usuario"],false);
+			//$this->Pregunta->Usuario->save($usuario["Usuario"],false);
 		}
 	}
 	

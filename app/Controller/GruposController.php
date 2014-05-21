@@ -4,19 +4,20 @@ class GruposController extends AppController {
     function beforeFilter() {
         parent::beforeFilter();
         $sesion=$this->Session->Read();
-        if($sesion['Usuario']==null){
+        //debug($sesion);
+        if($sesion['OUsuario']==null){
             
             $this->Session->setFlash("Debe loguearse para acceder a esta sección.<br>"
                         . "               El administrador ha sido notificado del error",null,null,"mensaje_sistema");
             $this->redirect(array('controller'=>'pages','action'=>'display','inicio'));
         }
         
-    }
+    }  
     function crear_grupo(){
         if(!empty($this->data)){
              if($this->Grupo->save($this->data)){ //SI GUARDA
                         $this->Session->setFlash("Se ha creado un nuevo Grupo",null,null,"mensaje_sistema");
-                        //debug($this->data);
+                        $this->redirect(array('controller'=>'grupos','action'=>'crear_grupo'));
              }else{ //SI NO GUARDA AL USUARIO
                         $this->Session->setFlash("El nuevo grupo NO se ha creado",null,null,"mensaje_sistema");
              }

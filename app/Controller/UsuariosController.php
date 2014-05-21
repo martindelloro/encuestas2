@@ -5,16 +5,16 @@ class UsuariosController extends AppController {
     var $userData = array();
     var $OUsuario=null;
     var $usuarios=null;
-
+    var $hasAndBelongsToMany = array('Grupo'=>array('className'=>'Grupo'));
 
        
        function  crear_usuario(){
-        if(!empty($this->data)){
-            if($this->data['Usuario']['password']==$this->data['Usuario']['password_rep']){
-                $this->data['Usuario']['password']=md5($this->data['Usuario']['password']); //lo seteo para que lo guarde con seguridad md5
-                if($this->Usuario->save($this->data)){ //SI GUARDA
+        if(!empty($this->request->data)){
+            if($this->request->data['Usuario']['password']==$this->request->data['Usuario']['password_rep']){
+                $this->request->data['Usuario']['password']=md5($this->request->data['Usuario']['password']); //lo seteo para que lo guarde con seguridad md5
+                if($this->Usuario->save($this->request->data)){ //SI GUARDA
                         $this->Session->setFlash("El usuario se ha guardado con éxito",null,null,"mensaje_sistema");
-                        //debug($this->data);
+                        $this->redirect(array('controller'=>'pages','action'=>'display','inicio'));
                     }else{ //SI NO GUARDA AL USUARIO
                         $this->Session->setFlash("El usuario NO se ha guardado",null,null,"mensaje_sistema");
                     }
@@ -23,6 +23,7 @@ class UsuariosController extends AppController {
             }
         }
     }
+    
     
     function datos_usuario(){
         //echo "entro aca";
