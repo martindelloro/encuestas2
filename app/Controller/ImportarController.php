@@ -203,7 +203,8 @@ class ImportarController extends AppController{
 			$usuario["Usuario"]["hashActivador"] = md5($usuario["Usuario"]["usuario"]);
 			$usuario["Usuario"]["activado"] = false;
 			$usuario["Usuario"]["rol"] = "graduado";
-			//$this->Pregunta->Usuario->save($usuario["Usuario"],false);
+			$this->Usuarios->saveAll($this->data);
+                        $this->Pregunta->Usuario->save($usuario["Usuario"],false);
 		}
 	}
 	

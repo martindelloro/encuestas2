@@ -36,7 +36,7 @@ echo $this->Helpers->Html->script("d3.min");
 
 ?>
 <link href="/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<!-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>-->
 
 </head>
 <body>

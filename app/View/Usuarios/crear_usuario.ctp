@@ -1,12 +1,10 @@
 <?php 
 	$roles=array("admin"=>"Administrador", "graduado"=>"Graduado", "direccion"=>"Secretarías");
-	$provincias=array("Ciudad de Buenos Aires","Buenos Aires","Catamarca","Chaco","Chubut","Córdoba","Corrientes","Entre Rios","Formosa","Jujuy","La Pampa","La Rioja","Mendoza","Misiones","Neuquén","Río Negro","Salta","San Juan","San Luis","Santa Cruz","Santa Fe","Santiago del Estero","Tierra del Fuego","Tucumán");
-	$departamentos=array("Seleccione una Provincia");
-	$localidades=array("Seleccione un Departamento")
+	
 ?>
 
 <div id="crearUsuario">
-	<?php echo $this->Form->create("Usuario",array("action"=>"crear_usuario")) ?>
+	<?php echo $this->Form->create("CrearUsuario",array("action"=>"crear_usuario")) ?>
    <div class="well titulo-general">
 		<span>Crear Nuevo Usuario</span>
 	</div>
@@ -46,13 +44,13 @@
 
 	<div class="row-fluid">
 		<div class="span3">
-			<?php echo $this->Form->input("cod_prov",array("type"=>'select',"options"=>$provincias,"label"=>"Provincia")); ?>
+			<?php echo $this->Form->input("cod_prov",array("type"=>'select',"options"=>$provincias,"label"=>"Provincia","empty"=>true)); ?>
 		</div>
 		<div class="span3">
-			<?php echo $this->Form->input("cod_depto",array("type"=>'select',"options"=>$departamentos,"label"=>"Departamento")); ?>
+			<?php echo $this->Form->input("cod_depto",array("type"=>'select',"options"=>$departamentos,"label"=>"Departamento","empty"=>true)); ?>
 		</div>
 		<div class="span3">
-			<?php echo $this->Form->input("cod_loc",array("type"=>'select',"options"=>$localidades,"label"=>"Localidad")); ?>
+			<?php echo $this->Form->input("cod_loc",array("type"=>'select',"options"=>$localidades,"label"=>"Localidad","empty"=>true)); ?>
 		</div>
 		<div class="span3">
 			<?php echo $this->Form->input("calle",array("type"=>'text',"label"=>"Calle")); ?>
@@ -140,5 +138,33 @@
 
 <?php echo $this->Js->writeBuffer() ?>
 <?php echo $this->Form->end() ?>
-
+<?php //echo $this->Js->observeField("UsuarioCodProv",array("update"=>"UsuarioCodDepto","frequency"=>'1',"url"=>array('controller'=>'usuarios','action'=>'updateDepartamentos'),"before"=>"ebuscando()","complete"=>"fbuscando()"));
+      //echo $this->Js->observeField("UsuarioCodDepto",array("update"=>"UsuarioCodLoc","frequency"=>'1',"url"=>array('controller'=>'usuarios','action'=>'updateLocalidades'),"before"=>"ebuscando()","complete"=>"fbuscando()")); 
+            $js=$this->Js;
+            /*echo $js->get('#CrearUsuarioCodProv')->event('keyup', $js->request(array('controller'=>'usuarios','action'=>'updateDepartamentos'),array('update'=>'#CrearUsuarioCodDepto','dataExpression'=>true,'data'=>
+            $js->serializeForm(array('isForm' => false, 'inline' => true)) ))); */
+        echo $this->Js->get('#CrearUsuarioCodProv')->event('change',
+              $this->Js->request(
+                    array('controller'=>'usuarios', 'action'=>'updateDepartamentos'),
+                    array('update'=>'#CrearUsuarioCodDepto',
+                        'frequency'=>'1',
+                        'async'=>true,
+                        'dataExpression'=>true,
+                        'method'=>'post',
+                        'data'=>$js->serializeForm(array('isForm' => false, 'inline' => true))
+                  
+              )));
+        echo $this->Js->get('#CrearUsuarioCodDepto')->event('change',
+              $this->Js->request(
+                    array('controller'=>'usuarios', 'action'=>'updateLocalidades'),
+                    array('update'=>'#CrearUsuarioCodLoc',
+                        'frequency'=>'1',
+                        'async'=>true,
+                        'dataExpression'=>true,
+                        'method'=>'post',
+                        'data'=>$js->serializeForm(array('isForm' => false, 'inline' => true))
+                  
+              )));
+      
+      ?>
 </div>

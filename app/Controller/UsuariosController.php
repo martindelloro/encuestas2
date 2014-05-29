@@ -1,14 +1,60 @@
 <?php 
 
 class UsuariosController extends AppController {
-    var $uses = array("Usuario");
+    var $uses = array("Usuario","Provincia","Localidad","Departamento");
+    var $helpers= array('Js'=>array('Jquery'));
     var $userData = array();
     var $OUsuario=null;
     var $usuarios=null;
     var $hasAndBelongsToMany = array('Grupo'=>array('className'=>'Grupo'));
 
-       
+       function updateDepartamentos(){
+        if(!empty($this->request->data["CrearUsuario"]["cod_prov"])){
+        $cod_prov=$this->request->data['CrearUsuario']['cod_prov'];
+        debug($this->Departamento->find('list',array('order'=>'nom_depto ASC', 'conditions'=>"Departamento.cod_prov = '$cod_prov'")));
+        $datos=$this->Departamento->find('list',array('order'=>'nom_depto ASC', 'conditions'=>"Departamento.cod_prov = '$cod_prov'"));
+        debug($datos);
+        }
+        else{
+                debug('se fue');  
+                        $datos = null; 	
+        }
+        $this->set('data',$datos);
+        $this->render("/Elements/update_select","ajax");
+    }
+    
+    function updateLocalidades(){
+        if(!empty($this->data["CrearUsuario"]["cod_depto"])){        
+	$cod_depto=$this->data['CrearUsuario']['cod_depto'];
+        $datos=$this->Localidad->find('list',array('order'=>'nom_loc ASC', 'conditions'=>"Localidad.cod_depto= '$cod_depto'"));
+	}
+	else{
+	$datos = null;	
+	}
+        $this->set('data',$datos);
+        $this->render("/Elements/update_select","ajax");
+    }
        function  crear_usuario(){
+           $provincias=$this->Provincia->find('list');
+                $this->set("provincias", $provincias);
+            $keys = array_keys($provincias);
+
+            $departamentos=$this->Provincia->Departamento->find('list',array(
+                'conditions'=>array(
+                    'Departamento.cod_prov'=>$keys[0]
+                    )
+                )
+            );
+            $this->set("departamentos",$departamentos);
+            $keys = array_keys($departamentos);
+
+            $localidades= $this->Provincia->Departamento->Localidad->find('list',array(
+                'conditions'=>array(
+                    'Localidad.cod_depto'=>$keys[0]
+                    )
+                )
+            );
+            $this->set("localidades",$localidades); 
         if(!empty($this->request->data)){
             if($this->request->data['Usuario']['password']==$this->request->data['Usuario']['password_rep']){
                 $this->request->data['Usuario']['password']=md5($this->request->data['Usuario']['password']); //lo seteo para que lo guarde con seguridad md5
