@@ -6,12 +6,15 @@ class Encuesta extends AppModel{
 	var $displayField = "nombreAnio";
 	var $order = "nombreAnio ASC";
 	
-	public $belongsTo = array("Usuario"=>array("className"=>"Usuario","foreignKey"=>"usuario_id"));
+	public $belongsTo = array("Usuario"=>array("className"=>"Usuario","foreignKey"=>"usuario_id"),
+							  "Categoria"=>array("className"=>"Categoria","foreignKey"=>"categoria_id","conditions"=>array("Categoria.tipo"=>"E")),
+							  "Subcategoria"=>array("className"=>"Subcategoria","foreignKey"=>"subcategoria_id","conditions"=>array("Subcategoria.tipo"=>"E")));
+	
 	public $hasMany   = array("Reporte"=>array("className"=>"Reporte","foreignKey"=>"encuesta_id"),
-						   "EncuestaPregunta"=>array("className"=>"EncuestaPregunta","foreignKey"=>"encuesta_id"));
+						  	  "EncuestaPregunta"=>array("className"=>"EncuestaPregunta","foreignKey"=>"encuesta_id"));
 	
 	public $hasAndBelongsToMany = array("Preguntas"=>array("className"=>"Pregunta","joinTable"=>"encuestas_preguntas","foreignKey"=>"encuesta_id","associationForeignKey"=>"pregunta_id"),
-									 "Grupos"=>array("className"=>"Grupo","joinTable"=>"grupos_usuarios","foreignKey"=>"encuesta_id","associationForeignKey"=>"grupo_id"));
+								        "Grupos"=>array("className"=>"Grupo","joinTable"=>"grupos_usuarios","foreignKey"=>"encuesta_id","associationForeignKey"=>"grupo_id"));
 	
 }
 
