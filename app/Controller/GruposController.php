@@ -1,6 +1,7 @@
 <?php 
 
 class GruposController extends AppController {
+    
     function beforeFilter() {
         parent::beforeFilter();
         $sesion=$this->Session->Read();

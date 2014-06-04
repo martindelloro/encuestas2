@@ -2,7 +2,18 @@
 
 class ImportarController extends AppController{
 	var $uses = array("Pregunta");
-	
+	function beforeFilter() {
+            parent::beforeFilter();
+            $sesion=$this->Session->Read();
+            //debug($sesion);
+            if($sesion['OUsuario']==null){
+
+                $this->Session->setFlash("Debe loguearse para acceder a esta sección.<br>"
+                            . "               El administrador ha sido notificado del error",null,null,"mensaje_sistema");
+                $this->redirect(array('controller'=>'pages','action'=>'display','inicio'));
+            }
+
+        }
 	private function buscarOpciones(){
 		
 	}
@@ -205,6 +216,83 @@ class ImportarController extends AppController{
 			$usuario["Usuario"]["rol"] = "graduado";
 			$this->Usuarios->saveAll($this->data);
                         $this->Pregunta->Usuario->save($usuario["Usuario"],false);
+		}
+	}
+        
+        function importarUsuarios($excel_name,$grupos){
+		$this->autoRender = false;
+		
+                
+                $data = new Spreadsheet_Excel_Reader('/var/www/excels/'.$excel_name, false);
+		$filas = $data->rowcount(0);
+		$columnas = $data->colcount(0);
+		
+		for($i = 2; $i <= $filas; $i++){
+			$usuario["Usuario"]["id"] = "";
+			for($j = 2; $j <= 12; $j++){
+				switch($j){
+					case 2:
+						$usuario["Usuario"]["nombre"] = utf8_encode($data->val($i,$j));
+						break;
+                                        case 3:
+						$usuario["Usuario"]["apellido"] = utf8_encode($data->val($i,$j));		
+						break;
+					case 4:
+						$usuario["Usuario"]["sexo"] = strtolower($data->val($i,$j));		
+						break;
+					case 5:
+						$usuario["Usuario"]["dni"] =  preg_replace( '/[^0-9]/', '', $data->val($i,$j));
+						break;
+					case 6:
+						$fecha_nac = $data->val($i,$j);
+						if(substr_count($fecha_nac,"/") == 2){
+							$fecha_separada = explode("/",$fecha_nac);
+							if($fecha_separada[1] > 12){
+								$fecha_nac = $fecha_separada[1]."/".$fecha_separada[0]."/".$fecha_separada["2"];
+							}
+							$usuario["Usuario"]["fecha_nac"] = $fecha_nac;
+						}else{
+							
+						}
+						break;
+					case 7:
+						$usuario["Usuario"]["estado_civil"] = $data->val($i,$j);
+						break;
+					case 8:
+						$usuario["Usuario"]["calle"] = utf8_encode($data->val($i,$j));
+					    break;
+					case 9:
+						$usuario["Usuario"]["localidad"] = strtolower(utf8_encode($data->val($i,$j)));
+						break;
+					case 10:
+						$usuario["Usuario"]["provincia"] = strtolower(utf8_encode($data->val($i,$j)));
+						break;
+					case 11:
+						$usuario["Usuario"]["tel_fijo"] = $data->val($i,$j);
+						break;
+					case 12:        
+						$usuario["Usuario"]["celular"] = $data->val($i,$j);
+						break;
+					case 13:
+						$usuario["Usuario"]["email_1"] = strtolower($data->val($i,$j));
+						break;
+				}
+						
+			}
+			if(filter_var($usuario["Usuario"]["email_1"],FILTER_VALIDATE_EMAIL)){
+				$usuario["Usuario"]["usuario"] = $usuario["Usuario"]["email_1"];
+			}
+			else{
+				$usuario["Usuario"]["usuario"] = str_replace(" ","",$usuario["Usuario"]["nombre"]);
+			}
+			$usuario["Usuario"]["hashActivador"] = md5($usuario["Usuario"]["usuario"]);
+			$usuario["Usuario"]["activado"] = false;
+			$usuario["Usuario"]["rol"] = "graduado";
+                        //saveAll(array('deep'=>true))
+                        //
+                        //
+			//$this->Usuarios->saveAll($this->data);
+                        debug($this->data);
 		}
 	}
 	

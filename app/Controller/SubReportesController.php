@@ -2,7 +2,18 @@
 
 class SubReportesController extends AppController{
 	var $uses = array("SubReporte","Respuesta","Opcion");
-	
+	function beforeFilter() {
+            parent::beforeFilter();
+            $sesion=$this->Session->Read();
+            //debug($sesion);
+            if($sesion['OUsuario']==null){
+
+                $this->Session->setFlash("Debe loguearse para acceder a esta sección.<br>"
+                            . "               El administrador ha sido notificado del error",null,null,"mensaje_sistema");
+                $this->redirect(array('controller'=>'pages','action'=>'display','inicio'));
+            }
+
+        }
 
 	function crear(){
 		$encuesta_id = $this->data["Reporte"]["encuesta_id"];

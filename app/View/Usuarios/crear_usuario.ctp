@@ -4,7 +4,7 @@
 ?>
 
 <div id="crearUsuario">
-	<?php echo $this->Form->create("CrearUsuario",array("action"=>"crear_usuario")) ?>
+	<?php echo $this->Form->create("Usuario",array("action"=>"crear_usuario")) ?>
    <div class="well titulo-general">
 		<span>Crear Nuevo Usuario</span>
 	</div>
@@ -143,28 +143,32 @@
             $js=$this->Js;
             /*echo $js->get('#CrearUsuarioCodProv')->event('keyup', $js->request(array('controller'=>'usuarios','action'=>'updateDepartamentos'),array('update'=>'#CrearUsuarioCodDepto','dataExpression'=>true,'data'=>
             $js->serializeForm(array('isForm' => false, 'inline' => true)) ))); */
-        echo $this->Js->get('#CrearUsuarioCodProv')->event('change',
+        echo $this->Js->get('#UsuarioCodProv')->event('change',
               $this->Js->request(
                     array('controller'=>'usuarios', 'action'=>'updateDepartamentos'),
-                    array('update'=>'#CrearUsuarioCodDepto',
+                    array('update'=>'#UsuarioCodDepto',
                         'frequency'=>'1',
                         'async'=>true,
                         'dataExpression'=>true,
+                        'before'=>'$("body").modalmanager("loading")',
+                        'complete'=>'$("body").modalmanager("loading")',
                         'method'=>'post',
-                        'data'=>$js->serializeForm(array('isForm' => false, 'inline' => true))
-                  
-              )));
-        echo $this->Js->get('#CrearUsuarioCodDepto')->event('change',
+                        'data'=>$js->serializeForm(array('isForm' => false, 'inline' => true
+                            ))
+            )));
+        
+        echo $this->Js->get('#UsuarioCodDepto')->event('change',
               $this->Js->request(
                     array('controller'=>'usuarios', 'action'=>'updateLocalidades'),
-                    array('update'=>'#CrearUsuarioCodLoc',
+                    array('update'=>'#UsuarioCodLoc',
                         'frequency'=>'1',
                         'async'=>true,
                         'dataExpression'=>true,
+                        'before'=>'$("body").modalmanager("loading")',
+                        'complete'=>'$("body").modalmanager("loading")',
                         'method'=>'post',
                         'data'=>$js->serializeForm(array('isForm' => false, 'inline' => true))
-                  
-              )));
+          )));
       
       ?>
 </div>

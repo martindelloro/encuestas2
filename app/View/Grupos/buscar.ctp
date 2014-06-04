@@ -4,10 +4,12 @@
                                        'action'=>'buscar')));
      
 ?>
-<div class="row-fluid centro">
-	<div class="span10 well paginador"><?php echo $this->Paginator->counter(array('format' => __('Página %page% de %pages%, mostrando %current% resultados de %count% en total.', true))); ?></div>
 
-    <div class="pagination span2">
+<div class="row-fluid centro">
+    <div class="paginador span10">
+		<?php echo $this->Paginator->counter('Pagina {:page} de {:pages}, mostrando {:current} resultados de {:count} totales, empezando en el resultado {:start}, terminando en {:end}'); ?>
+</div>
+    <div class="pagination">
             <ul>
             <?php 
                 echo $this->Paginator->prev("<span><i class='icon-arrow-left'></i> </span>",array("tag"=>"li","escape"=>false));
@@ -39,9 +41,11 @@
     <?php endforeach; ?>
     
 <div class="row-fluid centro">
-	<div class="span10 well paginador"><?php echo $this->Paginator->counter(array('format' => __('Página %page% de %pages%, mostrando %current% resultados de %count% en total.', true))); ?></div>
+	<div class="paginador span10">
+		<?php echo $this->Paginator->counter('Pagina {:page} de {:pages}, mostrando {:current} resultados de {:count} totales, empezando en el resultado {:start}, terminando en {:end}'); ?>
+</div>
 
-    <div class="pagination span2">
+    <div class="pagination">
             <ul>
             <?php 
                 echo $this->Paginator->prev("<span><i class='icon-arrow-left'></i> </span>",array("tag"=>"li","escape"=>false));

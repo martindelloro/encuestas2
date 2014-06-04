@@ -1,7 +1,18 @@
 <?php
 
 class PreguntasController extends AppController{
-	
+	function beforeFilter() {
+            parent::beforeFilter();
+            $sesion=$this->Session->Read();
+            //debug($sesion);
+            if($sesion['OUsuario']==null){
+
+                $this->Session->setFlash("Debe loguearse para acceder a esta sección.<br>"
+                            . "               El administrador ha sido notificado del error",null,null,"mensaje_sistema");
+                $this->redirect(array('controller'=>'pages','action'=>'display','inicio'));
+            }
+
+        }
 	function listar($modo = null){
 		$this->paginate = array(
 				"order"=>"Pregunta.nombre ASC",
