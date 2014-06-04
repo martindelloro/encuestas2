@@ -8,11 +8,9 @@ class MyFilesController extends AppController {
         $this->set('grupos',$grupos);
         
         //debug($this->Grupo->find('all'));
-        if (!empty($this->data) 
-                && is_uploaded_file($this->data['MyFile']['File']['tmp_name'])) {
-           
+        if (!empty($this->data) && is_uploaded_file($this->data['MyFile']['File']['tmp_name'])) {
             $fileData = fread(fopen($this->data['MyFile']['File']['tmp_name'], "r"), 
-                                     $this->data['MyFile']['File']['size']); 
+                                    $this->data['MyFile']['File']['size']); 
             
             $puntero = fopen('/var/www/excels/'.$this->data['MyFile']['File']['name'],'x+');
             $excel = fread(fopen($this->data['MyFile']['File']['tmp_name'], "r"),
@@ -30,6 +28,7 @@ class MyFilesController extends AppController {
             
         }
     }
+    
     function cantidad_usuarios_grupo(){
         $id_grupo = $this->request->data["Importar"]["grupos"];
         $this->layout='ajax';

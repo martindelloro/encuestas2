@@ -72,7 +72,10 @@ class ImportarController extends AppController{
 		$filas = $data->rowcount(0);
 		$columnas = $data->colcount(0);
 		$contResp = 0;
-		for($fila = 251; $fila <= 300; $fila++){
+		$ciclos = ceil($filas / 100);
+		for($i=1; $i < $ciclos; $i++ ){
+			$fin = $i * 100;
+		for($fila = 2; $fila <= $fin ; $fila++){
 			for($col = 4; $col <= $columnas; $col++){
 				switch($col){
 					case 4:
@@ -135,13 +138,13 @@ class ImportarController extends AppController{
 				} // FIN FOR COLUMNA
 				
 			} // FIN FOR FILA
+		} // FIN FOR SOBRE CARGA
 			$this->Pregunta->Respuesta->saveMany($respuesta,array("deep"=>true));
 	}
 	
         function crearUsuario($excel_name){
 		$this->autoRender = false;
-		
-                $data = new Spreadsheet_Excel_Reader('/var/www/excels/'.$excel_name, false);
+		$data = new Spreadsheet_Excel_Reader('/var/www/excels/'.$excel_name, false);
 		$filas = $data->rowcount(0);
 		$columnas = $data->colcount(0);
 		
@@ -194,6 +197,7 @@ class ImportarController extends AppController{
 				}
 						
 			}
+			
 			if(filter_var($usuario["Usuario"]["email_1"],FILTER_VALIDATE_EMAIL)){
 				$usuario["Usuario"]["usuario"] = $usuario["Usuario"]["email_1"];
 			}
@@ -203,6 +207,21 @@ class ImportarController extends AppController{
 			$usuario["Usuario"]["hashActivador"] = md5($usuario["Usuario"]["usuario"]);
 			$usuario["Usuario"]["activado"] = false;
 			$usuario["Usuario"]["rol"] = "graduado";
+			$this->Importar->set($usuario);
+			
+		    $repetidos = array();
+			if($this->Importar->validates(array("fieldList"=>array("usuario")))){
+				if($this->Pregunta->Usuario->save()){
+					
+				}else{
+					$repetidos[] = $usuario["nombre"];
+				}
+			}else{
+				
+			}
+			
+			
+			
 			//$this->Pregunta->Usuario->save($usuario["Usuario"],false);
 		}
 	}
