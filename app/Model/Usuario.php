@@ -25,7 +25,9 @@ class Usuario extends AppModel {
                           )
 );
     
-    var $hasMany = array("Respuesta"=>array("className"=>"Respuesta","foreignKey"=>"usuario_id"));
-        
+    var $hasMany = array("Respuesta"=>array("className"=>"Respuesta","foreignKey"=>"usuario_id")
+                         ,
+                         "Grupo"=>array("className"=>"Grupo","foreignKey"=>"id"));
+   
 }
 ?>
