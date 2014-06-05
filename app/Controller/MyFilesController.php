@@ -18,27 +18,29 @@ class MyFilesController extends AppController {
         $grupos=$this->Grupo->find('list', array('fields'=>'Grupo.nombre'));
         $this->set('grupos',$grupos);
         
+        var_dump($this->data);
         //debug($this->Grupo->find('all'));
         if (!empty($this->data) 
-                && is_uploaded_file($this->data['MyFile']['File']['tmp_name'])) {
+                && is_uploaded_file($this->data['MyFile']['file']['tmp_name'])) {
            
-            $fileData = fread(fopen($this->data['MyFile']['File']['tmp_name'], "r"), 
-                                     $this->data['MyFile']['File']['size']); 
+            $fileData = fread(fopen($this->data['MyFile']['file']['tmp_name'], "r"), 
+                                     $this->data['MyFile']['file']['size']); 
             
-            $puntero = fopen('/var/www/encuestas2/excels/'.$this->data['MyFile']['File']['name'],'x+');
-            $excel = fread(fopen($this->data['MyFile']['File']['tmp_name'], "r"),
-                                    $this->data['MyFile']['File']['size']);
             
-            fwrite($puntero,$excel,$this->data["MyFile"]["File"]["size"]);
+            $puntero2 = fopen('/var/www/encuestas2/app/webroot/excels/'.$this->data['MyFile']['file']['name'],'w+');
+            chmod('/var/www/encuestas2/app/webroot/excels/'.$this->data['MyFile']['file']['name'], 0775);
+            fwrite($puntero2,$fileData,$this->data["MyFile"]["file"]["size"]);
             
-            fclose($puntero); 
-            
-            if(fclose($puntero)==TRUE){ //Si cerró bien el archivo comienzo con la creación de usuarios
-                $this->requestAction('/importar/importarUsuarios/'.$this->request->data['MyFile']['File']['name'],$grupos);
+            //fclose($puntero);
+            if(fclose($puntero2)==TRUE){ //Si cerró bien el archivo comienzo con la creación de usuarios
+                
+                $this->requestAction('/importar/importarUsuarios/'.$this->request->data['MyFile']['file']['name'],$this->request->data['Importar']['grupos']);
                 //ASOCIAR LOS USUARIOS AL GRUPO
-                //debug($this->request->data);
+                var_dump($this->data);
                 $this->Session->setFlash("Se han cargado todos los usuarios",null,null,"mensaje_sistema");
                 //$this->redirect(array('controller'=>'pages','action'=>'display','inicio'));
+            }else{
+                
             }
             
         }

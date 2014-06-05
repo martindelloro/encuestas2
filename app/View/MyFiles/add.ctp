@@ -1,11 +1,11 @@
 <div class="well titulo-general" id="importarUsuarios">
 	<span>Importar Usuarios</span>
 </div>
-<?php echo $this->Form->create("Importar") ?>
+<?php echo $this->Form->create("Importar",array("type"=>"file","url"=>array("controller"=>"MyFiles","action"=>"add"))) ?>
 <div class="well contenedor-well fondo-1">
  
     <div class="span7">
-		<?php echo $this->Form->input("grupos",array("type"=>'select',"options"=>$grupos,"label"=>"Seleccione el Grupo:","empty"=>true, "id"=>'select_grupo')); 
+		<?php echo $this->Form->input("Importar.grupos",array("type"=>'select',"options"=>$grupos,"label"=>"Seleccione el Grupo:","empty"=>true, "id"=>'select_grupo')); 
                 ?>
                 
 	</div>
@@ -15,8 +15,8 @@
 <div id="div_cantidades"></div>
  <div class="well contenedor-well fondo-1" id="paso_2">   
     <div class="row-fluid">
-    <div class="span8"><?php echo $this->form->create('MyFile', array('action' => 'add', 'type' => 'file')); ?></div>
-    <div class="span8"> <?php echo $this->form->file('File'); ?>
+    <div class="span8"><?php // echo $this->form->create('MyFile', array('action' => 'add', 'type' => 'file')); ?></div>
+    <div class="span8"> <?php echo $this->form->input("MyFile.file",array("type"=>"file")) ?>
     <div class="span8"> <?php echo $this->form->submit('Upload'); ?>
     <div class="span8"><?php echo $this->form->end(); ?>   </div>
  </div>

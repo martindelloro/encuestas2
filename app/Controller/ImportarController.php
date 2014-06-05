@@ -223,7 +223,7 @@ class ImportarController extends AppController{
 		$this->autoRender = false;
 		
                 
-                $data = new Spreadsheet_Excel_Reader('/var/www/excels/'.$excel_name, false);
+                $data = new Spreadsheet_Excel_Reader('/var/www/encuestas2/excels/'.$excel_name, false);
 		$filas = $data->rowcount(0);
 		$columnas = $data->colcount(0);
 		
@@ -292,7 +292,7 @@ class ImportarController extends AppController{
                         //
                         //
 			//$this->Usuarios->saveAll($this->data);
-                        debug($this->data);
+                        
 		}
 	}
 	
