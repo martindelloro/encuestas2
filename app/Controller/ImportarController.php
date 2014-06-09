@@ -146,13 +146,13 @@ class ImportarController extends AppController{
 				} // FIN FOR COLUMNA
 				
 			} // FIN FOR FILA
-	
 			$this->Pregunta->Respuesta->saveMany($respuesta,array("deep"=>true));
 	}
 	
         function crearUsuario($excel_name){
 		$this->autoRender = false;
-		$data = new Spreadsheet_Excel_Reader('/var/www/excels/'.$excel_name, false);
+		
+                $data = new Spreadsheet_Excel_Reader('/var/www/excels/'.$excel_name, false);
 		$filas = $data->rowcount(0);
 		$columnas = $data->colcount(0);
 		
