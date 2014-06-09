@@ -3,7 +3,7 @@ class Usuario extends AppModel {
     
     var $validate = array(
                         'fecha_nac' => array(
-                            'rule' => 'date',
+                            'rule' => array("date","dmy"),
                             'message' => 'Ingrese una fecha válida usando el formato AAAA-MM-AAAA.',
                             'allowEmpty' => true
                           ),
@@ -23,11 +23,11 @@ class Usuario extends AppModel {
                                  'allowEmpty' => false
                                 
                           )
-);
+	);
     
-    var $hasMany = array("Respuesta"=>array("className"=>"Respuesta","foreignKey"=>"usuario_id")
-                         ,
-                         "Grupo"=>array("className"=>"Grupo","foreignKey"=>"id"));
+    var $hasAndBelongsToMany = array("Grupos"=>array("joinTable"=>"grupos_usuarios","class"=>"Grupo","foreignKey"=>"usuario_id","associationForeignKey"=>"grupo_id"));
+    
+    var $hasMany = array("Respuesta"=>array("className"=>"Respuesta","foreignKey"=>"usuario_id"));
    
 }
 ?>
