@@ -224,7 +224,6 @@ class ImportarController extends AppController{
 			$data = new Spreadsheet_Excel_Reader('/var/www/encuestas2/app/webroot/excels/'.$excel_name, false);
 			$filas = $data->rowcount(0);
 			$columnas = $data->colcount(0);
-		
 			for($i = 2; $i <= $filas; $i++){
 				$usuario["Usuario"]["id"] = "";
 				for($j = 2; $j <= 12; $j++){
@@ -263,7 +262,7 @@ class ImportarController extends AppController{
 							$usuario["Usuario"]["localidad"] = utf8_encode($data->val($i,$j));
 							break;
 						case 9:
-							$usuario["Usuario"]["provincia"] = strtolower(utf8_decode($data->val($i,$j)));
+							$usuario["Usuario"]["provincia"] = utf8_encode(strtolower($data->val($i,$j)));
 							break;
 						case 10:
 							$usuario["Usuario"]["tel_fijo"] = $data->val($i,$j);
@@ -280,9 +279,11 @@ class ImportarController extends AppController{
 					$usuario["Usuario"]["usuario"] = $usuario["Usuario"]["email_1"];
 				}
 				else{
+					$resultado["ErrorEmail"][] = $usuario["Usuario"]["nombre"];
 					$usuario["Usuario"]["usuario"] = str_replace(" ","",$usuario["Usuario"]["nombre"]);
 				}
-				$usuario["Usuario"]["hashActivador"] = md5($usuario["Usuario"]["usuario"]);
+				
+				$usuario["Usuario"]["hashactivador"] = md5($usuario["Usuario"]["usuario"]);
 				$usuario["Usuario"]["activado"] = true;
 				$usuario["Usuario"]["rol"] = "graduado";
 									
@@ -292,39 +293,60 @@ class ImportarController extends AppController{
 						$usuario["Grupos"]["Grupos"][] = $grupo_id;
 					}
 					if($this->Usuario->save($usuario,array("deep"=>true))){
-						$resultado["Creados"][$this->Usuario->getInsertId()] = $usuario["Usuario"]["nombre"]." ".$usuario["Usuario"]["apellido"];
+						$usuario_id = $this->Usuario->getInsertId();
+						$usuario["Usuario"]["id"] = $usuario_id;
+						$resultado["Creados"][$usuario_id] = $usuario;
+						$resultado["AgregadosGrupo"][] = $usuario;
 					}else{
-						$resultado["ErrorDB"][] = $usuario["Usuario"]["usuario"];
+						$resultado["ErrorDB"][] = $usuario;
 					}
 				}else{
-					$resultado["ErrorSave"][$usuario["Usuario"]["usuario"]] = $this->Usuario->validationErrors;
-					
+					$errores = $this->Usuario->validationErrors;
+					$errorMensaje = array();
+					foreach($errores as $field => $error){
+						if($field == "usuario"){
+							foreach($error as $rule=>$message){
+								if($rule == "isUnique"){
+								   $tmp = $this->Usuario->find("first",array("conditions"=>array("Usuario.usuario"=>$usuario["Usuario"]["usuario"]),"recursive"=>-1));
+								   $usuario_id = $tmp["Usuario"]["id"];
+								   $resultado["Repetidos"][$usuario_id] = $tmp ;
+								}else{
+									$errorMensaje[] = $message;
+								}
+							}							
+						}else{
+							foreach($error as $message){
+								$errorMensaje[] = $message;
+							}
+						}
+					}
+					if(!empty($errorMensaje)) $resultado["ErrorSave"][$usuario["Usuario"]["usuario"]] = $errorMensaje;
 				} // END IF VALIDATES
-				
+				$usuario = null;
 		} // END FOR FILAS
 		
-		pr($resultado);
+		
 		
 		if(!empty($resultado["Repetidos"])){
-			$usuarios_id = array();
-			foreach($resultado["Repetidos"] as $usuario){
-				$tmp	      = $this->Pregunta->Usuario->find("first",array("conditions"=>array("Usuario.usuario"=>$usuario)));
-				$usuario_id   = $tmp["Usuario"]["id"];
-				$usuarios_id += array($usuario_id);
-			}
-			$existenGrupo = $this->Pregunta->Usuario->Grupos->Grupo->find("all",array("conditions"=>array("Grupo.usuario_id"=>$usuarios_id,"Grupo.grupo_id"=>$grupo_id)));
-			debug($existenGrupo);
-			if($existenGrupo != null){
-				foreach($existenGrupo as $existe){
-					
-					
+			foreach($resultado["Repetidos"] as $n => $usuario){
+				$usuario_id = $usuario["Usuario"]["id"];
+				$usuario["GruposUsuarios"]["id"] = "";
+				$usuario["GruposUsuarios"]["usuario_id"] = $usuario_id; 
+				$usuario["GruposUsuarios"]["grupo_id"] = $grupo_id;
+				$this->Usuario->GruposUsuarios->set($usuario);
+				if($this->Usuario->GruposUsuarios->validates()){
+					if($this->Usuario->GruposUsuarios->save($usuario)){
+							$resultado["AgregadosGrupo"][] = $resultado["Repetidos"][$usuario_id];
+					}
+					else{
+						$resultado["GrupoErrorDB"][] = $usuario;
+					}
+				}else{
+					$resultado["ExistenEnGrupo"][] = $resultado["Repetidos"][$usuario_id];
 				}
-				
 			}
-		//	$grupos["Grupo"]["Grupo"] 
 		} // FIN IF RESULTADOS REPETIDOS
-		
-		return $resultado;
+	    return $resultado;
 	} // FIN FUNCTION IMPORTAR USUARIOS
 	
 }

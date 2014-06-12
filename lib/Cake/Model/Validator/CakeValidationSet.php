@@ -136,7 +136,7 @@ class CakeValidationSet implements ArrayAccess, IteratorAggregate, Countable {
 			}
 
 			if ($checkRequired || !$rule->isValid()) {
-				$errors[] = $this->_processValidationResponse($name, $rule);
+				$errors[$rule->rule] = $this->_processValidationResponse($name, $rule);
 				if ($rule->isLast()) {
 					break;
 				}

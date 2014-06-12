@@ -251,14 +251,14 @@ class ModelValidator implements ArrayAccess, IteratorAggregate, Countable {
 		$exists = $model->exists();
 		$methods = $this->getMethods();
 		$fields = $this->_validationList($fieldList);
-
+	
 		foreach ($fields as $field) {
 			$field->setMethods($methods);
 			$field->setValidationDomain($model->validationDomain);
 			$data = isset($model->data[$model->alias]) ? $model->data[$model->alias] : array();
 			$errors = $field->validate($data, $exists);
-			foreach ($errors as $error) {
-				$this->invalidate($field->field, $error);
+			foreach ($errors as $rule => $error) {
+				$this->invalidate($field->field, $rule,$error);
 			}
 		}
 
@@ -274,8 +274,8 @@ class ModelValidator implements ArrayAccess, IteratorAggregate, Countable {
  * @param string $message Validation message explaining why the rule failed, defaults to true.
  * @return void
  */
-	public function invalidate($field, $message = true) {
-		$this->getModel()->validationErrors[$field][] = $message;
+	public function invalidate($field, $rule = null, $message = true) {
+		$this->getModel()->validationErrors[$field][$rule] = $message;
 	}
 
 /**
