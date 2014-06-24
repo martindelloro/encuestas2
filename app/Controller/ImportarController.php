@@ -89,28 +89,30 @@ class ImportarController extends AppController{
 	} // Fin funcion
 	
 	
-	function preCarga($excelName = null){
-		
-		switch(true){
-			case ($excelName != null && !file_exists(WWW_ROOT."$excelName")):
+	function preCargaContenido($excelName = null){
+		if(!empty($this->data)){
+			debug($this->data);
+			switch(true){
+				case ($excelName != null && !file_exists(WWW_ROOT."$excelName")):
+					$data = new Spreadsheet_Excel_Reader(WWW_ROOT."/excels/$excelName", false);
+					if($data == null){
+						$this->Session->setFlash("Error de lectura, nombre de archivo incorrecto o error de permisos",null,null,"mensaje_sistema");
+						$error = true;
+					}
+					else{
+						$size  = $data->rowcount(0);
+						$parts = ceil($size / 50);
+						$error = false;
+					}
+					break;
 				
-			
-			case ($excelName == null):
-				break;
-			
-		}
-		
-		if($excelName != null ){
-			$data = new Spreadsheet_Excel_Reader(WWW_ROOT."/excels/$excelName", false);
-			if($data == null){
-				$this->Session->setFlash("Error de lectura, nombre de archivo incorrecto o error de permisos",null,null,"mensaje_sistema");
-				$error = true;
+				case ($excelName == null):
+					break;
+				
 			}
-			else{
-				$size  = $data->rowcount(0);
-				$parts = ceil($size / 50);
-				$error = false;
-			}
+			$this->set("parts",$parts);
+			$this->set("size",$size);
+			$this->set("error",$error);
 		}
 		else{
 			
@@ -197,16 +199,21 @@ class ImportarController extends AppController{
 				
 			} // FIN FOR FILA
 			$this->Pregunta->Respuesta->saveMany($respuesta,array("deep"=>true));
-			pr($resultado);
 	}
 	
               
-        function importarUsuarios($excelName,$grupo_id = null){
+        function importarUsuarios($excelName,$grupo_id = null,$offset = null,$size = null){
 			$this->autoRender = false;
 			$data = new Spreadsheet_Excel_Reader(WWW_ROOT."/excels/$excelName", false);
 			$filas = $data->rowcount(0);
 			$columnas = $data->colcount(0);
-			for($i = 2; $i <= $filas; $i++){
+			if($offset != null & $size != null){ 
+				$i=($offset == 1)?2:$offset; 
+				$filas = $size; 
+			}else{
+				$i= 2;
+			}
+			for($i; $i <= $filas; $i++){
 				$usuario["Usuario"]["id"] = "";
 				for($j = 2; $j <= 12; $j++){
 					switch($j){

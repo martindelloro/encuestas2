@@ -18,7 +18,8 @@ echo $this->Helpers->Html->css('bootstrap-responsive');
 echo $this->Helpers->Html->css('font-awesome');
 echo $this->Helpers->Html->css('bootstrap-modal');
 echo $this->Helpers->Html->css('bootstrap-modal-bs3patch');
-
+echo $this->Helpers->Html->css('blueimp/jquery.fileupload.css');
+echo $this->Helpers->Html->css('blueimp/jquery.fileupload-noscript.css');
 
 echo $scripts_for_layout;
 
@@ -33,6 +34,11 @@ echo $this->Helpers->Html->script("typeahead");
 echo $this->Helpers->Html->script("bootstrap-tooltip");
 echo $this->Helpers->Html->script("jquery.blockUI");
 echo $this->Helpers->Html->script("d3.min");
+echo $this->Helpers->Html->script("blueimp/jquery.fileupload.js");
+echo $this->Helpers->Html->script("blueimp/jquery.fileupload-process.js");
+echo $this->Helpers->Html->script("blueimp/jquery.fileupload-validate.js");
+echo $this->Helpers->Html->script("blueimp/jquery.iframe-transport.js");
+
 
 ?>
 <link href="/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
