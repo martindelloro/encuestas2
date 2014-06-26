@@ -15,13 +15,123 @@ class ImportarController extends AppController{
             }
 
         }
-	private function buscarOpciones(){
-		
-	}
+	
 	
 	function agregar_excel() {
 		$grupos=$this->Grupo->find('list', array('fields'=>'Grupo.nombre'));
 		$this->set('grupos',$grupos);
+	}
+	
+	function preCargaContenido($survey_id = null,$parse = null){
+	
+		switch($parse){
+			case "loadFile":
+				if($this->data["Excel"]["file"]["error"] != 0){
+					$this->Session->setFlash("Error al intentar subir el archivo $excelName",null,null,"mensaje_sistema");
+					$this->render("/Elements/error");
+				}
+	
+				$fileName = $this->data["Excel"]["file"]["name"];
+				$tmpName    = $this->data["Excel"]["file"]["tmp_name"];
+				$today   = date("Y-m-d-(H-i-s)");
+				$dirName = WWW_ROOT."uploads/$survey_id/$today";
+				$path    = $dirName."/$fileName";
+	
+				if(!mkdir($dirName,0775,true) ){
+					$this->Session->setFlash("Error al intentar crear directorio $dirName, contacte a su administrador",null,null,"mensaje_sistema");
+					$this->render("/Elements/error");
+				}
+	
+				if(!rename("$tmpName","$path")){
+					$this->Session->setFlash("Error de permisos, fallo renombrar archivo $fileName contacte al administrador",null,null,"mensaje_sistema");
+					$this->render("/Elements/error");
+				}
+	
+				$data = new Spreadsheet_Excel_Reader($path, false);
+				if($data == null){
+					$this->Session->setFlash("Error de lectura, nombre de archivo incorrecto o error de permisos",null,null,"mensaje_sistema");
+					$this->render("/Elements/error");
+				}
+					
+				$importInfo["rows"]     	 = $data->rowcount(0);
+				$importInfo["rowsChunks"]    = ceil($importInfo["rows"] / 50);
+				$importInfo["cols"]			 = $data->colcount(0)-13; // 13 x offset los datos del usuario no cuentan
+				$importInfo["colsChuncks"]	 = ceil($importInfo["cols"] / 10); 
+				$importInfo["path"]	   		 = $path;
+				$importInfo["survey_id"] 	 = $survey_id;
+				$this->Session->write("importInfo",$importInfo);
+				$this->set("ok",true);
+				$this->set("fileName",$fileName);
+				break;
+	
+	
+		}
+	}
+	
+	function createAnswers($offset,$size){
+		$this->autoRender = false;
+		$importInfo = $this->Session->read("importInfo");
+		$replace = array('à'=>'a','á'=>'a','è'=>'e','é'=>'e','ì'=>'i','í'=>'i','ò'=>'o','ó'=>'o','ù'=>'u','ú'=>'u');
+		$data = new Spreadsheet_Excel_Reader($importInfo["path"], false);
+		$rows = $data->rowcount(0);
+		$cols = $data->colcount(0);
+		for($col= 13; $col<= $columnas;$col++){
+			$pregunta = array();
+			$tmp = explode("-",utf8_encode($data->val(1,$col)));
+			switch(count($tmp)){
+				case 1:
+					$pregunta["Pregunta"]["nombre"] = utf8_encode($data->val(1,$col));
+					$pregunta["Encuestas"][$col]["encuesta_id"] = $encuesta_id;
+					break;
+				case 2:
+					$pregunta["Pregunta"]["nombre"] = utf8_encode($data->val(1,$col));
+					$pregunta["Encuestas"][$col]["encuesta_id"] = $encuesta_id;
+					$pregunta["Encuestas"][$col]["orden"] = $tmp[0];
+			}
+		
+			$opciones = array();
+			$sinAcento = array();
+			for($fila = 2;$fila <= $filas; $fila++){
+				$opcion = strtolower($data->val($fila,$col));
+				$opciones[] = (!empty($opcion))?utf8_encode($opcion):"";
+			}
+			$opciones = array_values(array_unique($opciones));
+				
+			sort($opciones);
+			$diferentes = count($opciones);
+		
+			switch($diferentes){
+				case 1:
+					$pregunta["Pregunta"]["tipo_id"] = 4;
+					$pregunta["Opcion"][0]["nombre"] = $opciones[0];
+					break;
+				case ($diferentes == 2):
+					if(in_array("si",$opciones) || in_array("no",$opciones)){
+						$pregunta["Pregunta"]["tipo_id"] = 6;
+						unset($pregunta["Opcion"]);
+					}else{
+						$pregunta["Pregunta"]["tipo_id"] = 4;
+						for($opc=0; $opc < $diferentes ; $opc++){
+							$pregunta["Opcion"][$opc]["nombre"] = $opciones[$opc];
+						}
+					}
+					break;
+				case ($diferentes >= 2 && $diferentes < 30):
+					$pregunta["Pregunta"]["tipo_id"] = 4;
+					for($opc=0; $opc < $diferentes; $opc++){
+						$pregunta["Opcion"][$opc]["nombre"] = $opciones[$opc];
+					}
+					break;
+				case ($diferentes >=30 ):
+					$pregunta["Pregunta"]["tipo_id"] = 1;
+					break;
+			} // fin switch
+			$pregunta["Pregunta"]["id"] = '';
+			$this->Pregunta->saveAssociated($pregunta);
+				
+		} // fin For preguntas
+		
+		
 	}
 	
 	function crearPreguntas($excelName,$encuesta_id){
@@ -42,7 +152,6 @@ class ImportarController extends AppController{
 					$pregunta["Pregunta"]["nombre"] = utf8_encode($data->val(1,$col));
 					$pregunta["Encuestas"][$col]["encuesta_id"] = $encuesta_id;
 					$pregunta["Encuestas"][$col]["orden"] = $tmp[0];
-				
 			}
 						
 		    $opciones = array();
@@ -88,36 +197,8 @@ class ImportarController extends AppController{
 		} // fin For preguntas
 	} // Fin funcion
 	
+		
 	
-	function preCargaContenido($excelName = null){
-		if(!empty($this->data)){
-			debug($this->data);
-			switch(true){
-				case ($excelName != null && !file_exists(WWW_ROOT."$excelName")):
-					$data = new Spreadsheet_Excel_Reader(WWW_ROOT."/excels/$excelName", false);
-					if($data == null){
-						$this->Session->setFlash("Error de lectura, nombre de archivo incorrecto o error de permisos",null,null,"mensaje_sistema");
-						$error = true;
-					}
-					else{
-						$size  = $data->rowcount(0);
-						$parts = ceil($size / 50);
-						$error = false;
-					}
-					break;
-				
-				case ($excelName == null):
-					break;
-				
-			}
-			$this->set("parts",$parts);
-			$this->set("size",$size);
-			$this->set("error",$error);
-		}
-		else{
-			
-		}
-	}
 	
 	
 	function cargarContenido($excelName,$encuesta_id,$offset,$size){

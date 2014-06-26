@@ -13,6 +13,7 @@
 <?php
 
 echo $this->Helpers->Html->css('estilo');
+echo $this->Helpers->Html->css('jquery-ui-1.10.4');
 echo $this->Helpers->Html->css('bootstrap-combined.no-icons.min');
 echo $this->Helpers->Html->css('bootstrap-responsive');
 echo $this->Helpers->Html->css('font-awesome');
@@ -24,6 +25,8 @@ echo $this->Helpers->Html->css('blueimp/jquery.fileupload-noscript.css');
 echo $scripts_for_layout;
 
 echo $this->Helpers->Html->script("jquery");
+echo $this->Helpers->Html->script("jquery-ui-1.10.4.min");
+echo $this->Helpers->Html->script("jquery.ui.widget");
 echo $this->Helpers->Html->script("controles");
 echo $this->Helpers->Html->script("bootstrap.min");
 echo $this->Helpers->Html->script("hogan");

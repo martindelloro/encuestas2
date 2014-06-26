@@ -488,7 +488,7 @@
 
         _initIframeSettings: function (options) {
             var targetHost = $('<a></a>').prop('href', options.url).prop('host');
-            // Setting the dataType to iframe enables the iframe transport:
+            // Setting the res to iframe enables the iframe transport:
             options.dataType = 'iframe ' + (options.dataType || '');
             // The iframe transport accepts a serialized array as form data:
             options.formData = this._getFormData(options);

@@ -6,14 +6,18 @@
 	
 	<?php echo $this->Form->end(); ?>
 </div>
+<div class="well" id="files"></div>
+<div id="debugueando">
+
+</div>
 
 <script>
 
 $(function () {
     'use strict';
     // Change this to the location of your server-side upload handler:
-    var url = <?php echo WWW_ROOT."/Importar/preCargaContenido" ?>;
-        uploadButton = $('<button/>')
+    var url = "../Importar/preCargaContenido/3/loadFile";
+    var uploadButton = $('<button/>')
             .addClass('btn btn-primary')
             .prop('disabled', true)
             .text('Processing...')
@@ -31,11 +35,13 @@ $(function () {
                     $this.remove();
                 });
             });
-    $('#fileupload').fileupload({
+    $('#ExcelFile').fileupload({
         url: url,
-        dataType: 'json',
-        autoUpload: false,
-        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+        dataType: 'html',
+        type: 'POST',
+        autoUpload: true,
+        singleFileUploads:false,
+        acceptFileTypes: /(\.|\/)(xls|jpe?g|png)$/i,
         maxFileSize: 5000000, // 5 MB
         // Enable image resizing, except for Android and Opera,
         // which actually support image resizing, but fail to
@@ -83,20 +89,9 @@ $(function () {
             progress + '%'
         );
     }).on('fileuploaddone', function (e, data) {
-        $.each(data.result.files, function (index, file) {
-            if (file.url) {
-                var link = $('<a>')
-                    .attr('target', '_blank')
-                    .prop('href', file.url);
-                $(data.context.children()[index])
-                    .wrap(link);
-            } else if (file.error) {
-                var error = $('<span class="text-danger"/>').text(file.error);
-                $(data.context.children()[index])
-                    .append('<br>')
-                    .append(error);
-            }
-        });
+        console.log(data);
+        
+       $("#debugueando").html(data._response.result);
     }).on('fileuploadfail', function (e, data) {
         $.each(data.files, function (index, file) {
             var error = $('<span class="text-danger"/>').text('File upload failed.');
