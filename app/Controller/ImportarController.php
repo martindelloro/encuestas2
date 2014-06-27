@@ -22,10 +22,9 @@ class ImportarController extends AppController{
 		$this->set('grupos',$grupos);
 	}
 	
-	function preCargaContenido($survey_id = null,$parse = null){
+	function preCargaContenido($survey_id = null,$group_id = null){
 	
-		switch($parse){
-			case "loadFile":
+			if(!empty($this->data)){
 				if($this->data["Excel"]["file"]["error"] != 0){
 					$this->Session->setFlash("Error al intentar subir el archivo $excelName",null,null,"mensaje_sistema");
 					$this->render("/Elements/error");
@@ -59,13 +58,18 @@ class ImportarController extends AppController{
 				$importInfo["colsChuncks"]	 = ceil($importInfo["cols"] / 10); 
 				$importInfo["path"]	   		 = $path;
 				$importInfo["survey_id"] 	 = $survey_id;
+				$importInfo["group_id"] 	 = $group_id;
 				$this->Session->write("importInfo",$importInfo);
+				$importInfo = json_encode($importInfo);
 				$this->set("ok",true);
-				$this->set("fileName",$fileName);
-				break;
+				$this->set("importInfo",$importInfo);
+				$this->render("startImport");
+			}	
+			
+					
 	
 	
-		}
+		
 	}
 	
 	function createAnswers($offset,$size){
@@ -74,8 +78,9 @@ class ImportarController extends AppController{
 		$replace = array('à'=>'a','á'=>'a','è'=>'e','é'=>'e','ì'=>'i','í'=>'i','ò'=>'o','ó'=>'o','ù'=>'u','ú'=>'u');
 		$data = new Spreadsheet_Excel_Reader($importInfo["path"], false);
 		$rows = $data->rowcount(0);
-		$cols = $data->colcount(0);
-		for($col= 13; $col<= $columnas;$col++){
+	
+		$encuesta_id = $importInfo["survey_id"];
+		for($col = $offset + 13; $col<= $size;$col++){
 			$pregunta = array();
 			$tmp = explode("-",utf8_encode($data->val(1,$col)));
 			switch(count($tmp)){
@@ -105,17 +110,6 @@ class ImportarController extends AppController{
 					$pregunta["Pregunta"]["tipo_id"] = 4;
 					$pregunta["Opcion"][0]["nombre"] = $opciones[0];
 					break;
-				case ($diferentes == 2):
-					if(in_array("si",$opciones) || in_array("no",$opciones)){
-						$pregunta["Pregunta"]["tipo_id"] = 6;
-						unset($pregunta["Opcion"]);
-					}else{
-						$pregunta["Pregunta"]["tipo_id"] = 4;
-						for($opc=0; $opc < $diferentes ; $opc++){
-							$pregunta["Opcion"][$opc]["nombre"] = $opciones[$opc];
-						}
-					}
-					break;
 				case ($diferentes >= 2 && $diferentes < 30):
 					$pregunta["Pregunta"]["tipo_id"] = 4;
 					for($opc=0; $opc < $diferentes; $opc++){
@@ -127,7 +121,10 @@ class ImportarController extends AppController{
 					break;
 			} // fin switch
 			$pregunta["Pregunta"]["id"] = '';
-			$this->Pregunta->saveAssociated($pregunta);
+			if(!$this->Pregunta->saveAssociated($pregunta)){
+				$this->Session->setFlash("Error creando preguntas",null,null,"mensaje_sistema");
+				$this->render("/Elements/error");
+			}
 				
 		} // fin For preguntas
 		

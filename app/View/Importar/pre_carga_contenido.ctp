@@ -1,3 +1,40 @@
+<?php $categorias = array(); ?>
+<div id="importarEncuesta">
+<div class="pasos" id="paso1">
+	<div class="titular color-1"><span><i class="icon icon-list"></i>Datos de la encuesta</span></div>
+	<div class="row-fluid">
+		<div class="span8">
+			<span class="label label-1">Nombre</span>
+			<?php echo $this->Form->input("id",array("type"=>"hidden")) ?>
+			<?php echo $this->Form->input("nombre",array("type"=>"text","label"=>false,"class"=>"color-input-1 span8 input-100")); ?>
+		</div>
+		<div class="span2">
+			<span class="label label-1">Anio</span>
+			<?php echo $this->Form->input("anio",array("type"=>"select","options"=>$categorias,"label"=>false,"class"=>"input-100")); ?>
+		</div>
+		<div class="span2">
+			<span class="label label-1">Preg. x pagina</span>
+			<?php echo $this->Form->input("cantXpag",array("type"=>"select","options"=>$categorias,"label"=>false,"class"=>"input-100")); ?>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span4">
+			<span class="label label-1">Categoria</span>
+			<i class="icon icon-plus crear"></i>
+			<?php echo $this->Form->input("categoria_id",array("type"=>"select","options"=>$categorias,"label"=>false,"class"=>"input-100")); ?>
+		</div>
+		<div class="span4">
+			<span class="label label-1">Subcategoria</span>
+			<?php echo $this->Form->input("subcategoria_id",array("type"=>"select","options"=>$categorias,"label"=>false,"class"=>"input-100")); ?>
+		</div>
+	
+	</div>
+	
+	<div style="clear:both"></div>
+		
+</div>
+
+
 
 <div class="well">
 	<?php echo $this->Form->create("Excel",array("type"=>"file"))?>
@@ -10,9 +47,8 @@
 <script>
 
 $(function () {
-    'use strict';
-    // Change this to the location of your server-side upload handler:
-    var url = <?php echo WWW_ROOT."/Importar/preCargaContenido" ?>;
+    
+    var url = "<?php echo WWW_ROOT."Importar/preCargaContenido" ?>";
         uploadButton = $('<button/>')
             .addClass('btn btn-primary')
             .prop('disabled', true)
@@ -108,3 +144,4 @@ $(function () {
         .parent().addClass($.support.fileInput ? undefined : 'disabled');
 });
 </script>
+</div>

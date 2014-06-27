@@ -20,17 +20,11 @@ class MyFilesController extends AppController {
         
         var_dump($this->data);
         //debug($this->Grupo->find('all'));
-<<<<<<< HEAD
+
         if (!empty($this->data) && is_uploaded_file($this->data['MyFile']['File']['tmp_name'])) {
             $fileData = fread(fopen($this->data['MyFile']['File']['tmp_name'], "r"), 
                                     $this->data['MyFile']['File']['size']); 
-=======
-        if (!empty($this->data) 
-                && is_uploaded_file($this->data['MyFile']['file']['tmp_name'])) {
-           
-            $fileData = fread(fopen($this->data['MyFile']['file']['tmp_name'], "r"), 
-                                     $this->data['MyFile']['file']['size']); 
->>>>>>> c4d98d6c1c09d58689d06bfcbe1e609d22e66996
+
             
             
             $puntero2 = fopen('/var/www/encuestas2/app/webroot/excels/'.$this->data['MyFile']['file']['name'],'w+');
