@@ -202,21 +202,23 @@ class ImportarController extends AppController{
 	
               
         function importarUsuarios($excelName,$grupo_id = null){
-			$this->autoRender = false;
+			
+            $this->autoRender = false;
 			$data = new Spreadsheet_Excel_Reader(WWW_ROOT."/excels/$excelName", false);
 			$filas = $data->rowcount(0);
 			$columnas = $data->colcount(0);
+                        
 			for($i = 2; $i <= $filas; $i++){
 				$usuario["Usuario"]["id"] = "";
 				for($j = 2; $j <= 12; $j++){
 					switch($j){
-						case 2:
+						case 1:
 							$usuario["Usuario"]["nombre"] = utf8_encode($data->val($i,$j));
 							break;
-                    	case 3:
-						    //	$usuario["Usuario"]["apellido"] = utf8_encode($data->val($i,$j));		
-							//break;
-							//case 4:
+                                                case 2:
+                                                        $usuario["Usuario"]["apellido"] = utf8_encode($data->val($i,$j));		
+                                                        break;
+                                                case 3:
 							$usuario["Usuario"]["sexo"] = strtolower($data->val($i,$j));		
 							break;
 						case 4:
@@ -328,7 +330,9 @@ class ImportarController extends AppController{
 				}
 			}
 		} // FIN IF RESULTADOS REPETIDOS
-	    return $resultado;
+                
+                return $resultado;
+            
 	} // FIN FUNCTION IMPORTAR USUARIOS
 	
 }

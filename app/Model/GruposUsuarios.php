@@ -1,7 +1,7 @@
 <?php
 
 class GruposUsuarios extends AppModel{
-	
+	var $useTable = "grupos_usuarios";
 	var $validate = array(
 			'usuario_id' => array('rule' => 'uniqueCombi',"message"=>"El usuario ya existe en el grupo"),
 			'grupo_id'  => array('rule' => 'uniqueCombi',"message"=>"El usuario ya existe en el grupo")
