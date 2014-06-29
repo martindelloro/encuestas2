@@ -14,20 +14,38 @@ class EncuestasController extends AppController{
             }
 
         }	
-	function crear(){
-		if(!empty($this->data)){
-			$cantPreg = count($this->data["Preguntas"]);
-			if($this->data["Encuesta"]["cantXpag"] != null){
-				$this->request->data["Encuesta"]["partes"] = ceil($cantPreg / $this->data["Encuesta"]["cantXpag"]);				
-			}
-			if($this->Encuesta->saveAll($this->data)){
-				$this->Session->setFlash("Encuesta creada con exito",null,null,"mensaje_sistema");
-				$this->render("/Elements/guardo_ok");
-			}
-			else{
-				$this->Session->setFLash("Ocurrio un error al intentar guardar la encuesta",null,null,"mensaje_sistema");
-			}
-			
+	function crear($seccion = "Encuesta"){
+		switch($seccion){
+			case "Encuesta":
+				if(!empty($this->data)){
+					$cantPreg = count($this->data["Preguntas"]);
+					if($this->data["Encuesta"]["cantXpag"] != null){
+						$this->request->data["Encuesta"]["partes"] = ceil($cantPreg / $this->data["Encuesta"]["cantXpag"]);
+					}
+					if($this->Encuesta->saveAll($this->data)){
+						$this->Session->setFlash("Encuesta creada con exito",null,null,"mensaje_sistema");
+						$this->render("/Elements/guardo_ok");
+					}
+					else{
+						$this->Session->setFLash("Ocurrio un error al intentar guardar la encuesta",null,null,"mensaje_sistema");
+					}
+						
+				}
+				break;
+			case "Importar":
+				$this->Encuesta->set($this->data);
+				if($this->Encuesta->validates()){
+					if($this->Encuesta->save()){
+						$this->Session->write("ImportarEncuestaId",$this->Encuesta->getInsertId());
+						$this->Session->setFlash("Paso 1, completado con exito",null,null,"mensaje_sistema");
+						$this->render("/Elements/Importar/Encuesta/paso1OK")
+						
+					}else{
+						$this->Session->setFlash("Ocurrio un error de base de datos al intentar crear la encuesta, contacte al administrador",null,null,"mensaje_sistema");
+					}
+				}else{
+					$this->Session->setFlash("Error de validacion",null,null,"mensaje_sistema");
+				}
 		}
 		$grupos = $this->Encuesta->Grupos->find("list");
 		$this->set("grupos",$grupos);
