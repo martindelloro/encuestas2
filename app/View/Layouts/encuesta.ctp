@@ -20,6 +20,8 @@ echo $this->Helpers->Html->css('bootstrap-modal');
 echo $this->Helpers->Html->css('bootstrap-modal-bs3patch');
 
 
+
+
 echo $scripts_for_layout;
 
 echo $this->Helpers->Html->script("jquery");
@@ -32,9 +34,11 @@ echo $this->Helpers->Html->script("bootstrap-tab");
 echo $this->Helpers->Html->script("typeahead");
 echo $this->Helpers->Html->script("bootstrap-tooltip");
 echo $this->Helpers->Html->script("jquery.blockUI");
-echo $this->Helpers->Html->script("d3.min");
 
+echo $this->Helpers->Html->script("d3.min");
+ 
 ?>
+
 <link href="/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
 <!-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>-->
 

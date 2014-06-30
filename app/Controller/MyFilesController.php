@@ -35,6 +35,18 @@ class MyFilesController extends AppController {
                 
                 $resultados=$this->requestAction(array("controller"=>"importar","action"=>"importarUsuarios",$this->request->data['MyFile']['file']['name'],$this->request->data['Importar']['grupos']),array("return"=>true));
                 //pr($resultados);
+                $creados= Set::extract($resultados, '{n}'.'/Creados');
+                $this->set('creados',$creados);
+                
+                $repetidos = Set::extract($resultados, '{n}'.'/Repetidos');
+                $this->set('repetidos',$repetidos);
+                
+                $agregados_grupo = Set::extract($resultados, '{n}'.'/AgregadosGrupo');
+                $this->set('agregados_grupo',$agregados_grupo);
+                
+                $existen_grupo = Set::extract($resultados, '{n}'.'/ExistenEnGrupo');
+                $this->set('existen_grupo',$existen_grupo);
+                
                 if(!empty($resultados['Creados'])){
                     $cant_usr_creados=count($resultados['Creados']);
                     
@@ -54,7 +66,7 @@ class MyFilesController extends AppController {
                     $cant_usr_agregados_grupo=0;
                 }
                 if(!empty($resultados['ExistenEnGrupo'])){
-                    $cant_usr_existen_grupo=count($resultados['AgregadosGrupo']);
+                    $cant_usr_existen_grupo=count($resultados['ExistenEnGrupo']);
                 }else{
                     $cant_usr_existen_grupo=0;
                 }
