@@ -23,6 +23,51 @@ class ImportarController extends AppController{
 	}
 	
 	
+	function uploadFile($group_id,$survey_id){
+		if($this->data["file"]["error"] != 0){
+			$this->Session->setFlash("Error al intentar subir el archivo $excelName",null,null,"mensaje_sistema");
+			$this->set("ok",false);
+			$this->render("/Elements/error");
+		}
+		
+		$fileName = $this->data["file"]["name"];
+		$tmpName    = $this->data["file"]["tmp_name"];
+		$today   = date("Y-m-d-(H-i-s)");
+		$dirName = WWW_ROOT."uploads/$survey_id/$today";
+		$path    = $dirName."/$fileName";
+		if(!mkdir($dirName,0775,true) ){
+			$this->Session->setFlash("Error al intentar crear directorio $dirName, contacte a su administrador",null,null,"mensaje_sistema");
+			$this->render("/Elements/error");
+		}
+		
+		if(!rename("$tmpName","$path")){
+			$this->Session->setFlash("Error de permisos, fallo renombrar archivo $fileName contacte al administrador",null,null,"mensaje_sistema");
+			$this->render("/Elements/error");
+		}
+		
+		$data = new Spreadsheet_Excel_Reader($path, false);
+		if($data == null){
+			$this->Session->setFlash("Error de lectura, nombre de archivo incorrecto o error de permisos",null,null,"mensaje_sistema");
+			$this->render("/Elements/error");
+		}
+			
+		$importInfo["rows"]     	 = $data->rowcount(0);
+		$importInfo["rowsChunks"]    = ceil($importInfo["rows"] / 50);
+		$importInfo["RowSliceSize"]  = 50;
+		$importInfo["cols"]			 = $data->colcount(0)-12; // 13 x offset los datos del usuario no cuentan
+		$importInfo["colsChunks"]	 = ceil($importInfo["cols"] / 10);
+		$importInfo["ColSliceSize"]  = 10;
+		$importInfo["path"]	   		 = $path;
+		$importInfo["survey_id"] 	 = $survey_id;
+		$importInfo["group_id"] 	 = $group_id;
+		$importInfo["contSliceSize"] = 10;
+		$importInfo["contChunks"]    = ceil($importInfo["rows"] / 10);
+		$this->Session->write("importInfo",$importInfo);
+		$importInfo = json_encode($importInfo);
+		$this->set("ok",true);
+		$this->set("importInfo",$importInfo);
+	}
+	
 
 	
 	function preCargaContenido($survey_id = null,$group_id = null){
@@ -75,15 +120,25 @@ class ImportarController extends AppController{
 		
 	}
 	
-	function createAnswers($offset,$size){
+	function createAnswers($offset,$size,$loop = 1){
 		$this->autoRender = false;
 		$importInfo = $this->Session->read("importInfo");
 		$replace = array('à'=>'a','á'=>'a','è'=>'e','é'=>'e','ì'=>'i','í'=>'i','ò'=>'o','ó'=>'o','ù'=>'u','ú'=>'u');
 		$data = new Spreadsheet_Excel_Reader($importInfo["path"], false);
-		$rows = $data->rowcount(0);
+		$rows  = $data->rowcount(0);
+		$filas = $data->colcount(0);
+		
+		if($offset == 1){
+			$preguntasCreadas = array();
+			$preguntasError   = array();
+		}
+		else{
+			$preguntasCreadas = $this->Session->read("preguntasCreadas");
+			$preguntasError   = $this->Session->read("preguntasError");
+		}
 	
 		$encuesta_id = $importInfo["survey_id"];
-		for($col = $offset + 13; $col<= $size;$col++){
+		for($col = $offset + 12; $col<= $size+12;$col++){
 			$pregunta = array();
 			$tmp = explode("-",utf8_encode($data->val(1,$col)));
 			switch(count($tmp)){
@@ -92,8 +147,8 @@ class ImportarController extends AppController{
 					$pregunta["Encuestas"][$col]["encuesta_id"] = $encuesta_id;
 					break;
 				case 2:
-					$pregunta["Pregunta"]["nombre"] = utf8_encode($data->val(1,$col));
-					$pregunta["Encuestas"][$col]["encuesta_id"] = $encuesta_id;
+					$pregunta["Pregunta"]["nombre"] = $tmp[1];
+					$pregunta["Encuestas"][$col]["encuesta_id"] = $importInfo["survey_id"];
 					$pregunta["Encuestas"][$col]["orden"] = $tmp[0];
 			}
 		
@@ -101,7 +156,7 @@ class ImportarController extends AppController{
 			$sinAcento = array();
 			for($fila = 2;$fila <= $filas; $fila++){
 				$opcion = strtolower($data->val($fila,$col));
-				$opciones[] = (!empty($opcion))?utf8_encode($opcion):"";
+				$opciones[] = (!empty($opcion) || $opcion == "0")?utf8_encode($opcion):"-";
 			}
 			$opciones = array_values(array_unique($opciones));
 				
@@ -125,13 +180,19 @@ class ImportarController extends AppController{
 			} // fin switch
 			$pregunta["Pregunta"]["id"] = '';
 			if(!$this->Pregunta->saveAssociated($pregunta)){
-				$this->Session->setFlash("Error creando preguntas",null,null,"mensaje_sistema");
-				$this->render("/Elements/error");
+				$preguntasError[] = $preguntas;
+				$this->Session->write("preguntasError",$preguntasError);
+			}else{
+				$id = $this->Pregunta->getInsertId();
+				$preguntasCreadas[$id] = $id;
+				$this->Session->write("preguntasCreadas",$preguntasCreadas);
 			}
 				
 		} // fin For preguntas
-		
-		
+		$loop += 1;
+		$this->set("loop",$loop);
+		if($importInfo["colsChunks"] < $loop) $this->set("endLoop",true);
+		$this->render("/Elements/Importar/Encuesta/create_answers");
 	}
 	
 	function crearPreguntas($excelName,$encuesta_id){
@@ -201,40 +262,84 @@ class ImportarController extends AppController{
 	
 	
 	
-	function cargarContenido($excelName,$encuesta_id,$offset,$size){
+	function cargarContenido($excelName=null,$encuesta_id=null,$offset=null,$size=null,$loop=null){
 		$this->autoRender = false;
 		$remplazar = array('à'=>'a','á'=>'a','è'=>'e','é'=>'e','ì'=>'i','í'=>'i','ò'=>'o','ó'=>'o','ù'=>'u','ú'=>'u');
-		$data = new Spreadsheet_Excel_Reader(WWW_ROOT."/excels/$excelName", false,"UTF-8");
-		$filas = $data->rowcount(0);
+		$ajaxInception = false;
+		if($excelName == null){
+			$offset = $this->passedArgs["offset"];
+			$size   = $this->passedArgs["size"];
+			$loop   = $this->passedArgs["loop"];
+			$ajaxInception = true;
+			$importInfo  = $this->Session->read("importInfo");
+			$excelName   = $importInfo["path"];
+			$grupo_id    = $importInfo["group_id"];
+			$encuesta_id = $importInfo["survey_id"];
+			if($loop>1){
+				$offset = 2;
+				// $resultado = $this->Session->read("resultadoUsuarios");
+			}
+			else{
+				$resultado = array();
+			}
+		}
+		else{
+			$excelName = WWW_ROOT."/excels/$excelName";
+			$offset = 2;
+		}
+		$data = new Spreadsheet_Excel_Reader($excelName, false,"UTF-8");
+		if(!isset($filas)) $filas = $data->rowcount(0);
 		$columnas = $data->colcount(0);
 		$contResp = 0;
 		for($offset ; $offset <= $size; ++$offset){
-			for($col = 4; $col <= $columnas; $col++){
+			$dni = preg_replace( '/[^0-9]/', '', $data->val($offset,4));
+			$usuario = $this->Pregunta->Usuario->find("first",array("conditions"=>array("Usuario.dni"=>$dni),"recursive"=>-1));
+			if($usuario == null){
+				$email = $data->val($offset,12);
+				$usuario = $this->Pregunta->Usuario->find("first",array("conditions"=>array("Usuario.usuario"=>$email)));
+				if($usuario == null){
+					$nombreApellido = str_replace(" ","",$data->val($offset,2));
+					$usuario = $this->Pregunta->Usuario->find("first",array("conditions"=>array("Usuario.usuario"=>$nombreApellido)));
+			
+				}
+			}
+			if($usuario == null) {
+				
+				echo "Paso X veces <br>"; continue;
+			}
+			$nombrePregunta = null;
+			$pregunta = null;
+			$opcion = null;
+			$usuario_id = $usuario["Usuario"]["id"];
+			for($col = 13; $col <= $columnas; $col++){
 				switch($col){
-					case 4:
-						$dni = preg_replace( '/[^0-9]/', '', $data->val($offset,$col));
-						$usuario = $this->Pregunta->Usuario->find("first",array("conditions"=>array("Usuario.dni"=>$dni),"recursive"=>-1));
-						if($usuario == null){
-							$email = $data->val($offset,12);
-							$usuario = $this->Pregunta->Usuario->find("first",array("conditions"=>array("Usuario.usuario"=>$email)));
-							if($usuario == null){
-								$nombreApellido = str_replace(" ","",$data->val($offset,2));
-								$usuario = $this->Pregunta->Usuario->find("first",array("conditions"=>array("Usuario.usuario"=>$nombreApellido)));
-								
-							}
-						} 
-						$usuario_id = $usuario["Usuario"]["id"];
-						$col = 12;
-						break;
 					case ($col >= 13):
-						$nombrePregunta = utf8_encode($data->val(1,$col));
+						$tmp = utf8_encode($data->val(1,$col));
+						$tmp = explode("-",$tmp);
+					    if(count($tmp)>1){
+					    	$nombrePregunta = $tmp[1];
+					    }
+					    else{
+					    	$nombrePregunta = $tmp[0];
+					    }
+					    $nombrePregunta=  pg_escape_string($nombrePregunta);
 						$valor = strtolower($data->val($offset,$col));
 							$contResp++;
 							$valor = utf8_encode($valor);
-							$pregunta = $this->Pregunta->find("first",array("conditions"=>array("Pregunta.nombre ILIKE"=>$nombrePregunta),"recursive"=>-1));
-							if($pregunta == null) $resultado["PreguntaInexistente"][] = $nombrePregunta;
+							
+							$pregunta = $this->Pregunta->find("first",array("conditions"=>array("Pregunta.nombre"=>$nombrePregunta),"recursive"=>-1));
+							if(!isset($pregunta["Pregunta"])){
+								echo "Aca boludo";
+								pr($nombrePregunta);
+								pr($valor);
+							}	
+							if($pregunta == null) {
+								$resultado["PreguntaInexistente"][] = $nombrePregunta;
+								continue;
+							}
 							switch($pregunta["Pregunta"]["tipo_id"]){
 								case 1:
+									echo "Aca le problema tipo 1";
 									$respuesta[$contResp]["Respuesta"]["id"] = '';
 									$respuesta[$contResp]["Respuesta"]["usuario_id"] = $usuario["Usuario"]["id"];
 									$respuesta[$contResp]["Respuesta"]["encuesta_id"] = $encuesta_id;
@@ -249,12 +354,16 @@ class ImportarController extends AppController{
 									// NO HAY TIEMPO X AHORA
 									break;
 								case 4:
+									echo "Aca le problema tipo 4";
+									if($valor === '' || $valor === ' '){
+										$valor = "-";
+									}
 									$opcion = $this->Pregunta->Opcion->find("first",array("conditions"=>array("Opcion.nombre"=>$valor,"Opcion.pregunta_id"=>$pregunta["Pregunta"]["id"]),"recursive"=>-1));
 									if($opcion == null){
-										echo $pregunta["Pregunta"]["id"]." / ".$valor."<br>";
-										
+										pr($pregunta);									
+										pr($valor);
+										pr($nombrePregunta);
 									}
-									
 									$respuesta[$contResp]["Respuesta"]["id"] = '';
 									$respuesta[$contResp]["Respuesta"]["usuario_id"] = $usuario["Usuario"]["id"];
 									$respuesta[$contResp]["Respuesta"]["encuesta_id"] = $encuesta_id;
@@ -266,6 +375,7 @@ class ImportarController extends AppController{
 									// NO HAY TIEMPO X AHORA
 									break;
 								case 6:
+									echo "Aca le problema tipo 6";
 									$respuesta[$contResp]["Respuesta"]["id"] = '';
 									$respuesta[$contResp]["Respuesta"]["usuario_id"] = $usuario["Usuario"]["id"];
 									$respuesta[$contResp]["Respuesta"]["encuesta_id"] = $encuesta_id;
@@ -280,20 +390,49 @@ class ImportarController extends AppController{
 				
 			} // FIN FOR FILA
 			$this->Pregunta->Respuesta->saveMany($respuesta,array("deep"=>true));
+			if($ajaxInception){
+				// $this->Session->write("resultadoUsuarios",$resultado);
+				$loop += 1;
+				$this->set("loop",$loop);
+				if($loop > $importInfo["rowsChunks"] || $loop == 1){
+					$this->set("endLoop",true);
+				}
+				$this->render("/Elements/Importar/Encuesta/create_content");
+					
+			}else{
+				
+			}
+			
 	}
 	
               
-        function importarUsuarios($excelName,$grupo_id = null,$offset = null,$size = null){
+        function importarUsuarios($excelName=null,$grupo_id = null,$offset = null,$size = null,$loop=1){
 			$this->autoRender = false;
-			$data = new Spreadsheet_Excel_Reader(WWW_ROOT."/excels/$excelName", false);
-			$filas = $data->rowcount(0);
-			$columnas = $data->colcount(0);
-			if($offset != null & $size != null){ 
-				$i=($offset == 1)?2:$offset; 
-				$filas = $size; 
-			}else{
-				$i= 2;
+			$ajaxInception    = false;
+			$excelName = isset($excelName)?$excelName:null;
+			if($excelName == null){
+				$offset = $this->passedArgs["offset"];
+				$size   = $this->passedArgs["size"];
+				$loop   = $this->passedArgs["loop"];
+				$ajaxInception = true;
+				$importInfo = $this->Session->read("importInfo");
+				$excelName = $importInfo["path"];
+				$grupo_id  = $importInfo["group_id"];
+				if($loop>1){
+				 	$resultado = $this->Session->read("resultadoUsuarios");
+				}
+				else{
+					$resultado = array();
+				}
+				$i=$offset;
+				$filas = $size;
 			}
+			else{
+				$excelName = WWW_ROOT."/excels/$excelName";
+				$i = 2;
+			}
+			$data = new Spreadsheet_Excel_Reader($excelName, false);
+			if(!isset($filas)) $filas = $data->rowcount(0);
 			for($i; $i <= $filas; $i++){
 				$usuario["Usuario"]["id"] = "";
 				for($j = 2; $j <= 12; $j++){
@@ -416,7 +555,20 @@ class ImportarController extends AppController{
 				}
 			}
 		} // FIN IF RESULTADOS REPETIDOS
-	    return $resultado;
+		
+		if($ajaxInception){
+			    $this->Session->write("resultadoUsuarios",$resultado);
+				$loop += 1;
+				$this->set("loop",$loop);
+				if($loop > $importInfo["rowsChunks"]){
+					$this->set("endLoop",true);
+				}
+				$this->render("/Elements/Importar/Encuesta/create_users");
+			
+		}else{
+		   return $resultado;
+		}
+	    
 	} // FIN FUNCTION IMPORTAR USUARIOS
 	
 }

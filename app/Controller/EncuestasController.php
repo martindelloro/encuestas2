@@ -15,6 +15,8 @@ class EncuestasController extends AppController{
 
         }	
 	function crear($seccion = "Encuesta"){
+		$grupos = $this->Encuesta->Grupos->find("list");
+		$this->set("grupos",$grupos);
 		switch($seccion){
 			case "Encuesta":
 				if(!empty($this->data)){
@@ -36,9 +38,10 @@ class EncuestasController extends AppController{
 				$this->Encuesta->set($this->data);
 				if($this->Encuesta->validates()){
 					if($this->Encuesta->save()){
-						$this->Session->write("ImportarEncuestaId",$this->Encuesta->getInsertId());
+						$this->set("survey_id",$this->Encuesta->getInsertId());
+						$this->set("group_id",$this->data["Grupo"]["id"]);
 						$this->Session->setFlash("Paso 1, completado con exito",null,null,"mensaje_sistema");
-						$this->render("/Elements/Importar/Encuesta/paso1OK")
+						$this->render("/Elements/Importar/Encuesta/paso1OK");
 						
 					}else{
 						$this->Session->setFlash("Ocurrio un error de base de datos al intentar crear la encuesta, contacte al administrador",null,null,"mensaje_sistema");
@@ -47,8 +50,7 @@ class EncuestasController extends AppController{
 					$this->Session->setFlash("Error de validacion",null,null,"mensaje_sistema");
 				}
 		}
-		$grupos = $this->Encuesta->Grupos->find("list");
-		$this->set("grupos",$grupos);
+		
 	}
 	
 	function buscar($tipo = "nueva"){
