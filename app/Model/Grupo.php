@@ -1,8 +1,16 @@
 <?php
 
 class Grupo extends AppModel{
-	var $useTable = "grupos";
-   
+    var $useTable = "grupos";
+   var $hasAndBelongsToMany = array('Usuarios' =>
+                        array(
+                            'className' => 'Usuario',
+                            'joinTable' => 'grupos_usuarios',
+                            'foreignKey' => 'grupo_id',
+                            'associationForeignKey' => 'usuario_id',
+                          
+                        )
+            );
     var $validate = array(
                      'nombre' => array(
                      'ruleName' => array(

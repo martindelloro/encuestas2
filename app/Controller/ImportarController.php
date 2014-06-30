@@ -406,8 +406,9 @@ class ImportarController extends AppController{
 	}
 	
               
+
         function importarUsuarios($excelName=null,$grupo_id = null,$offset = null,$size = null,$loop=1){
-			$this->autoRender = false;
+    		$this->autoRender = false;
 			$ajaxInception    = false;
 			$excelName = isset($excelName)?$excelName:null;
 			if($excelName == null){
@@ -437,13 +438,13 @@ class ImportarController extends AppController{
 				$usuario["Usuario"]["id"] = "";
 				for($j = 2; $j <= 12; $j++){
 					switch($j){
-						case 2:
+						case 1:
 							$usuario["Usuario"]["nombre"] = utf8_encode($data->val($i,$j));
 							break;
-                    	case 3:
-						    //	$usuario["Usuario"]["apellido"] = utf8_encode($data->val($i,$j));		
-							//break;
-							//case 4:
+                                                case 2:
+                                                        $usuario["Usuario"]["apellido"] = utf8_encode($data->val($i,$j));		
+                                                        break;
+                                                case 3:
 							$usuario["Usuario"]["sexo"] = strtolower($data->val($i,$j));		
 							break;
 						case 4:
