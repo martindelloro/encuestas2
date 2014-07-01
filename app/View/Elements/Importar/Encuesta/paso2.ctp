@@ -61,8 +61,8 @@
 
 <script type="text/javascript">
 
-	var group_id  = 0;
-	var survey_id = 0;
+	var group_id  = 3;
+	var survey_id = 3;
 		
 	$("#cargarPreguntas").bind("click",function(){
 			<?php echo $this->Element("Importar/Encuesta/create_answers"); ?>

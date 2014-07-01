@@ -27,7 +27,7 @@
 			    dataType:"html", 
 			    success:function (data, textStatus) {$("#exec_js").html(data);}, 
 			    type:"get", 
-			    async:false,
+			    async:true,
 			    url:"\/encuestas2\/importar\/cargarContenido/offset:"+offset+"\/size:"+size+"\/loop:"+i});
 	   
 	
