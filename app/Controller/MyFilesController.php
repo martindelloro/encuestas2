@@ -17,8 +17,7 @@ class MyFilesController extends AppController {
     function add() {
         $grupos=$this->Grupo->find('list', array('fields'=>'Grupo.nombre'));
         $this->set('grupos',$grupos);
-        
-             
+                 
         if (!empty($this->data) 
                 && is_uploaded_file($this->data['MyFile']['file']['tmp_name'])) {
             //  debug($this->data);

@@ -4,6 +4,11 @@ select {
 input{
     width: 98% !important;
 }
+
+body{
+	background-color:#F2F2F0 !important;
+}
+
 body .modal-body{
 	max-height: none;
 	height:72%;
@@ -1009,4 +1014,133 @@ border-radius: 2px;
 }
 
 
+/*************************************************/
+/*************   IMPORTAR ENCUESTA ***************/
+/*************************************************/
 
+
+#importarEncuesta {
+    border-left: 20px solid #474747;
+    border-right: 20px solid #474747;
+    border-top: 20px solid #474747;
+}
+
+.label-1 {
+    background-color: transparent !important;
+    border-radius: 0 !important;
+    color: #025373 !important;
+    display: block !important;
+    margin-bottom: 0.15em;
+    margin-top: 0.4em !important;
+    padding: 5px !important;
+    float:left;
+    display:inline;
+}
+
+#importarEncuesta .pasos{
+	padding:2px !important;
+	min-height:110px;
+	margin-bottom:4px;
+}
+
+#importarEncuesta .pasos .titular {
+    background-color: white !important;
+    border-bottom: 1px solid #730220 !important;
+    height: 28px;
+}
+
+
+#importarEncuesta .pasos .titular span {
+    color: #730220 !important;
+    display: block;
+    font-family: helvetica;
+    font-size: 1.2em;
+    font-weight: bold;
+    line-height: 1.9em;
+    margin-left: 0.2em;
+    text-align: center;
+}
+
+#importarEncuesta .crear {
+    float: right;
+    margin-right: 0.2em;
+    margin-top: 0.75em;
+}
+
+#importarEncuesta #paso2 button{
+	border: 1px solid #730220 !important;
+	background-color: white;
+	color: #730220 !important;
+	width:100%;
+}
+
+#importarEncuesta #paso2 .datosArchivo{
+	border: 1px solid #730220 !important;
+	background-color: white;
+	color: #730220 !important;
+	width:100%;
+	height:23px;
+}
+
+#importarEncuesta #paso2 .datosArchivo div{
+	border-right: 2px solid black;
+    height: 28px;
+    margin-top: -2px;
+    min-height: 0;
+}
+
+#importarEncuesta #paso2 .datosArchivo div:last-child{
+	border-right: none;
+ 
+}
+
+#importarEncuesta #paso2 .progressBar {
+	background-color: green;
+    border-radius: 3px;
+    height: 23px;
+    margin-left: 1px;
+    opacity: 0.3;
+    position: relative;
+    top: -35px;
+    width: 0%;
+    display:none;
+}
+
+#importarEncuesta #paso2 .datosArchivo .subLabel span{
+	 color: #115373;
+    display: block;
+    line-height: 25px;
+    text-align: center;
+	
+}
+
+#importarEncuesta #paso2 .fileInfo  span{
+	 display: block;
+     line-height: 25px;
+}
+
+
+
+.color-input-1 {
+    border: 1px solid #bfb6b0 !important;
+}
+
+.color-1{
+	background-color: #730220 !important;
+}
+
+.color-2{
+	background-color: #BF0436 !important;
+}
+
+.color-3{
+	background-color: #025373 !important;
+}
+
+.color-4{
+	background-color: #F2F2F0 !important;
+}
+
+.color-5{
+	background-color: #BFB6B0 !important;
+}
