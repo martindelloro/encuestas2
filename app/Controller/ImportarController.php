@@ -202,7 +202,7 @@ class ImportarController extends AppController{
 	}
 	
               
-<<<<<<< HEAD
+/*
         function importarUsuarios($excelName,$grupo_id = null){
 			
             $this->autoRender = false;
@@ -211,7 +211,7 @@ class ImportarController extends AppController{
 			$columnas = $data->colcount(0);
                         
 			for($i = 2; $i <= $filas; $i++){
-=======
+  */
         function importarUsuarios($excelName,$grupo_id = null,$offset = null,$size = null){
 			$this->autoRender = false;
 			$data = new Spreadsheet_Excel_Reader(WWW_ROOT."/excels/$excelName", false);
@@ -224,7 +224,7 @@ class ImportarController extends AppController{
 				$i= 2;
 			}
 			for($i; $i <= $filas; $i++){
->>>>>>> d5482b01e2fa79d0c0fd33ae935c7e1d4ecd7376
+
 				$usuario["Usuario"]["id"] = "";
 				for($j = 2; $j <= 12; $j++){
 					switch($j){
