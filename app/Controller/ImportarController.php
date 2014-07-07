@@ -141,7 +141,7 @@ class ImportarController extends AppController{
 		$encuesta_id = $importInfo["survey_id"];
 		for($col = $offset + 12; $col<= $size+12;$col++){
 			$pregunta = array();
-<<<<<<< .merge_file_rkeaT6
+
                         $valor  = $data->val(1,$col);
                         $strpos = strpos($valor, "-")+1;
                         $fin    = strlen($valor) - $strpos;
@@ -154,7 +154,7 @@ class ImportarController extends AppController{
 			$pregunta["Encuestas"][$col]["encuesta_id"] = $importInfo["survey_id"];
 			$pregunta["Encuestas"][$col]["orden"] = $col - 12;
                         $pregunta["Pregunta"]["nombre"] = $valor;
-=======
+/*
 			$tmp = explode("-",utf8_encode($data->val(1,$col)));
 			switch(count($tmp)){
 				case 1:
@@ -165,7 +165,7 @@ class ImportarController extends AppController{
 			}
 			$pregunta["Encuestas"][$col]["encuesta_id"] = $importInfo["survey_id"];
 			$pregunta["Encuestas"][$col]["orden"] = $col - 12;
->>>>>>> .merge_file_ddnXh6
+*/
 			$opciones = array();
 			$sinAcento = array();
 			for($fila = 2;$fila <= $rows; $fila++){
