@@ -87,7 +87,7 @@
   <div class="panel panel-default">
     <div class="panel-heading">
       <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">Cantidad de usuarios que existen en el grupo: <?php echo $cant_usr_existen_grupo; ?></a>
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">Cantidad de usuarios que existían en el grupo antes de importar: <?php echo $cant_usr_existen_grupo; ?></a>
       </h4>
     </div>
     <div id="collapseFour" class="panel-collapse collapse">

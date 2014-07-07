@@ -141,6 +141,7 @@ class ImportarController extends AppController{
 		$encuesta_id = $importInfo["survey_id"];
 		for($col = $offset + 12; $col<= $size+12;$col++){
 			$pregunta = array();
+<<<<<<< .merge_file_rkeaT6
                         $valor  = $data->val(1,$col);
                         $strpos = strpos($valor, "-")+1;
                         $fin    = strlen($valor) - $strpos;
@@ -153,6 +154,18 @@ class ImportarController extends AppController{
 			$pregunta["Encuestas"][$col]["encuesta_id"] = $importInfo["survey_id"];
 			$pregunta["Encuestas"][$col]["orden"] = $col - 12;
                         $pregunta["Pregunta"]["nombre"] = $valor;
+=======
+			$tmp = explode("-",utf8_encode($data->val(1,$col)));
+			switch(count($tmp)){
+				case 1:
+					$pregunta["Pregunta"]["nombre"] = $tmp[0];
+					break;
+				case 2:
+					$pregunta["Pregunta"]["nombre"] = $tmp[1];
+			}
+			$pregunta["Encuestas"][$col]["encuesta_id"] = $importInfo["survey_id"];
+			$pregunta["Encuestas"][$col]["orden"] = $col - 12;
+>>>>>>> .merge_file_ddnXh6
 			$opciones = array();
 			$sinAcento = array();
 			for($fila = 2;$fila <= $rows; $fila++){
@@ -267,8 +280,6 @@ class ImportarController extends AppController{
 	} // Fin funcion
 	
 		
-	
-	
 	
 	function cargarContenido($excelName=null,$encuesta_id=null,$offset=null,$size=null,$loop=null){
 		$this->autoRender = false;
@@ -401,6 +412,7 @@ class ImportarController extends AppController{
 	
               
 
+
         function importarUsuarios($excelName=null,$grupo_id = null,$offset = null,$size = null,$loop=1){
     		$this->autoRender = false;
 			$ajaxInception    = false;
@@ -429,54 +441,54 @@ class ImportarController extends AppController{
 			$data = new Spreadsheet_Excel_Reader($excelName, false);
 			if(!isset($filas)) $filas = $data->rowcount(0);
 			for($i; $i <= $filas; $i++){
-				$usuario["Usuario"]["id"] = "";
-				for($j = 2; $j <= 12; $j++){
-					switch($j){
-						case 1:
-							$usuario["Usuario"]["nombre"] = utf8_encode($data->val($i,$j));
-							break;
-                                                case 2:
-                                                        $usuario["Usuario"]["apellido"] = utf8_encode($data->val($i,$j));		
-                                                        break;
-                                                case 3:
-							$usuario["Usuario"]["sexo"] = strtolower($data->val($i,$j));		
-							break;
-						case 4:
-							$usuario["Usuario"]["dni"] =  preg_replace( '/[^0-9]/', '', $data->val($i,$j));
-							break;
-						case 5:
-							$fecha_nac = $data->val($i,$j);
-							if(substr_count($fecha_nac,"/") == 2){
-								$fecha_separada = explode("/",$fecha_nac);
-								if($fecha_separada[1] > 12){
-									$fecha_nac = $fecha_separada[1]."/".$fecha_separada[0]."/".$fecha_separada["2"];
-								}
-								$usuario["Usuario"]["fecha_nac"] = $fecha_nac;
-							}else{
-								
+			$usuario["Usuario"]["id"] = "";
+			for($j = 2; $j <= 12; $j++){
+				switch($j){
+					case 1:
+						$usuario["Usuario"]["nombre"] = utf8_encode($data->val($i,$j));
+						break;
+                                        case 2:
+                                                $usuario["Usuario"]["apellido"] = utf8_encode($data->val($i,$j));		
+                                                break;
+                                        case 3:
+                				$usuario["Usuario"]["sexo"] = strtolower($data->val($i,$j));		
+                                		break;
+					case 4:
+						$usuario["Usuario"]["dni"] =  preg_replace( '/[^0-9]/', '', $data->val($i,$j));
+						break;
+					case 5:
+						$fecha_nac = $data->val($i,$j);
+						if(substr_count($fecha_nac,"/") == 2){
+							$fecha_separada = explode("/",$fecha_nac);
+							if($fecha_separada[1] > 12){
+								$fecha_nac = $fecha_separada[1]."/".$fecha_separada[0]."/".$fecha_separada["2"];
 							}
-							break;
-						case 6:
-							$usuario["Usuario"]["estado_civil"] = $data->val($i,$j);
-							break;
-						case 7:
-							$usuario["Usuario"]["calle"] = utf8_encode($data->val($i,$j));
-						    break;
-						case 8:
-							$usuario["Usuario"]["localidad"] = utf8_encode($data->val($i,$j));
-							break;
-						case 9:
-							$usuario["Usuario"]["provincia"] = utf8_encode(strtolower($data->val($i,$j)));
-							break;
-						case 10:
-							$usuario["Usuario"]["tel_fijo"] = $data->val($i,$j);
-							break;
-						case 11:        
-							$usuario["Usuario"]["celular"] = $data->val($i,$j);
-							break;
-						case 12:
-							$usuario["Usuario"]["email_1"] = strtolower($data->val($i,$j));
-							break;
+							$usuario["Usuario"]["fecha_nac"] = $fecha_nac;
+						}else{
+							
+						}
+						break;
+					case 6:
+						$usuario["Usuario"]["estado_civil"] = $data->val($i,$j);
+						break;
+					case 7:
+						$usuario["Usuario"]["calle"] = utf8_encode($data->val($i,$j));
+				                break;
+					case 8:
+						$usuario["Usuario"]["localidad"] = utf8_encode($data->val($i,$j));
+						break;
+					case 9:
+						$usuario["Usuario"]["provincia"] = utf8_encode(strtolower($data->val($i,$j)));
+						break;
+					case 10:
+						$usuario["Usuario"]["tel_fijo"] = $data->val($i,$j);
+						break;
+					case 11:        
+						$usuario["Usuario"]["celular"] = $data->val($i,$j);
+						break;
+					case 12:
+						$usuario["Usuario"]["email_1"] = strtolower($data->val($i,$j));
+						break;
 					} // FIN IF SWTICH
 				} // FIN FOR COLUMNAS 
 				if(filter_var($usuario["Usuario"]["email_1"],FILTER_VALIDATE_EMAIL)){
