@@ -20,8 +20,8 @@ $this->Paginator->options(array('update' => '#resultado_busqueda','before' => 'i
   <div class='span4'><?php echo $usuario['Usuario']['apellido']; ?>&nbsp;</div>
   <div class='span3'><?php echo $usuario['Usuario']['nombre']; ?>&nbsp;</div>
   <div class='span1'>
-  		<?php echo $this->Js->link("<i class='icon-edit'></i>",array('controller'=>'usuarios','action'=>'editar',$usuario["Usuario"]["id"]),array('escape'=>false,'class'=>'btn-mini btn-inverse','before'=>"modales('editarUsuario','modal-ficha')",'complete'=>"fin_ajax('editarUsuario')",'update'=>'#editarUsuario')) ?>
-  		<?php echo $this->Js->link("<i class='icon-eye-open'></i>",array('controller'=>'usuarios','action'=>'ver',$usuario["Usuario"]["id"]),array('escape'=>false,'class'=>'btn-mini btn-inverse','before'=>"modales('verUsuario','modal-ficha')",'complete'=>"fin_ajax('verUsuario')",'update'=>'#verUsuario')) ?></div>
+  		<?php echo $this->Js->link("<i class='icon icon-edit'></i>",array('controller'=>'usuarios','action'=>'editar',$usuario["Usuario"]["id"]),array('escape'=>false,'class'=>'btn-mini btn-inverse','before'=>"modales('editarUsuario','modal-ficha')",'complete'=>"fin_ajax('editarUsuario')",'update'=>'#editarUsuario')) ?>
+  		<?php echo $this->Js->link("<i class='icon icon-eye-open'></i>",array('controller'=>'usuarios','action'=>'ver',$usuario["Usuario"]["id"]),array('escape'=>false,'class'=>'btn-mini btn-inverse','before'=>"modales('verUsuario','modal-ficha')",'complete'=>"fin_ajax('verUsuario')",'update'=>'#verUsuario')) ?></div>
   </div>
  </div>
 <?php endforeach; ?>
@@ -32,9 +32,9 @@ $this->Paginator->options(array('update' => '#resultado_busqueda','before' => 'i
 <div class="pagination">
 <ul>
 	<?php 
-          echo $this->Paginator->prev("<span><i class='icon-arrow-left'></i> </span>",array("tag"=>"li","escape"=>false));
+          echo $this->Paginator->prev("<span><i class='icon icon-arrow-left'></i> </span>",array("tag"=>"li","escape"=>false));
           echo $this->Paginator->numbers(array('separator' => '','tag' => 'li'));
-          echo $this->Paginator->next("<span><i class='icon-arrow-right'></i> </span>",array("tag"=>"li","escape"=>false));
+          echo $this->Paginator->next("<span><i class='icon icon-arrow-right'></i> </span>",array("tag"=>"li","escape"=>false));
     ?>
 </ul>
 </div>

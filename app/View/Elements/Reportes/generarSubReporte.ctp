@@ -3,7 +3,7 @@
 	<?php echo $this->Form->create("Reporte") ?>
 	<div class="well contenedor-well fondo-1">
 		<span class="label label-titular color-1">PASO 1</span> <span
-			class="label label-titular color-2">Seleccione una encuesta</span>
+			class="label label-titular ">Seleccione una encuesta</span>
 		<?php echo $this->Form->input("encuesta_id",array("type"=>"select","options"=>$encuestas,"label"=>false,"empty"=>true)) ?>
 	</div>
 

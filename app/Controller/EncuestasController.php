@@ -78,7 +78,7 @@ class EncuestasController extends AppController{
 		$this->autoRender = false;
 		$encuesta = $this->Encuesta->find("first",array("conditions"=>array("Encuesta.id"=>2),"contain"=>array("Preguntas"=>array("Respuesta"=>array("conditions"=>array("Respuesta.encuesta_id"=>2))))));
 		debug($encuesta);
-		break;
+		
 	}
 	
 	function completar($encuesta_id = null, $parte = 1,$partes = null,$cantXpag = null){

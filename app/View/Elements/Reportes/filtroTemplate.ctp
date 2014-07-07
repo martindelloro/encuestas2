@@ -1,6 +1,6 @@
 <div class="row-fluid" id="filtro{{n}}">
 		<div class="span12">
-			<span class="label label-titular color-3">Filtro {{n}}</span><i class="icon-remove btn boton-borrar" data-n='{{n}}'></i>
+			<span class="label label-titular color-1">Filtro {{n}}</span><i class="icon-remove btn boton-borrar" data-n='{{n}}'></i>
 			<?php echo @$this->Form->input("SubReporte.Filtro.{{n}}.pregunta_id",array("type"=>"select","options"=>$preguntas,"label"=>false,"empty"=>true,"class"=>"FiltroPregunta")) ?>
 			<div class="contenedor-opciones" id="opcionesFiltro{{n}}">
 			

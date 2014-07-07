@@ -141,16 +141,18 @@ class ImportarController extends AppController{
 		$encuesta_id = $importInfo["survey_id"];
 		for($col = $offset + 12; $col<= $size+12;$col++){
 			$pregunta = array();
-			$tmp = explode("-",utf8_encode($data->val(1,$col)));
-			switch(count($tmp)){
-				case 1:
-					$pregunta["Pregunta"]["nombre"] = $tmp[0];
-					break;
-				case 2:
-					$pregunta["Pregunta"]["nombre"] = $tmp[1];
-			}
+                        $valor  = $data->val(1,$col);
+                        $strpos = strpos($valor, "-")+1;
+                        $fin    = strlen($valor) - $strpos;
+                        
+                        
+                        $tmp = trim(substr($valor,$strpos,$fin));
+                        $valor = utf8_encode($tmp);
+                                         
+			
 			$pregunta["Encuestas"][$col]["encuesta_id"] = $importInfo["survey_id"];
 			$pregunta["Encuestas"][$col]["orden"] = $col - 12;
+                        $pregunta["Pregunta"]["nombre"] = $valor;
 			$opciones = array();
 			$sinAcento = array();
 			for($fila = 2;$fila <= $rows; $fila++){
@@ -202,7 +204,14 @@ class ImportarController extends AppController{
 		$columnas = $data->colcount(0);
 		for($col= 13; $col<= $columnas;$col++){
 			$pregunta = array();
-			$tmp = explode("-",utf8_encode($data->val(1,$col)));
+			$valor  = $data->val(1,$col);
+                        $strpos = strpos($valor, "-")+1;
+                        $fin    = strlen($valor) - $strpos;
+                        
+                        
+                        $tmp = substr($valor,$strpos,$fin);
+                        $valor = utf8_encode($tmp);
+                        
 			switch(count($tmp)){
 				case 1:
 					$pregunta["Pregunta"]["nombre"] = utf8_encode($data->val(1,$col));
@@ -313,16 +322,13 @@ class ImportarController extends AppController{
 			for($col = 13; $col <= $columnas; $col++){
 				switch($col){
 					case ($col >= 13):
-						$tmp = utf8_encode($data->val(1,$col));
-						$tmp = explode("-",$tmp);
-					    if(count($tmp)>1){
-					    	$nombrePregunta = $tmp[1];
-					    }
-					    else{
-					    	$nombrePregunta = $tmp[0];
-					    }
-					    $nombrePregunta=  pg_escape_string($nombrePregunta);
-						$valor = strtolower($data->val($offset,$col));
+						$pregNom  = $data->val(1,$col);
+                                                $strpos = strpos($pregNom, "-")+1;
+                                                $fin    = strlen($pregNom) - $strpos;     
+                                                $tmp = trim(substr($pregNom,$strpos,$fin));
+                                                $pregNom = utf8_encode($tmp);
+					        $nombrePregunta =  pg_escape_string($pregNom);
+                                                $valor = strtolower($data->val($offset,$col));
 						$valor = utf8_encode($valor);
 						$contResp++;
 							

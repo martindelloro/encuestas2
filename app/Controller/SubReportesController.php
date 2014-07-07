@@ -185,7 +185,11 @@ class SubReportesController extends AppController{
 				$this->set("datos",$datos);
 				break;
 		} // FIN SWITCH GRAFICO TIPO
-		
+                
+		$datosInfoStackedResultados= Set::extract($datosInfoStacked, '{s}');
+                $this->set('datosInfoStackedResultados',$datosInfoStackedResultados);
+                
+                
 		$this->set("resultados",$resultados);
 		$this->set("cont_opciones",$cont_opciones);
 		$this->set("datosInfo",$datosInfo);

@@ -1,8 +1,8 @@
 
 <span class="label label-titular color-1">PASO 3</span>
 <div class="botonera-filtros">
-    <span class="label label-titular color-2">Seleccione filtros (opcional)</span>
-    <a href="#" class="btn btn-mini" id="agregarFiltro"><i class="icon-plus"></i> Agregar</a>
+    <span class="label label-titular ">Seleccione filtros (opcional)</span>
+    <a href="#" class="btn btn-mini" id="agregarFiltro"><i class="icon icon-plus"></i> Agregar</a>
 </div>
 
 <div class="contenedor-filtros">
