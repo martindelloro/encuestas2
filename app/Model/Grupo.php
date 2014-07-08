@@ -9,6 +9,13 @@ class Grupo extends AppModel{
                             'foreignKey' => 'grupo_id',
                             'associationForeignKey' => 'usuario_id',
                           
+                        ),
+                        'Encuesta'=>
+                        array(
+                            'className'=>'Encuesta',
+                            'joinTable'=>'encuestas_grupos',
+                            'foreignKey'=>'grupo_id',
+                            'associationForeignKey'=> 'encuesta_id'
                         )
             );
     var $validate = array(
