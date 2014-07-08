@@ -68,52 +68,16 @@ class ImportarController extends AppController{
 		$this->set("importInfo",$importInfo);
 	}
 	
+	function steps(){
+		$this->loadModel("Grupo");
+		$grupos = $this->Grupo->find("list");
+		$this->set("grupos",$grupos);
+	}
 
 	
 	function preCargaContenido($survey_id = null,$group_id = null){
 	
-			if(!empty($this->data)){
-				if($this->data["Excel"]["file"]["error"] != 0){
-					$this->Session->setFlash("Error al intentar subir el archivo $excelName",null,null,"mensaje_sistema");
-					$this->render("/Elements/error");
-				}
-	
-				$fileName = $this->data["Excel"]["file"]["name"];
-				$tmpName    = $this->data["Excel"]["file"]["tmp_name"];
-				$today   = date("Y-m-d-(H-i-s)");
-				$dirName = WWW_ROOT."uploads/$survey_id/$today";
-				$path    = $dirName."/$fileName";
-	
-				if(!mkdir($dirName,0775,true) ){
-					$this->Session->setFlash("Error al intentar crear directorio $dirName, contacte a su administrador",null,null,"mensaje_sistema");
-					$this->render("/Elements/error");
-				}
-	
-				if(!rename("$tmpName","$path")){
-					$this->Session->setFlash("Error de permisos, fallo renombrar archivo $fileName contacte al administrador",null,null,"mensaje_sistema");
-					$this->render("/Elements/error");
-				}
-	
-				$data = new Spreadsheet_Excel_Reader($path, false);
-				if($data == null){
-					$this->Session->setFlash("Error de lectura, nombre de archivo incorrecto o error de permisos",null,null,"mensaje_sistema");
-					$this->render("/Elements/error");
-				}
-					
-				$importInfo["rows"]     	 = $data->rowcount(0);
-				$importInfo["rowsChunks"]    = ceil($importInfo["rows"] / 50);
-				$importInfo["cols"]			 = $data->colcount(0)-13; // 13 x offset los datos del usuario no cuentan
-				$importInfo["colsChuncks"]	 = ceil($importInfo["cols"] / 10); 
-				$importInfo["path"]	   		 = $path;
-				$importInfo["survey_id"] 	 = $survey_id;
-				$importInfo["group_id"] 	 = $group_id;
-				$this->Session->write("importInfo",$importInfo);
-				$importInfo = json_encode($importInfo);
-				$this->set("ok",true);
-				$this->set("importInfo",$importInfo);
-				$this->render("startImport");
-			}	
-			
+				
 					
 	
 	
@@ -401,6 +365,7 @@ class ImportarController extends AppController{
 				$this->set("loop",$loop);
 				if($loop > $importInfo["contChunks"] || $loop == 1){
 					$this->set("endLoop",true);
+					$this->Session->setFlash("Importacion realizada con exito",null,null,"mensaje_sistema");
 				}
 				$this->render("/Elements/Importar/Encuesta/create_content");
 					

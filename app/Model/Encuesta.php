@@ -14,7 +14,7 @@ class Encuesta extends AppModel{
 						  	  "EncuestaPregunta"=>array("className"=>"EncuestaPregunta","foreignKey"=>"encuesta_id"));
 	
 	public $hasAndBelongsToMany = array("Preguntas"=>array("className"=>"Pregunta","joinTable"=>"encuestas_preguntas","foreignKey"=>"encuesta_id","associationForeignKey"=>"pregunta_id"),
-								        "Grupos"=>array("className"=>"Grupo","joinTable"=>"grupos_usuarios","foreignKey"=>"encuesta_id","associationForeignKey"=>"grupo_id"));
+								        "Grupos"=>array("className"=>"Grupo","joinTable"=>"encuestas_grupos","foreignKey"=>"encuesta_id","associationForeignKey"=>"grupo_id"));
 	
 }
 

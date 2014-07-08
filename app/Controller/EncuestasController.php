@@ -37,18 +37,19 @@ class EncuestasController extends AppController{
 			case "Importar":
 				$this->Encuesta->set($this->data);
 				if($this->Encuesta->validates()){
-					if($this->Encuesta->save()){
+					if($this->Encuesta->saveAssociated()){
 						$this->set("survey_id",$this->Encuesta->getInsertId());
-						$this->set("group_id",$this->data["Grupo"]["id"]);
+						$this->set("group_id",$this->data["Grupos"]["Grupos"]);
+						$this->set("paso2ok",true);
 						$this->Session->setFlash("Paso 1, completado con exito",null,null,"mensaje_sistema");
-						$this->render("/Elements/Importar/Encuesta/paso1OK");
-						
 					}else{
 						$this->Session->setFlash("Ocurrio un error de base de datos al intentar crear la encuesta, contacte al administrador",null,null,"mensaje_sistema");
 					}
 				}else{
 					$this->Session->setFlash("Error de validacion",null,null,"mensaje_sistema");
 				}
+				$this->render("/Elements/Import/Survey/step1");
+				break;
 		}
 		
 	}
