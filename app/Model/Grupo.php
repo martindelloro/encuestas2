@@ -33,7 +33,7 @@ class Grupo extends AppModel{
                             )
                         )
                     );
-        
+        var $displayField = "nombre";
 	
 }
 

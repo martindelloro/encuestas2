@@ -1,81 +1,55 @@
+<?php 
+echo $this->Mensajes->mostrar();
+$cantXpag   = array(); 
+for($i=1;$i <= 50; $i++){
+	$cantXpag[$i] = $i;
+}
+$years = array();
+for($i=2000;$i <= 2030;$i++){
+	$years[$i] = $i;
+}
 
-<div class="titular color-1"><span><i class="icon icon-list"></i>Carga archivo importacion</span></div>
 
-<div class="row-fluid">
-	<div class="span3">
-		<button type="button" class="btn" id="SelectFile">Seleccione archivo</button>
-		<?php echo $this->Form->input("file",array("type"=>"file","label"=>false,"style"=>"display:none","id"=>"ImportarFile")) ?>
+?>
+
+<?php echo $this->Form->create("Encuesta"); ?> 
+	<div class="titular color-1"><span><i class="icon icon-list"></i>Datos de la encuesta</span></div>
+	<div class="row-fluid">
+		<div class="span8">
+			<span class="label label-1">Nombre</span>
+			<?php echo $this->Form->input("id",array("type"=>"hidden")) ?>
+			<?php echo $this->Form->input("nombre",array("type"=>"text","label"=>false,"class"=>"color-input-1 span8 input-100")); ?>
+		</div>
+		<div class="span2">
+			<span class="label label-1">Año</span>
+			<?php echo $this->Form->input("anio",array("type"=>"select","options"=>$years,"label"=>false,"class"=>"input-100","empty"=>true)); ?>
+		</div>
+		<div class="span2">
+			<span class="label label-1">Preg. x pagina</span>
+			<?php echo $this->Form->input("cantXpag",array("type"=>"select","options"=>$cantXpag,"label"=>false,"class"=>"input-100","empty"=>true)); ?>
+		</div>
 	</div>
-	<div class="span7">
-		<div class="label datosArchivo" id="file">&nbsp;</div>
-		<div class="label progressBar" id="progressBarFile">&nbsp;</div>
+	<div class="row-fluid">
+		<div class="span8" id="GruposId">
+			<span class="label label-1">Grupo</span>
+			<?php echo $this->Form->input("Grupos.Grupos",array("type"=>"select","options"=>$grupos,"label"=>false,"div"=>false,"empty"=>true)); ?>
+		</div>
+		<div class="span4">
+			<?php  echo $this->Js->submit("Crear encuesta",array("url"=>array("controller"=>"encuestas","action"=>"crear","Importar"),"update"=>"#step1")); ?>
 		
+		</div>
 	</div>
-	<div class="span2" id="buttonsFile">
-		<button class="btn" type="button" id="sendButton" disabled="disabled">Subir Archivo</button>
-	</div>
-</div>
-
-<div class="row-fluid">
-	<div class="span3">
-		<span class="label label-1">Cantidad de preguntas</span>
-		<span id="cantPreg">&nbsp;</span>	
-	</div>
-	<div class="span7">
-		<div class="label datosArchivo" id="pregProgress">&nbsp;</div>
-		<div class="label progressBar" id="progressBarPreg">&nbsp;</div>
-	</div>
-	<div class="span2">
-		<button type="button" class="btn" id="cargarPreguntas">Crear preguntas</button>
-	</div>
-</div>
-
-<div class="row-fluid">
-	<div class="span3">
-		<span class="label label-1">Importar Usuarios</span>	
-	</div>
-	<div class="span7">
-		<div class="label datosArchivo" id="userProgress">&nbsp;</div>
-		<div class="label progressBar" id="progressBarUser">&nbsp;</div>
-	</div>
-	<div class="span2">
-		<button type="button" class="btn" id="cargarUsuarios">Cargar Usuarios</button>
-	</div>
-</div>
-
-<div class="row-fluid">
-	<div class="span3">
-		<span class="label label-1">Cargar respuestas</span>	
-	</div>
-	<div class="span7">
-		<div class="label datosArchivo" id="respuestasProgress">&nbsp;</div>
-		<div class="label progressBar" id="progressBarRespuesta">&nbsp;</div>
-	</div>
-	<div class="span2">
-		<button type="button" class="btn" id="cargarRespuestas">Cargar respuestas</button>
-	</div>
-</div>
-
-<div id="debug">
-</div>
-
-<script type="text/javascript">
-
-	var group_id  = 3;
-	var survey_id = 3;
-		
-	$("#cargarPreguntas").bind("click",function(){
-			<?php echo $this->Element("Importar/Encuesta/create_answers"); ?>
-	});
-
-	$("#cargarUsuarios").bind("click",function(){
-			<?php echo $this->Element("Importar/Encuesta/create_users") ?>
-	});
-
-	$("#cargarRespuestas").bind("click",function(){
-		<?php echo $this->Element("Importar/Encuesta/create_content") ?>
-	});	
 	
+	<div style="clear:both"></div>
+<?php echo $this->Form->end(); ?>
+<?php echo $this->Js->writeBuffer(); ?>
+
+<?php if(isset($paso2ok)): ?>
+<script type="text/javascript">
+	var group_id  = <?php echo $group_id ?>;
+	var survey_id = <?php echo $survey_id ?>;
+	$("#step2").unblock();
+	$("#step1 input select").prop("disabled","disabled");
 	$("#SelectFile").bind("click",function(){
 		$("#ImportarFile").trigger("click");
 	});
@@ -140,3 +114,4 @@
         .parent().addClass($.support.fileInput ? undefined : 'disabled');
 	});
 </script>
+<?php endif; ?>
