@@ -38,3 +38,9 @@
 </script>
 <?php endif; ?>
 <?php endif; ?>
+
+<?php if(isset($endLoop)): ?>
+<script type="text/javascript">
+	$("#step5").unblock();
+</script>
+<?php endif; ?>

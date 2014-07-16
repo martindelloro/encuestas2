@@ -38,3 +38,6 @@
 </script>
 <?php endif; ?>
 <?php endif; ?>
+
+
+<?php echo $this->Mensajes->mostrar(); ?>

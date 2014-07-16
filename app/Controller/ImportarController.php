@@ -68,52 +68,16 @@ class ImportarController extends AppController{
 		$this->set("importInfo",$importInfo);
 	}
 	
+	function steps(){
+		$this->loadModel("Grupo");
+		$grupos = $this->Grupo->find("list");
+		$this->set("grupos",$grupos);
+	}
 
 	
 	function preCargaContenido($survey_id = null,$group_id = null){
 	
-			if(!empty($this->data)){
-				if($this->data["Excel"]["file"]["error"] != 0){
-					$this->Session->setFlash("Error al intentar subir el archivo $excelName",null,null,"mensaje_sistema");
-					$this->render("/Elements/error");
-				}
-	
-				$fileName = $this->data["Excel"]["file"]["name"];
-				$tmpName    = $this->data["Excel"]["file"]["tmp_name"];
-				$today   = date("Y-m-d-(H-i-s)");
-				$dirName = WWW_ROOT."uploads/$survey_id/$today";
-				$path    = $dirName."/$fileName";
-	
-				if(!mkdir($dirName,0775,true) ){
-					$this->Session->setFlash("Error al intentar crear directorio $dirName, contacte a su administrador",null,null,"mensaje_sistema");
-					$this->render("/Elements/error");
-				}
-	
-				if(!rename("$tmpName","$path")){
-					$this->Session->setFlash("Error de permisos, fallo renombrar archivo $fileName contacte al administrador",null,null,"mensaje_sistema");
-					$this->render("/Elements/error");
-				}
-	
-				$data = new Spreadsheet_Excel_Reader($path, false);
-				if($data == null){
-					$this->Session->setFlash("Error de lectura, nombre de archivo incorrecto o error de permisos",null,null,"mensaje_sistema");
-					$this->render("/Elements/error");
-				}
-					
-				$importInfo["rows"]     	 = $data->rowcount(0);
-				$importInfo["rowsChunks"]    = ceil($importInfo["rows"] / 50);
-				$importInfo["cols"]			 = $data->colcount(0)-13; // 13 x offset los datos del usuario no cuentan
-				$importInfo["colsChuncks"]	 = ceil($importInfo["cols"] / 10); 
-				$importInfo["path"]	   		 = $path;
-				$importInfo["survey_id"] 	 = $survey_id;
-				$importInfo["group_id"] 	 = $group_id;
-				$this->Session->write("importInfo",$importInfo);
-				$importInfo = json_encode($importInfo);
-				$this->set("ok",true);
-				$this->set("importInfo",$importInfo);
-				$this->render("startImport");
-			}	
-			
+				
 					
 	
 	
@@ -141,6 +105,20 @@ class ImportarController extends AppController{
 		$encuesta_id = $importInfo["survey_id"];
 		for($col = $offset + 12; $col<= $size+12;$col++){
 			$pregunta = array();
+
+                        $valor  = $data->val(1,$col);
+                        $strpos = strpos($valor, "-")+1;
+                        $fin    = strlen($valor) - $strpos;
+                        
+                        
+                        $tmp = trim(substr($valor,$strpos,$fin));
+                        $valor = utf8_encode($tmp);
+                                         
+			
+			$pregunta["Encuestas"][$col]["encuesta_id"] = $importInfo["survey_id"];
+			$pregunta["Encuestas"][$col]["orden"] = $col - 12;
+                        $pregunta["Pregunta"]["nombre"] = $valor;
+/*
 			$tmp = explode("-",utf8_encode($data->val(1,$col)));
 			switch(count($tmp)){
 				case 1:
@@ -151,6 +129,7 @@ class ImportarController extends AppController{
 			}
 			$pregunta["Encuestas"][$col]["encuesta_id"] = $importInfo["survey_id"];
 			$pregunta["Encuestas"][$col]["orden"] = $col - 12;
+*/
 			$opciones = array();
 			$sinAcento = array();
 			for($fila = 2;$fila <= $rows; $fila++){
@@ -202,7 +181,14 @@ class ImportarController extends AppController{
 		$columnas = $data->colcount(0);
 		for($col= 13; $col<= $columnas;$col++){
 			$pregunta = array();
-			$tmp = explode("-",utf8_encode($data->val(1,$col)));
+			$valor  = $data->val(1,$col);
+                        $strpos = strpos($valor, "-")+1;
+                        $fin    = strlen($valor) - $strpos;
+                        
+                        
+                        $tmp = substr($valor,$strpos,$fin);
+                        $valor = utf8_encode($tmp);
+                        
 			switch(count($tmp)){
 				case 1:
 					$pregunta["Pregunta"]["nombre"] = utf8_encode($data->val(1,$col));
@@ -311,16 +297,13 @@ class ImportarController extends AppController{
 			for($col = 13; $col <= $columnas; $col++){
 				switch($col){
 					case ($col >= 13):
-						$tmp = utf8_encode($data->val(1,$col));
-						$tmp = explode("-",$tmp);
-					    if(count($tmp)>1){
-					    	$nombrePregunta = $tmp[1];
-					    }
-					    else{
-					    	$nombrePregunta = $tmp[0];
-					    }
-					    $nombrePregunta=  pg_escape_string($nombrePregunta);
-						$valor = strtolower($data->val($offset,$col));
+						$pregNom  = $data->val(1,$col);
+                                                $strpos = strpos($pregNom, "-")+1;
+                                                $fin    = strlen($pregNom) - $strpos;     
+                                                $tmp = trim(substr($pregNom,$strpos,$fin));
+                                                $pregNom = utf8_encode($tmp);
+					        $nombrePregunta =  pg_escape_string($pregNom);
+                                                $valor = strtolower($data->val($offset,$col));
 						$valor = utf8_encode($valor);
 						$contResp++;
 							
@@ -382,6 +365,7 @@ class ImportarController extends AppController{
 				$this->set("loop",$loop);
 				if($loop > $importInfo["contChunks"] || $loop == 1){
 					$this->set("endLoop",true);
+					$this->Session->setFlash("Importacion realizada con exito",null,null,"mensaje_sistema");
 				}
 				$this->render("/Elements/Importar/Encuesta/create_content");
 					

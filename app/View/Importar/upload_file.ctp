@@ -4,7 +4,8 @@
   var importInfo = <?php echo $importInfo ?>;
   $("#cantPreg").html(importInfo.cols);
   $("#cantRegistros").html(importInfo.rows);
-</script>
+  $("#step3").unblock(); 	
+  </script>
 
 
 <?php endif; ?>
