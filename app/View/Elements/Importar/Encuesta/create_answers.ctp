@@ -27,7 +27,7 @@
 			    success:function (data, textStatus) {$("#exec_js").html(data);}, 
 			    type:"get", 
 			    async:false,
-			    url:"\/encuestas2\/importar\/createAnswers\/"+offset+"\/"+size+"\/"+i});
+			    url:"createAnswers\/"+offset+"\/"+size+"\/"+i});
 	   
 	
 
