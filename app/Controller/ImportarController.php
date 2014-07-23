@@ -74,16 +74,6 @@ class ImportarController extends AppController{
 		$this->set("grupos",$grupos);
 	}
 
-	
-	function preCargaContenido($survey_id = null,$group_id = null){
-	
-				
-					
-	
-	
-		
-	}
-	
 	function createAnswers($offset,$size,$loop = 1){
 		$this->autoRender = false;
 		$importInfo = $this->Session->read("importInfo");
@@ -106,8 +96,10 @@ class ImportarController extends AppController{
 		for($col = $offset + 12; $col<= $size+12;$col++){
 			$pregunta = array();
 
+
                         $valor  = $data->val(1,$col);
                         $strpos = (strpos($valor, "-") === false)?strpos($valor,"-")+1:0;
+
                         $fin    = strlen($valor) - $strpos;
                         
                         
@@ -117,19 +109,8 @@ class ImportarController extends AppController{
 			
 			$pregunta["Encuestas"][$col]["encuesta_id"] = $importInfo["survey_id"];
 			$pregunta["Encuestas"][$col]["orden"] = $col - 12;
-                        $pregunta["Pregunta"]["nombre"] = $valor;
-/*
-			$tmp = explode("-",utf8_encode($data->val(1,$col)));
-			switch(count($tmp)){
-				case 1:
-					$pregunta["Pregunta"]["nombre"] = $tmp[0];
-					break;
-				case 2:
-					$pregunta["Pregunta"]["nombre"] = $tmp[1];
-			}
-			$pregunta["Encuestas"][$col]["encuesta_id"] = $importInfo["survey_id"];
-			$pregunta["Encuestas"][$col]["orden"] = $col - 12;
-*/
+            $pregunta["Pregunta"]["nombre"] = $valor;
+            
 			$opciones = array();
 			$sinAcento = array();
 			for($fila = 2;$fila <= $rows; $fila++){
@@ -172,79 +153,7 @@ class ImportarController extends AppController{
 		if($importInfo["colsChunks"] < $loop) $this->set("endLoop",true);
 		$this->render("/Elements/Importar/Encuesta/create_answers");
 	}
-	
-	function crearPreguntas($excelName,$encuesta_id){
-		$this->autoRender = false;
-		$remplazar = array('à'=>'a','á'=>'a','è'=>'e','é'=>'e','ì'=>'i','í'=>'i','ò'=>'o','ó'=>'o','ù'=>'u','ú'=>'u');
-		$data = new Spreadsheet_Excel_Reader(WWW_ROOT."/excels/$excelName", false);
-		$filas = $data->rowcount(0);
-		$columnas = $data->colcount(0);
-		for($col= 13; $col<= $columnas;$col++){
-			$pregunta = array();
-			$valor  = $data->val(1,$col);
-                        $strpos = strpos($valor, "-")+1;
-                        $fin    = strlen($valor) - $strpos;
-                        
-                        
-                        $tmp = substr($valor,$strpos,$fin);
-                        $valor = utf8_encode($tmp);
-                        
-			switch(count($tmp)){
-				case 1:
-					$pregunta["Pregunta"]["nombre"] = utf8_encode($data->val(1,$col));
-					$pregunta["Encuestas"][$col]["encuesta_id"] = $encuesta_id;
-					break;
-				case 2:
-					$pregunta["Pregunta"]["nombre"] = utf8_encode($data->val(1,$col));
-					$pregunta["Encuestas"][$col]["encuesta_id"] = $encuesta_id;
-					$pregunta["Encuestas"][$col]["orden"] = $tmp[0];
-			}
-						
-		    $opciones = array();
-			$sinAcento = array();
-			for($fila = 2;$fila <= $filas; $fila++){
-				$opcion = strtolower($data->val($fila,$col));
-				$opciones[] = (!empty($opcion))?utf8_encode($opcion):"";
-			}
-			$opciones = array_values(array_unique($opciones));
-					
-			sort($opciones);
-			$diferentes = count($opciones);
-						
-			switch($diferentes){
-				case 1:
-					$pregunta["Pregunta"]["tipo_id"] = 4;
-					$pregunta["Opcion"][0]["nombre"] = $opciones[0];
-					break;
-				case ($diferentes == 2):
-					if(in_array("si",$opciones) || in_array("no",$opciones)){
-						$pregunta["Pregunta"]["tipo_id"] = 6;
-						unset($pregunta["Opcion"]);
-					}else{
-						$pregunta["Pregunta"]["tipo_id"] = 4;
-						for($opc=0; $opc < $diferentes ; $opc++){
-							$pregunta["Opcion"][$opc]["nombre"] = $opciones[$opc];
-						} 
-					}
-					break;
-				case ($diferentes >= 2 && $diferentes < 30):
-						$pregunta["Pregunta"]["tipo_id"] = 4;
-						for($opc=0; $opc < $diferentes; $opc++){
-							$pregunta["Opcion"][$opc]["nombre"] = $opciones[$opc];
-						}
-					break;
-				case ($diferentes >=30 ):
-						$pregunta["Pregunta"]["tipo_id"] = 1;
-						break;
-			} // fin switch
-			$pregunta["Pregunta"]["id"] = '';
-			$this->Pregunta->saveAssociated($pregunta);
-			
-		} // fin For preguntas
-	} // Fin funcion
-	
-		
-	
+
 	function cargarContenido($excelName=null,$encuesta_id=null,$offset=null,$size=null,$loop=null){
 		$this->autoRender = false;
 		$remplazar = array('à'=>'a','á'=>'a','è'=>'e','é'=>'e','ì'=>'i','í'=>'i','ò'=>'o','ó'=>'o','ù'=>'u','ú'=>'u');
@@ -275,7 +184,7 @@ class ImportarController extends AppController{
 		$columnas = $data->colcount(0);
 		$contResp = 0;
 		for($offset ; $offset <= $size; ++$offset){
-			$dni = preg_replace( '/[^0-9]/', '', $data->val($offset,4));
+			$dni = preg_replace( '/[^0-9]/', '', $data->val($offset,5));
 			$usuario = $this->Pregunta->Usuario->find("first",array("conditions"=>array("Usuario.dni"=>$dni),"recursive"=>-1));
 			if($usuario == null){
 				$email = $data->val($offset,12);
@@ -286,6 +195,7 @@ class ImportarController extends AppController{
 			
 				}
 			}
+			
 			if($usuario == null) {
 				
 				echo "Usuario inexistente"; continue;
@@ -298,6 +208,7 @@ class ImportarController extends AppController{
 				switch($col){
 					case ($col >= 13):
 						$pregNom  = $data->val(1,$col);
+
                                                 $strpos = (strpos($pregNom, "-") === false)?strpos($pregNom,"-")+1:0;
                                                 $fin    = strlen($pregNom) - $strpos;     
                                                 $tmp = trim(substr($pregNom,$strpos,$fin));
@@ -305,6 +216,7 @@ class ImportarController extends AppController{
 					        $nombrePregunta =  pg_escape_string($pregNom);
                                                 $valor = strtolower($data->val($offset,$col));
 						$valor = utf8_encode($valor);
+
 						$contResp++;
 							
 						$EncuestaPregunta = $this->Encuesta->EncuestaPregunta->find("first",array("conditions"=>array("EncuestaPregunta.nombre"=>$nombrePregunta,"EncuestaPregunta.encuesta_id"=>$encuesta_id,"EncuestaPregunta.orden"=>$col-12),"recursive"=>-1));
@@ -407,22 +319,23 @@ class ImportarController extends AppController{
 			if(!isset($filas)) $filas = $data->rowcount(0);
 			for($i; $i <= $filas; $i++){
 			$usuario["Usuario"]["id"] = "";
-			for($j = 2; $j <= 12; $j++){
-				switch($j){
-                                        case 1:
-						$usuario["Usuario"]["nombre"] = utf8_encode($data->val($i,$j));
-						break;
+
+			for($j = 2; $j <= 13; $j++){
+				switch($j-1){
+					case 1:
+                                             $usuario["Usuario"]["nombre"] = @utf8_encode($data->val($i,$j));
+                                              break;
                                         case 2:
-                                                $usuario["Usuario"]["apellido"] = utf8_encode($data->val($i,$j));		
-                                                break;
+                                            $usuario["Usuario"]["apellido"] = @utf8_encode($data->val($i,$j));		
+                                             break;
                                         case 3:
-                				$usuario["Usuario"]["sexo"] = strtolower($data->val($i,$j));		
-                                		break;
+                                            $usuario["Usuario"]["sexo"] = @strtolower($data->val($i,$j));		
+                                             break;
 					case 4:
-						$usuario["Usuario"]["dni"] =  preg_replace( '/[^0-9]/', '', $data->val($i,$j));
-						break;
+                                             $usuario["Usuario"]["dni"] =  @preg_replace( '/[^0-9]/', '', $data->val($i,$j));
+                                             break;
 					case 5:
-						$fecha_nac = $data->val($i,$j);
+						$fecha_nac = @$data->val($i,$j);
 						if(substr_count($fecha_nac,"/") == 2){
 							$fecha_separada = explode("/",$fecha_nac);
 							if($fecha_separada[1] > 12){
@@ -437,16 +350,16 @@ class ImportarController extends AppController{
 						$usuario["Usuario"]["estado_civil"] = $data->val($i,$j);
 						break;
 					case 7:
-						$usuario["Usuario"]["calle"] = utf8_encode($data->val($i,$j));
+						$usuario["Usuario"]["calle"] = @utf8_encode($data->val($i,$j));
 				                break;
 					case 8:
-						$usuario["Usuario"]["localidad"] = utf8_encode($data->val($i,$j));
+						$usuario["Usuario"]["localidad"] = @utf8_encode($data->val($i,$j));
 						break;
 					case 9:
-						$usuario["Usuario"]["provincia"] = utf8_encode(strtolower($data->val($i,$j)));
+						$usuario["Usuario"]["provincia"] = @utf8_encode(strtolower($data->val($i,$j)));
 						break;
 					case 10:
-						$usuario["Usuario"]["tel_fijo"] = $data->val($i,$j);
+						$usuario["Usuario"]["tel_fijo"] = @$data->val($i,$j);
 						break;
 					case 11:        
 						$usuario["Usuario"]["celular"] = $data->val($i,$j);
@@ -456,24 +369,37 @@ class ImportarController extends AppController{
 						break;
 					} // FIN IF SWTICH
 				} // FIN FOR COLUMNAS 
-				if(filter_var($usuario["Usuario"]["email_1"],FILTER_VALIDATE_EMAIL)){
-					$usuario["Usuario"]["usuario"] = $usuario["Usuario"]["email_1"];
+				$email  = false;
+				$nombre = false;
+				$dni    = false;
+				switch(true){
+					case (filter_var($usuario["Usuario"]["email_1"],FILTER_VALIDATE_EMAIL)):
+					   	  $usuario["Usuario"]["usuario"] = $usuario["Usuario"]["email_1"];
+					   	  $email = true;
+					   	  break;
+					case (!empty($usuario["Usuario"]["dni"]) && $email == false):
+						  $usuario["Usuario"]["usuario"] = $usuario["Usuario"]["dni"];
+						  $dni = true;
+						  break;
+					case (!empty($usuario["Usuario"]["nombre"]) && ($email == false && $dni ==false)):
+						  $usuario["Usuario"]["usuario"] = $usuario["Usuario"]["nombre"];
+						  $nombre = true;
+						  break;
+					case (!empty($usuario["Usuario"]["apellido"]) && ($nombre == false && $email == false && $dni == false)):
+						  $usuario["Usuario"]["usuario"] = $usuario["Usuario"]["apellido"];
+						  break;	  
 				}
-				else{
-					$resultado["ErrorEmail"][] = $usuario["Usuario"]["nombre"];
-					$usuario["Usuario"]["usuario"] = str_replace(" ","",$usuario["Usuario"]["nombre"]);
-				}
-				
+								
 				$usuario["Usuario"]["hashactivador"] = md5($usuario["Usuario"]["usuario"]);
 				$usuario["Usuario"]["activado"] = true;
 				$usuario["Usuario"]["rol"] = "graduado";
 									
 				$this->Usuario->set($usuario);
-				if($this->Usuario->validates()){
+				if(true){ /* $this->Usuario->validates() */
 					if($grupo_id != null){
 						$usuario["Grupos"]["Grupos"][] = $grupo_id;
 					}
-					if($this->Usuario->save($usuario,array("deep"=>true))){
+					if($this->Usuario->save($usuario,array("deep"=>true,"validate"=>false))){
 						$usuario_id = $this->Usuario->getInsertId();
 						$usuario["Usuario"]["id"] = $usuario_id;
 						$resultado["Creados"][$usuario_id] = $usuario;

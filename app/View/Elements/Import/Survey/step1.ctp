@@ -58,7 +58,7 @@ for($i=2000;$i <= 2030;$i++){
 		$("#ImportarFile").trigger("send");
 	});
 	$(function () {
-	var url = "/encuestas2/Importar/uploadFile/"+group_id+"/"+survey_id;
+	var url = "uploadFile/"+group_id+"/"+survey_id;
     var uploadButton = $('<button/>')
     .addClass('btn')
     .prop('disabled',true)

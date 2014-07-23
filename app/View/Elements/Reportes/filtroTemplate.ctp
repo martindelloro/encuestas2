@@ -13,6 +13,8 @@
 $("#filtro{{n}} .FiltroPregunta").bind("change",function(){
 	inicia_ajax();
 	pregunta_id = $(this).val();
-	$.ajax({async:true, type:'get', complete:function(request, json) {$('#opcionesFiltro{{n}}').html(request.responseText); fin_ajax()}, url:'/encuestas2/reportes/generarFiltro/'+pregunta_id+"/{{n}}"}) 
+	baseUrl = "<?php echo Router::url('/', true) ?>";
+	console.log(baseUrl);
+	$.ajax({async:true, type:'get', complete:function(request, json) {$('#opcionesFiltro{{n}}').html(request.responseText); fin_ajax()}, url:baseUrl+'reportes/generarFiltro/'+pregunta_id+"/{{n}}"}) 
 });
 </script>

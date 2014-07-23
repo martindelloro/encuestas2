@@ -28,7 +28,7 @@
 			    success:function (data, textStatus) {$("#exec_js").html(data);}, 
 			    type:"get", 
 			    async:false,
-			    url:"\/encuestas2\/importar\/importarUsuarios/offset:"+offset+"\/size:"+size+"\/loop:"+i});
+			    url:"importarUsuarios/offset:"+offset+"\/size:"+size+"\/loop:"+i});
 	   
 	
 
