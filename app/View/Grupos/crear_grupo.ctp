@@ -3,7 +3,7 @@
 	    <?php echo $this->Form->create("Grupo") ?>
         <div class="tab-content">
                                
-				<?php echo $this->element("Grupos/grupo_form") ?>
+				<?php echo $this->element("Grupos/asignar_grupo_form") ?>
                  <?php //echo $this->element("usuarios/dato_user_form") ?>
 				
 		</div>

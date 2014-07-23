@@ -107,7 +107,7 @@ class ImportarController extends AppController{
 			$pregunta = array();
 
                         $valor  = $data->val(1,$col);
-                        $strpos = strpos($valor, "-")+1;
+                        $strpos = (strpos($valor, "-") === false)?strpos($valor,"-")+1:0;
                         $fin    = strlen($valor) - $strpos;
                         
                         
@@ -288,7 +288,7 @@ class ImportarController extends AppController{
 			}
 			if($usuario == null) {
 				
-				echo "Paso X veces <br>"; continue;
+				echo "Usuario inexistente"; continue;
 			}
 			$nombrePregunta = null;
 			$pregunta = null;
@@ -298,7 +298,7 @@ class ImportarController extends AppController{
 				switch($col){
 					case ($col >= 13):
 						$pregNom  = $data->val(1,$col);
-                                                $strpos = strpos($pregNom, "-")+1;
+                                                $strpos = (strpos($pregNom, "-") === false)?strpos($pregNom,"-")+1:0;
                                                 $fin    = strlen($pregNom) - $strpos;     
                                                 $tmp = trim(substr($pregNom,$strpos,$fin));
                                                 $pregNom = utf8_encode($tmp);
@@ -409,7 +409,7 @@ class ImportarController extends AppController{
 			$usuario["Usuario"]["id"] = "";
 			for($j = 2; $j <= 12; $j++){
 				switch($j){
-					case 1:
+                                        case 1:
 						$usuario["Usuario"]["nombre"] = utf8_encode($data->val($i,$j));
 						break;
                                         case 2:
