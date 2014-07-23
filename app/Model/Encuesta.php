@@ -7,8 +7,8 @@ class Encuesta extends AppModel{
 	var $order = "nombreAnio ASC";
 	
 	public $belongsTo = array("Usuario"=>array("className"=>"Usuario","foreignKey"=>"usuario_id"),
-							  "Categoria"=>array("className"=>"Categoria","foreignKey"=>"categoria_id","conditions"=>array("Categoria.tipo"=>"E")),
-							  "Subcategoria"=>array("className"=>"Subcategoria","foreignKey"=>"subcategoria_id","conditions"=>array("Subcategoria.tipo"=>"E")));
+							  "Categoria"=>array("className"=>"Categoria","foreignKey"=>"categoria_id","conditions"=>array("Categoria.type"=>"S")),
+							  "Subcategoria"=>array("className"=>"Subcategoria","foreignKey"=>"subcategoria_id","conditions"=>array("Subcategoria.type"=>"S")));
 	
 	public $hasMany   = array("Reporte"=>array("className"=>"Reporte","foreignKey"=>"encuesta_id"),
 						  	  "EncuestaPregunta"=>array("className"=>"EncuestaPregunta","foreignKey"=>"encuesta_id"));

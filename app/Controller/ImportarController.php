@@ -182,7 +182,7 @@ class ImportarController extends AppController{
 		$columnas = $data->colcount(0);
 		$contResp = 0;
 		for($offset ; $offset <= $size; ++$offset){
-			$dni = preg_replace( '/[^0-9]/', '', $data->val($offset,4));
+			$dni = preg_replace( '/[^0-9]/', '', $data->val($offset,5));
 			$usuario = $this->Pregunta->Usuario->find("first",array("conditions"=>array("Usuario.dni"=>$dni),"recursive"=>-1));
 			if($usuario == null){
 				$email = $data->val($offset,12);
@@ -193,6 +193,7 @@ class ImportarController extends AppController{
 			
 				}
 			}
+			
 			if($usuario == null) {
 				
 				echo "Paso X veces <br>"; continue;
@@ -205,13 +206,13 @@ class ImportarController extends AppController{
 				switch($col){
 					case ($col >= 13):
 						$pregNom  = $data->val(1,$col);
-                                                $strpos = strpos($pregNom, "-")+1;
-                                                $fin    = strlen($pregNom) - $strpos;     
-                                                $tmp = trim(substr($pregNom,$strpos,$fin));
-                                                $pregNom = utf8_encode($tmp);
-					        $nombrePregunta =  pg_escape_string($pregNom);
-                                                $valor = strtolower($data->val($offset,$col));
-						$valor = utf8_encode($valor);
+                        $strpos   = strpos($pregNom, "-")+1;
+                        $fin      = strlen($pregNom) - $strpos;     
+                        $tmp      = trim(substr($pregNom,$strpos,$fin));
+                        $pregNom  = utf8_encode($tmp);
+				        $nombrePregunta =  pg_escape_string($pregNom);
+                        $valor    = strtolower($data->val($offset,$col));
+						$valor    = utf8_encode($valor);
 						$contResp++;
 							
 						$EncuestaPregunta = $this->Encuesta->EncuestaPregunta->find("first",array("conditions"=>array("EncuestaPregunta.nombre"=>$nombrePregunta,"EncuestaPregunta.encuesta_id"=>$encuesta_id,"EncuestaPregunta.orden"=>$col-12),"recursive"=>-1));
