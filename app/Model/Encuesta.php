@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+
 class Encuesta extends AppModel{
 	var $actsAs = array("Containable");
 	var $virtualFields = array("nombreAnio"=>"CONCAT(Encuesta.nombre,' Año: ',Encuesta.anio)");

@@ -1,3 +1,5 @@
+set schema 'encuestas';
+
 -- Table: subcategorias
 
 -- DROP TABLE subcategorias;
