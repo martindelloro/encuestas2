@@ -1,10 +1,41 @@
-create or replace view encuestas.v_resumen_encuestas as
-select A.id,B.completas,B.incompletas,B.usuarios, C.grupos, D.preguntas, (B.completas::float / B.usuarios::float) * 100 as porcentaje from encuestas.encuestas as A left join 
-(select A.id as encuesta_id,sum(case when (b.porcentaje = 100) then 1 else 0 END) as completas,
-	     sum(case when (b.porcentaje != 100) then 1 else 0 END) as incompletas,
-	     count(B.usuario_id) as usuarios from encuestas.encuestas as A left join encuestas.v_resumen_usuario_respuestas as B on A.id = B.encuesta_id
-	group by A.id) as B on A.id = B.encuesta_id
-left join (select A.id as encuesta_id,count(B.grupo_id) as grupos from encuestas.encuestas as A left join encuestas.encuestas_grupos as B on A.id = B.encuesta_id group by A.id) as C ON A.id = C.encuesta_id	
-left join (select A.id as encuesta_id,count(B.pregunta_id) as preguntas from encuestas.encuestas as A left join encuestas.encuestas_preguntas AS B on A.id = B.encuesta_id group by A.id) as D ON A.id = D.encuesta_id
-	
-    
+-- View: v_resumen_encuestas
+
+-- DROP VIEW v_resumen_encuestas;
+
+CREATE OR REPLACE VIEW v_resumen_encuestas AS 
+ SELECT a.id,
+    b.completas,
+    b.incompletas,
+    b.usuarios,
+    c.grupos,
+    d.preguntas,
+    b.completas::double precision / b.usuarios::double precision * 100::double precision AS porcentaje
+   FROM encuestas a
+   LEFT JOIN ( SELECT a_1.id AS encuesta_id,
+            sum(
+                CASE
+                    WHEN b_1.porcentaje = 100 THEN 1
+                    ELSE 0
+                END) AS completas,
+            sum(
+                CASE
+                    WHEN b_1.porcentaje <> 100 THEN 1
+                    ELSE 0
+                END) AS incompletas,
+            count(b_1.usuario_id) AS usuarios
+           FROM encuestas a_1
+      LEFT JOIN v_resumen_usuario_respuestas b_1 ON a_1.id = b_1.encuesta_id
+     GROUP BY a_1.id) b ON a.id = b.encuesta_id
+   LEFT JOIN ( SELECT a_1.id AS encuesta_id,
+       count(b_1.grupo_id) AS grupos
+      FROM encuestas a_1
+   LEFT JOIN encuestas_grupos b_1 ON a_1.id = b_1.encuesta_id
+  GROUP BY a_1.id) c ON a.id = c.encuesta_id
+   LEFT JOIN ( SELECT a_1.id AS encuesta_id,
+    count(b_1.pregunta_id) AS preguntas
+   FROM encuestas a_1
+   LEFT JOIN encuestas_preguntas b_1 ON a_1.id = b_1.encuesta_id
+  GROUP BY a_1.id) d ON a.id = d.encuesta_id;
+
+ALTER TABLE v_resumen_encuestas
+  OWNER TO encuestas;

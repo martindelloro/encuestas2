@@ -1,3 +1,6 @@
+-- View: v_resumen_usuario_respuestas
+
+-- DROP VIEW v_resumen_usuario_respuestas;
 
 CREATE OR REPLACE VIEW v_resumen_usuario_respuestas AS 
  SELECT a.id AS encuesta_id,
