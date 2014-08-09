@@ -11,6 +11,8 @@ class Encuesta extends AppModel{
 							  "Categoria"=>array("className"=>"Categoria","foreignKey"=>"categoria_id","conditions"=>array("Categoria.type"=>"S")),
 							  "Subcategoria"=>array("className"=>"Subcategoria","foreignKey"=>"subcategoria_id","conditions"=>array("Subcategoria.type"=>"S")));
 	
+	public $hasOne = array("ResumenEncuesta"=>array("className"=>"ResumenEncuesta","foreignKey"=>"encuesta_id"));
+	
 	public $hasMany   = array("Reporte"=>array("className"=>"Reporte","foreignKey"=>"encuesta_id"),
 						  	  "EncuestaPregunta"=>array("className"=>"EncuestaPregunta","foreignKey"=>"encuesta_id"));
 	

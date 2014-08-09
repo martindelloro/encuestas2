@@ -54,6 +54,17 @@ class EncuestasController extends AppController{
 		
 	}
 	
+	/* 
+	 * OPCIONES:
+	 * 	NUEVA: Genera el formulario de busqueda y div contenedor de resultado pero no realiza la busqueda
+	 *  PAGINAR: Se llama cuando se necesitan que la funcion devuelva resultado lee parametros de busqueda 
+	 *  guardados en la primer llamada a la funcion paginar "$this->data no esta vacio"
+	 * 
+	 * Tiene 2 vistas:
+	 *  nueva: buscar.ctp con formulario de busqueda
+	 *  paginar: resultadoBusqueda pagina el resultado de la busqueda.
+	 * */ 
+	
 	function buscar($tipo = "nueva"){
 		if(!empty($this->data)){
 			$condiciones = null;
@@ -64,12 +75,14 @@ class EncuestasController extends AppController{
 		}
 		
 		switch($tipo){
-			case "nueva":
+			case "nueva":  
 				$this->set("categorias",$this->Encuesta->Categoria->find("list"));
 				$this->set("subcategorias",$this->Encuesta->Subcategoria->find("list"));
+				
 				break;
 			case "paginar":
 				$condiciones = $this->Session->read("busquedaEncuesta");
+				$this->paginate = array("contain"=>array("ResumenEncuesta"));
 				$this->set("encuestas",$this->paginate("Encuesta",$condiciones));
 				$this->render("resultadoBusqueda");
 		}

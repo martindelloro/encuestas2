@@ -1,9 +1,8 @@
--- View: v_resumen_encuestas
-
--- DROP VIEW v_resumen_encuestas;
+set search_path to encuestas;
+DROP VIEW v_resumen_encuestas;
 
 CREATE OR REPLACE VIEW v_resumen_encuestas AS 
- SELECT a.id,
+ SELECT a.id as encuesta_id,
     b.completas,
     b.incompletas,
     b.usuarios,
