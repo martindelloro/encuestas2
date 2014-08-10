@@ -96,10 +96,8 @@ class ImportarController extends AppController{
 		for($col = $offset + 12; $col<= $size+12;$col++){
 			$pregunta = array();
 
-
-                        $valor  = $data->val(1,$col);
-                        $strpos = (strpos($valor, "-") === false)?strpos($valor,"-")+1:0;
-
+           $valor  = $data->val(1,$col);
+           $strpos = strpos($valor, "-")+1;
                         $fin    = strlen($valor) - $strpos;
                         
                         
@@ -197,8 +195,7 @@ class ImportarController extends AppController{
 			}
 			
 			if($usuario == null) {
-				
-				echo "Usuario inexistente"; continue;
+				echo "Paso X veces <br>"; continue;
 			}
 			$nombrePregunta = null;
 			$pregunta = null;
@@ -208,15 +205,13 @@ class ImportarController extends AppController{
 				switch($col){
 					case ($col >= 13):
 						$pregNom  = $data->val(1,$col);
-
-                                                $strpos = (strpos($pregNom, "-") === false)?strpos($pregNom,"-")+1:0;
-                                                $fin    = strlen($pregNom) - $strpos;     
-                                                $tmp = trim(substr($pregNom,$strpos,$fin));
-                                                $pregNom = utf8_encode($tmp);
-					        $nombrePregunta =  pg_escape_string($pregNom);
-                                                $valor = strtolower($data->val($offset,$col));
-						$valor = utf8_encode($valor);
-
+                        $strpos   = strpos($pregNom, "-")+1;
+                        $fin      = strlen($pregNom) - $strpos;     
+                        $tmp      = trim(substr($pregNom,$strpos,$fin));
+                        $pregNom  = utf8_encode($tmp);
+				        $nombrePregunta =  pg_escape_string($pregNom);
+                        $valor    = strtolower($data->val($offset,$col));
+						$valor    = utf8_encode($valor);
 						$contResp++;
 							
 						$EncuestaPregunta = $this->Encuesta->EncuestaPregunta->find("first",array("conditions"=>array("EncuestaPregunta.nombre"=>$nombrePregunta,"EncuestaPregunta.encuesta_id"=>$encuesta_id,"EncuestaPregunta.orden"=>$col-12),"recursive"=>-1));
@@ -319,21 +314,20 @@ class ImportarController extends AppController{
 			if(!isset($filas)) $filas = $data->rowcount(0);
 			for($i; $i <= $filas; $i++){
 			$usuario["Usuario"]["id"] = "";
-
 			for($j = 2; $j <= 13; $j++){
 				switch($j-1){
 					case 1:
-                                             $usuario["Usuario"]["nombre"] = @utf8_encode($data->val($i,$j));
-                                              break;
-                                        case 2:
-                                            $usuario["Usuario"]["apellido"] = @utf8_encode($data->val($i,$j));		
-                                             break;
-                                        case 3:
-                                            $usuario["Usuario"]["sexo"] = @strtolower($data->val($i,$j));		
-                                             break;
+						$usuario["Usuario"]["nombre"] = @utf8_encode($data->val($i,$j));
+						break;
+                    case 2:
+                    	$usuario["Usuario"]["apellido"] = @utf8_encode($data->val($i,$j));		
+                        break;
+                    case 3:
+                		$usuario["Usuario"]["sexo"] = @strtolower($data->val($i,$j));		
+                    	break;
 					case 4:
-                                             $usuario["Usuario"]["dni"] =  @preg_replace( '/[^0-9]/', '', $data->val($i,$j));
-                                             break;
+						$usuario["Usuario"]["dni"] =  @preg_replace( '/[^0-9]/', '', $data->val($i,$j));
+						break;
 					case 5:
 						$fecha_nac = @$data->val($i,$j);
 						if(substr_count($fecha_nac,"/") == 2){

@@ -133,7 +133,7 @@
 	</div>
 	
 	<div class="row-fluid">
-		<?php echo $this->Form->submit("Crear Usuario", array("class"=>"btn","onclick"=>"inicia_ajax()")); ?>
+		<?php echo $this->Form->submit("Crear Usuario", array("class"=>"icon icon-check","onclick"=>"inicia_ajax()")); ?>
 	</div>
 
 <?php echo $this->Js->writeBuffer() ?>

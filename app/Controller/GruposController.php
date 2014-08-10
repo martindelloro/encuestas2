@@ -15,6 +15,8 @@ class GruposController extends AppController {
         
     }  
     function crear_grupo(){
+           $grupos=$this->Grupo->find('list');
+        $this->set("grupos",$grupos);
         if(!empty($this->data)){
              if($this->Grupo->save($this->data)){ //SI GUARDA
                         $this->Session->setFlash("Se ha creado un nuevo Grupo",null,null,"mensaje_sistema");
@@ -31,6 +33,24 @@ class GruposController extends AppController {
     
         
     }
+    
+    function asignar($id_usuario, $id_grupo){
+        //Chequeo si está en el grupo
+        if ($this->GruposUsuarios->find('first',array('conditions'=>array('grupo_id'=>$id_grupo,'usuario_id'=>$id_usuario),"recursive"=>-1))!= null){
+            //ESTÁ: Mensaje: El usuario ya estaba asignado al grupo <<nro>>    
+            $this->Session->setFlash("El usuario ya estaba asignado al grupo",null,null,"mensaje_sistema");
+        }else{
+            $usuario["Usuario"]["id"] = $id_usuario;
+            $usuario["Grupos"][] = $id_grupo;
+            //NO ESTÁ: Asignarlo. Mensaje: El usuario ha sido asignado
+            if($this->Usuario->save($usuario)){
+                
+                $this->Session->setFlash("El usuario ha sido asignado al grupo",null,null,"mensaje_sistema");
+            }
+        }
+    }
+    
+    
     function buscar_gr(){  //BUSQUEDA DE USUARIOS PARA LA ASIGNACIÓN DE GRUPOS
          parent::beforeFilter();
             $sesion=$this->Session->Read();
@@ -63,9 +83,10 @@ class GruposController extends AppController {
                           $buscar['Usuario.email_1 ilike'] = '%'.$this->data['Grupo']['mail'].'%';
                       }
 
-                       
+                      $grupo_xa_asig=$this->data['Grupo']['grupo'];
                       $this->paginate = array("order"=>"Usuario.apellido ASC","fields"=>array('Usuario.usuario','Usuario.apellido','Usuario.nombre','Usuario.email_1', 'Usuario.id'),'conditions'=>$buscar);
                       $this->set('usuarios',$this->paginate("Usuario"));
+                      $this->set('grupo',$grupo_xa_asig);
             }
      }
     function cantidad_usuarios_grupo(){

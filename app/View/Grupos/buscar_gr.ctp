@@ -1,5 +1,5 @@
 <?php 
-$this->Paginator->options(array('update' => '#resultado_busqueda','before' => 'inicia_ajax()','evalScripts' => true, 'url'=>array('controller'=>'usuarios','action'=>'buscar')));
+$this->Paginator->options(array('update' => '#resultado_busqueda2','before' => 'inicia_ajax()','evalScripts' => true, 'url'=>array('controller'=>'grupos','action'=>'buscar_gr')));
 ?>
 
 <div class="paginador">
@@ -20,7 +20,7 @@ $this->Paginator->options(array('update' => '#resultado_busqueda','before' => 'i
   <div class='span4'><?php echo $usuario['Usuario']['apellido']; ?>&nbsp;</div>
   <div class='span3'><?php echo $usuario['Usuario']['nombre']; ?>&nbsp;</div>
   <div class='span1'>
-  		<?php echo $this->Js->link("<i class='icon icon-fa-bomb'></i>",array('controller'=>'usuarios','action'=>'editar',$usuario["Usuario"]["id"]),array('escape'=>false,'class'=>'btn-mini btn-inverse','before'=>"modales('editarUsuario','modal-ficha')",'complete'=>"fin_ajax('editarUsuario')",'update'=>'#editarUsuario')) ?>
+  		<?php echo $this->Js->link("<i class='icon icon-plus'></i>",array('controller'=>'grupos','action'=>'asignar',$usuario["Usuario"]["id"],$grupo),array('escape'=>false,'class'=>'btn-mini btn-inverse','before'=>"inicia_ajax();",'complete'=>"fin_ajax();",'update'=>'#exec_js','confirm'=>'¿Desea asignar a '.$usuario['Usuario']['usuario'].' al grupo '.$grupo.'?')) ?>
 </div>
   </div>
  </div>

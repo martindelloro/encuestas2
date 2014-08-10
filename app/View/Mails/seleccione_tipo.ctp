@@ -1,13 +1,11 @@
-
-
-
 <div class="modal-body">
 	 <div class="tabbable">
-	    <?php echo $this->Form->create("Grupo") ?>
+	    <?php echo $this->Form->create("Mail") ?>
         <div class="tab-content">
                                
-				<?php echo $this->element("Grupos/grupo_form") ?>
-                                 
+				<?php echo $this->element("Mails/seleccione_tipo_form") ?>
+                 
+				
 		</div>
      
                 

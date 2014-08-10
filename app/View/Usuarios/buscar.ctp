@@ -21,7 +21,7 @@ $this->Paginator->options(array('update' => '#resultado_busqueda','before' => 'i
   <div class='span3'><?php echo $usuario['Usuario']['nombre']; ?>&nbsp;</div>
   <div class='span1'>
   		<?php echo $this->Js->link("<i class='icon icon-edit'></i>",array('controller'=>'usuarios','action'=>'editar',$usuario["Usuario"]["id"]),array('escape'=>false,'class'=>'btn-mini btn-inverse','before'=>"modales('editarUsuario','modal-ficha')",'complete'=>"fin_ajax('editarUsuario')",'update'=>'#editarUsuario')) ?>
-  		<?php echo $this->Js->link("<i class='icon icon-eye-open'></i>",array('controller'=>'usuarios','action'=>'ver',$usuario["Usuario"]["id"]),array('escape'=>false,'class'=>'btn-mini btn-inverse','before'=>"modales('verUsuario','modal-ficha')",'complete'=>"fin_ajax('verUsuario')",'update'=>'#verUsuario')) ?></div>
+  		<?php echo $this->Js->link("<i class='icon icon-eye'></i>",array('controller'=>'usuarios','action'=>'ver',$usuario["Usuario"]["id"]),array('escape'=>false,'class'=>'btn-mini btn-inverse','before'=>"modales('verUsuario','modal-ficha')",'complete'=>"fin_ajax('verUsuario')",'update'=>'#verUsuario')) ?></div>
   </div>
  </div>
 <?php endforeach; ?>
