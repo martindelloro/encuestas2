@@ -1,7 +1,7 @@
 <?php
 
 class MailsController extends AppController{
-    var $uses=array('Encuesta','EncuestaGrupos','EncuestaUsuarios','VistaCantUsuariosEnc');
+    var $uses=array('Encuesta','EncuestaGrupos','EncuestaUsuarios','VistaCantUsuariosEnc','Grupo');
 	function beforeFilter() {
             parent::beforeFilter();
             $sesion=$this->Session->Read();
@@ -18,8 +18,11 @@ class MailsController extends AppController{
             $tipo=array('1'=>'Encuesta','2'=>'Datos de Contacto');
             $encuestas=$this->Encuesta->find("list");
             $tipo_envio=array('1'=>'Envío por primera vez','2'=>'Recordatorio');
+            $grupos_total=$this->Grupo->find('list');
+            //Si es para enviar a datos de contacto
             
             
+            $this->set('grupos_total',$grupos_total);
             $this->set("tipo",$tipo);
             $this->set("encuestas",$encuestas);
             $this->set('tipo_envio',$tipo_envio);
@@ -30,7 +33,9 @@ class MailsController extends AppController{
             $this->layout='ajax';
             //CANTIDAD DE GRUPOS DE UNA ENCUESTA
             $cantidad_grupos=$this->EncuestaGrupos->find('count',array('conditions'=>array('EncuestaGrupos.encuesta_id'=>$id_encuesta))); 
-            //pr($cantidad_grupos);
+            $grupos=$this->EncuestaGrupos->find('list',array('conditions'=>array('EncuestaGrupos.encuesta_id'=>$id_encuesta))); 
+            //pr($grupos);
+            $this->set("grupos",$grupos);
             //CANTIDAD DE USUARIOS DE UNA ENCUESTA
             $cantidad_usuarios=$this->VistaCantUsuariosEnc->find('first',array('fields'=>'cantidad_usuarios','conditions'=>array('VistaCantUsuariosEnc.id'=>$id_encuesta))); 
             //pr($cantidad_usuarios);
@@ -49,7 +54,7 @@ class MailsController extends AppController{
                 $this->set("mensaje",$mensaje);
         }
         
-       
+       $this->set("id_encuesta",$id_encuesta);
     }
 	
 }
