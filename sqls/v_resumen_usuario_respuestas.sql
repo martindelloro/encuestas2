@@ -8,7 +8,7 @@ CREATE OR REPLACE VIEW v_resumen_usuario_respuestas AS
     count(e.usuario_id) AS cantrespuestas,
     count(b.encuesta_id) AS totalpreguntas,
         CASE
-            WHEN count(b.encuesta_id) > 0 THEN count(e.usuario_id) / count(b.encuesta_id) * 100
+            WHEN count(b.encuesta_id)::float > 0 THEN count(e.usuario_id)::float / count(b.encuesta_id)::float * 100
             ELSE 0::bigint
         END AS porcentaje
    FROM encuestas a

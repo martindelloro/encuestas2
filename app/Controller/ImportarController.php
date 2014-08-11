@@ -195,7 +195,6 @@ class ImportarController extends AppController{
 			}
 			
 			if($usuario == null) {
-				
 				echo "Paso X veces <br>"; continue;
 			}
 			$nombrePregunta = null;
@@ -382,7 +381,7 @@ class ImportarController extends AppController{
 						  break;
 					case (!empty($usuario["Usuario"]["apellido"]) && ($nombre == false && $email == false && $dni == false)):
 						  $usuario["Usuario"]["usuario"] = $usuario["Usuario"]["apellido"];
-						  break;	  
+						  break;	
 				}
 								
 				$usuario["Usuario"]["hashactivador"] = md5($usuario["Usuario"]["usuario"]);

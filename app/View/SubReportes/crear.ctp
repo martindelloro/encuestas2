@@ -50,19 +50,41 @@
 <!-- ***** COMIENZO RESULTADOS GRAFICO STACKED BARS ***** -->
 <!-- **************************************************** -->
 <?php if(!empty($datosInfoStacked)): ?>
-<div class="well label-titular color-3">Resultados</div>
-    <?php //pr($resultados);
-    foreach($resultados as $resultado): ?>
-        <div class="row-fluid resumen-resultados">
-	<div class="span8 color-1 borde-1 borde-abajo"><span><?php echo $preguntaGraficoX['Pregunta']['nombre'].': '. $resultado['categoriaX'] ?></span></div></div>
-	<ul>
-            <?php //pr($resultado);
-            foreach($resultado['Resultados'] as $key=>$valor):?>
-                <li><?php echo $key .': '.$valor; ?></li>
-            <?php endforeach; ?>
-        </ul>
-        
-    <?php endforeach; ?>    
+<table class="table table-striped">
+	<thead>
+		<tr class="preguntasTabla">
+			<th><?php echo $preguntaX ?></th>
+			<th colspan="<?php echo count($categoriasY)+1; ?>"><?php echo $preguntaY ?></th>
+		
+		</tr>
+		<tr>
+			<th></th>
+			<?php foreach($categoriasY as $categoriaY): ?>
+				<th><?php echo $categoriaY ?></th>
+			<?php endforeach; ?>
+			<th>Total</th>
+		</tr>
+	</thead>
+	
+	<tbody>
+	<?php foreach($datosInfoStacked as $categoriaX=>$datosY): ?>
+		<tr>
+			<td><?php echo $categoriaX ?></td>
+			<?php foreach($datosY["Resultados"] as $categoriaY=>$valor): ?>
+			<td><?php echo $valor ?></td>	
+			<?php endforeach; ?>
+			<td><?php echo $datosY["Total"] ?></td>
+		</tr>
+	</tbody>
+	<?php endforeach; ?>
+	<tr>
+		<td>Total</td>
+		<?php foreach($totalesY as $totalY): ?>
+			<td><?php echo $totalY ?></td>	
+		<?php endforeach; ?>
+		<td><?php echo array_sum($totalesY); ?></td>		
+	</tr>
+	</table>
 <?php endif; ?>
 <!--  ***** FIN IF RESULTADOS GRAFICO STACKED BARS *****  -->
 
@@ -71,6 +93,7 @@
 
 <div id="graficoBarras" class="grafico" >
 </div>
+
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>

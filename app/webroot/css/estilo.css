@@ -358,6 +358,16 @@ body .mensaje-contenido{
     /********  REPORTES  *********/
 /*************************************************/
 
+.preguntasTabla th{
+	text-align:center;
+	background-color:#8A091D;
+	color:white !important;
+	font-weight:bold !important;
+}
+
+.preguntasTabla th:first-child{
+	border-right:1px solid white !important;
+}
 .contenedor-reportes .resultados:nth-child(odd){
     background-color:#DDDDDD;
 }
@@ -1013,6 +1023,14 @@ border-radius: 2px;
 	
 }
 
+.contenedorResultados .resultado:nth-child(odd){
+	background-color: white !important;
+}
+
+.contenedorResultados .resultado:nth-child(even){
+	background-color:#DBDBDB !important;
+	
+}
 
 /*************************************************/
 /*************    IMPORT SURVEY    ***************/
@@ -1156,4 +1174,9 @@ border-radius: 2px;
 
 .color-5{
 	background-color: #BFB6B0 !important;
+}
+
+
+.contenedor-opciones .checkbox input{
+	width:22px !important;
 }
