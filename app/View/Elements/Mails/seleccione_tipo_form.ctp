@@ -33,7 +33,7 @@
         foreach($grupos_total as $grupo_id=>$name): ?>
         <label class="btn btn-primary active">
           <input type="checkbox" name="data[Mail][grupos][]" value="<?php echo $grupo_id ?>" checked> <?php echo $name; ?>
-          <input type="hidden" name="data[Mail][grupos_nombre][]" value="<?php echo $name ?>" checked>
+            <input type="hidden" name="data[Mail][grupos_nombre][]" value="<?php echo $name ?>" checked>
         </label>
     <?php endforeach; ?>
           </div><br><br>

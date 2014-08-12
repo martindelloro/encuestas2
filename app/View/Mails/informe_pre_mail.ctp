@@ -23,22 +23,29 @@
                      <tr>
                          <td><b>Encuesta:</b> <?php echo $nombre_encuesta ?> </td>
                      
-                     </tr>
+                     </tr>              
+                     <td><b>Grupos:</b>
+                        <?php foreach($datos['Mail']['grupos_nombre'] as $grupo_id=>$name): 
+                                       echo $name.'. ';
+                               endforeach; ?>
+                     </td>
+                    
+
                      <?php }?>
-                     <!-- Si seleccionó Datos de Usuario --><tr>
+                     <?php if($datos['Mail']['tipo']==2){ ?>
+                     <!-- Si seleccionó Datos de Usuario -->
+                     <tr>
                          <td><b>Grupos:</b>
                         <?php foreach($datos['Mail']['grupos_nombre'] as $grupo_id=>$name): 
                                        echo $name.'. ';
                                endforeach; ?>
-                    </tr>
-                     
+                     </tr>
+                                          <?php }?>
                  </table>
              </div>
          </div>
          <div class="todo span8">
-         <!--<div class="volver span2">
-            <i class="icon  icon-hand-o-left icon-1x btn btn-inverse">Volver</i>
-        </div>-->
+   
          <div>
              <?php echo $this->Js->link("<i class='icon icon-envelope-o'>Enviar</i>",array('url'=>array('controller'=>'grupos','action'=>'buscar_gr')),array('update'=>'#resultado_busqueda2','before'=>'inicia_ajax()','complete'=>'fin_ajax()',"with"=>"$(this).parents('form:first').serialize()",'method'=>'POST','dataExpression'=>true,"class"=>"btn btn-inverse span2","escape"=>false));  ?>
 		

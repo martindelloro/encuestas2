@@ -61,9 +61,11 @@ class MailsController extends AppController{
         $id_encuesta=$this->request->data['Mail']['encuesta'];
         $datos=$this->request->data;
         $nombre_encuesta=$this->Encuesta->find('first',array('fields'=>'Encuesta.nombre','conditions'=>array('Encuesta.id'=>$id_encuesta),'recursive'=>-1));
-        
+        pr($datos);
         $this->set("id_encuesta",$id_encuesta);
-        $this->set('nombre_encuesta',$nombre_encuesta['Encuesta']['nombre']);
+        if(!empty($nombre_encuesta)){
+            $this->set('nombre_encuesta',$nombre_encuesta['Encuesta']['nombre']);
+        }
         $this->set("datos",$datos);
     }
     function enviar_mail(){
