@@ -1,12 +1,11 @@
 <?php 
-	$roles=array("admin"=>"Administrador", "graduado"=>"Graduado", "direccion"=>"Secretarías");
 	
 ?>
-
-<div id="crearUsuario">
-	<?php echo $this->Form->create("Usuario",array("action"=>"crear_usuario")) ?>
+<div class="modal-body">
+	<?php echo $this->Form->create("Usuario",array("action"=>"editar_usuario")) ?>
+	<?php echo $this->Form->input("Usuario.id",array("type"=>"hidden")); ?>
    <div class="well titulo-general">
-		<span>Crear Nuevo Usuario</span>
+		<span>Actualizar Datos de Contacto : <?php echo $OUsuario['Usuario']['nombre']. ' '. $OUsuario['Usuario']['apellido']; ?></span>
 	</div>
 
 	<div class="row-fluid">
@@ -20,21 +19,15 @@
 			<?php echo $this->Form->input("apellido",array("type"=>'text',"label"=>"Apellido")); ?>
 		</div>
 		<div class="span3">
-			<?php echo $this->Form->input("dni",array("type"=>'text',"label"=>"DNI")); ?>
+			<?php echo $this->Form->input("dni",array("type"=>'text',"label"=>"DNI","readOnly"=>true)); ?>
 		</div>
 	</div>
 	<div class="row-fluid">
 		<div class="span3">
-			<?php echo $this->Form->input("password",array("type"=>'password',"label"=>"Password")); ?>
-		</div>
-		<div class="span3">
-			<?php echo $this->Form->input("password_rep",array("type"=>'password',"label"=>"Repetir Password")); ?>
-		</div>
-		<div class="span3">
 			<?php echo $this->Form->input("fecha_nac",array("type"=>'text',"label"=>"Fecha de Nac")); ?>
 		</div>
 		<div class="span3">
-			<?php echo $this->Form->input("rol",array("type"=>'select',"options"=>$roles, "label"=>"Rol")); ?>
+			<?php echo $this->Form->input("rol",array("type"=>'text', "label"=>"Rol",  "readOnly"=>true)); ?>
 		</div>
 	</div>
 	
@@ -44,13 +37,13 @@
 
 	<div class="row-fluid">
 		<div class="span3">
-			<?php echo $this->Form->input("cod_prov",array("type"=>'select',"options"=>$provincias,"label"=>"Provincia","empty"=>true)); ?>
+			<?php echo $this->Form->input("cod_prov",array("type"=>'select',"options"=>$provincias,"label"=>"Provincia")); ?>
 		</div>
 		<div class="span3">
-			<?php echo $this->Form->input("cod_depto",array("type"=>'select',"options"=>$departamentos,"label"=>"Departamento","empty"=>true)); ?>
+			<?php echo $this->Form->input("cod_depto",array("type"=>'select',"options"=>$departamentos,"label"=>"Departamento")); ?>
 		</div>
 		<div class="span3">
-			<?php echo $this->Form->input("cod_loc",array("type"=>'select',"options"=>$localidades,"label"=>"Localidad","empty"=>true)); ?>
+			<?php echo $this->Form->input("cod_loc",array("type"=>'select',"options"=>$localidades,"label"=>"Localidad")); ?>
 		</div>
 		<div class="span3">
 			<?php echo $this->Form->input("calle",array("type"=>'text',"label"=>"Calle")); ?>
@@ -131,19 +124,18 @@
 			<?php echo $this->Form->input("cohorte_graduacion",array("type"=>'text',"label"=>"Cohorte Graduación")); ?>
 		</div>
 	</div>
+	<div class="modal-header header-ficha azul">
+   <div class="botonera-header">
+      <?php echo $this->Js->link("Guardar cambios",array("controller"=>"usuarios","action"=>"editar"), array("class"=>"btn","before"=>"inicia_ajax()","complete"=>"fin_ajax()","data"=>"$(this).parents('form:first').serialize()","dataExpression"=>true,"method"=>"post","update"=>"#editarUsuario")); ?>
+   </div>
+</div>
 	
-	<div class="row-fluid">
-		<?php echo $this->Form->submit("Crear Usuario", array("class"=>"icon icon-check","onclick"=>"inicia_ajax()")); ?>
-	</div>
+
 
 <?php echo $this->Js->writeBuffer() ?>
 <?php echo $this->Form->end() ?>
-<?php //echo $this->Js->observeField("UsuarioCodProv",array("update"=>"UsuarioCodDepto","frequency"=>'1',"url"=>array('controller'=>'usuarios','action'=>'updateDepartamentos'),"before"=>"ebuscando()","complete"=>"fbuscando()"));
-      //echo $this->Js->observeField("UsuarioCodDepto",array("update"=>"UsuarioCodLoc","frequency"=>'1',"url"=>array('controller'=>'usuarios','action'=>'updateLocalidades'),"before"=>"ebuscando()","complete"=>"fbuscando()")); 
-            $js=$this->Js;
-            /*echo $js->get('#CrearUsuarioCodProv')->event('keyup', $js->request(array('controller'=>'usuarios','action'=>'updateDepartamentos'),array('update'=>'#CrearUsuarioCodDepto','dataExpression'=>true,'data'=>
-            $js->serializeForm(array('isForm' => false, 'inline' => true)) ))); */
-        echo $this->Js->get('#UsuarioCodProv')->event('change',
+<?php $js=$this->Js;
+echo $this->Js->get('#UsuarioCodProv')->event('change',
               $this->Js->request(
                     array('controller'=>'usuarios', 'action'=>'updateDepartamentos'),
                     array('update'=>'#UsuarioCodDepto',
@@ -169,6 +161,5 @@
                         'method'=>'post',
                         'data'=>$js->serializeForm(array('isForm' => false, 'inline' => true))
           )));
-      
-      ?>
+        ?>
 </div>

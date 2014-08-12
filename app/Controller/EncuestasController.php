@@ -15,7 +15,7 @@ class EncuestasController extends AppController{
 
         }	
 	function crear($seccion = "Encuesta"){
-		$grupos = $this->Encuesta->Grupos->find("list");
+		$grupos = $this->Encuesta->Grupos->find("list",array('fields'=>'Grupos.nombre'));
 		$this->set("grupos",$grupos);
 		switch($seccion){
 			case "Encuesta":
@@ -24,9 +24,11 @@ class EncuestasController extends AppController{
 					if($this->data["Encuesta"]["cantXpag"] != null){
 						$this->request->data["Encuesta"]["partes"] = ceil($cantPreg / $this->data["Encuesta"]["cantXpag"]);
 					}
-					if($this->Encuesta->saveAll($this->data)){
+					if($this->Encuesta->saveAll($this->data)){ 
+                                            
 						$this->Session->setFlash("Encuesta creada con exito",null,null,"mensaje_sistema");
 						$this->render("/Elements/guardo_ok");
+                                                $this->redirect(array('controller'=>'encuestas','action'=>'display','crear'));
 					}
 					else{
 						$this->Session->setFLash("Ocurrio un error al intentar guardar la encuesta",null,null,"mensaje_sistema");

@@ -102,6 +102,7 @@ echo $this->Helpers->Html->script("d3.min");
             <div class="span10" id="contenedor-paginador">
                <?php echo $this->fetch("content") ?>
                    <?php
+                   //pr($OUsuario);
                            /* if(isset($OUsuario)){
                                 debug($OUsuario);
                             }else{
