@@ -19,6 +19,7 @@
     <div class="row-fluid">
         <div class="span6" id="paso_encuesta" style="display:none">
                         <?php echo $this->Form->input('encuesta',array("type"=>'select','options'=>$encuestas,'label'=>'Seleccione la Encuesta:','empty'=>true,'id'=>'select_encuesta')); ?>
+                        
             </div>
     </div>
 <div class="row-fluid">        
@@ -32,6 +33,7 @@
         foreach($grupos_total as $grupo_id=>$name): ?>
         <label class="btn btn-primary active">
           <input type="checkbox" name="data[Mail][grupos][]" value="<?php echo $grupo_id ?>" checked> <?php echo $name; ?>
+          <input type="hidden" name="data[Mail][grupos_nombre][]" value="<?php echo $name ?>" checked>
         </label>
     <?php endforeach; ?>
           </div><br><br>

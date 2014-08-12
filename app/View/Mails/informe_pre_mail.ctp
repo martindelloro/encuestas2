@@ -6,7 +6,7 @@
              <div class="row-fluid">
                  <table class="table">
                      <tr>
-                         <td><b>Detalles del correo electrónico a enviar.</b></td>
+                         <td><b><u>Detalles del correo electrónico a enviar.</u></b></td>
                      </tr>
                      <tr>
                          <td><b>Tipo de mail: </b> <?php if ($datos['Mail']['tipo']==1){ echo 'Encuesta'; }
@@ -21,17 +21,17 @@
                      <!-- Si seleccionó Encuesta-->
                      <?php if(!empty($datos['Mail']['encuesta'])){ ?>
                      <tr>
-                         <td><b>Encuesta: </b> </td>
+                         <td><b>Encuesta:</b> <?php echo $nombre_encuesta ?> </td>
                      
                      </tr>
                      <?php }?>
                      <!-- Si seleccionó Datos de Usuario --><tr>
-                         <td><b>Grupos: </b> </td>
-                     </tr>
+                         <td><b>Grupos:</b>
+                        <?php foreach($datos['Mail']['grupos_nombre'] as $grupo_id=>$name): 
+                                       echo $name.'. ';
+                               endforeach; ?>
+                    </tr>
                      
-                     <tr>
-                         <td><b>Usuarios: </b> </td>
-                     </tr>
                  </table>
              </div>
          </div>
