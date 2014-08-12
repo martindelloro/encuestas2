@@ -31,13 +31,13 @@
 	<?php foreach($datosInfo["Resultados"]["Opciones"] as $nombre=>$valor): ?>
 		<div class="row-fluid resumen-resultados">
 			<div class="span6 color-1 borde-1 borde-abajo"><span><?php echo $nombre ?></span></div>
-			<div class="span6 color-2 borde-1"><span><?php echo $valor ?></span></div>
+			<div class="span6  borde-1"><span><?php echo $valor ?></span></div>
 		</div>
 	<?php endforeach;?>
 
 	<div class="row-fluid resumen-resultados">
 		<div class="span6 color-1"><span>Total</span></div>
-		<div class="span6 color-2"><span><?php echo $datosInfo["Resultados"]["total"] ?></span></div>
+		<div class="span6 "><span><?php echo $datosInfo["Resultados"]["total"] ?></span></div>
 	</div>
 
 	<div class="well label-titular color-3"><?php echo $datosInfo["Pregunta"]["nombre"] ?></div>
