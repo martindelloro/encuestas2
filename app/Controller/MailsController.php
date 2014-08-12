@@ -56,6 +56,15 @@ class MailsController extends AppController{
         
        $this->set("id_encuesta",$id_encuesta);
     }
+    
+    function informe_pre_mail() {
+        $id_encuesta=$this->request->data['Mail']['encuesta'];
+        $datos=$this->request->data;
+        pr($datos);
+        
+        $this->set("id_encuesta",$id_encuesta);
+        $this->set("datos",$datos);
+    }
 	
 }
 

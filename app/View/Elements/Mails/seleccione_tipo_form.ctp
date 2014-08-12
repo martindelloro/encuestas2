@@ -24,7 +24,7 @@
 <div class="row-fluid">        
             <div class="span6" id="paso_grupo" style="display: none">
                         <?php //echo $this->Form->input('grupos',array("type"=>'select','options'=>$grupos_total,'label'=>'Seleccione el Grupo:','empty'=>true,'id'=>'checkbox_grupo')); ?>
-                <b>Seleccione el grupo:</b>
+                <b>Seleccione el grupo asociado a la encuesta:</b>
             <?php if (@!empty($grupos_total)){ ?>
     <div class="btn-group" data-toggle="buttons">
      <?php
@@ -44,54 +44,21 @@
     <div id="grupos_encuestas"> </div>
 	<div id="div_cantidades"></div>
         
-        
         <div id="continuar">
-            <i class="icon  icon-hand-o-right icon-1x btn btn-inverse">Continuar</i>
-        </div>
-         </div>
-     <div id="parte_2" style="display: none">
-         <div class="well contenedor-well fondo-1" id="paso_2" ">
-             <div class="row-fluid">
-                 <table class="table">
-                     <tr>
-                         <td><b>Detalles del correo electrónico a enviar.</b></td>
-                     </tr>
-                     <tr>
-                         <td>Tipo de mail: </td>
-                     </tr>
-                     <tr>
-                         <td>Tipo de envío: </td>
-                     </tr>
-                     <!-- Si seleccionó Encuesta-->
-                     <tr>
-                         <td>Encuesta: </td>
-                     </tr>
-                     <!-- Si seleccionó Datos de Usuario --><tr>
-                         <td>Grupos: </td>
-                     </tr>
-                     <tr>
-                         <td>Usuarios:  </td>
-                     </tr>
-                 </table>
-             </div>
-         </div>
-         <div class="todo span8">
-         <div class="volver span2">
-            <i class="icon  icon-hand-o-left icon-1x btn btn-inverse">Volver</i>
-        </div>
-         <div>
-             <?php echo $this->Js->link("<i class='icon icon-envelope-o'>Enviar</i>",array('url'=>array('controller'=>'grupos','action'=>'buscar_gr')),array('update'=>'#resultado_busqueda2','before'=>'inicia_ajax()','complete'=>'fin_ajax()',"with"=>"$(this).parents('form:first').serialize()",'method'=>'POST','dataExpression'=>true,"class"=>"btn btn-inverse span2","escape"=>false)); 
-		echo $this->Form->End(); ?>
-         </div>
-         </div>
-     </div>
-</div>
-<div id="resultado_busqueda2"></div>
-    </div>
-</div>
+            <i class='icon  icon-hand-o-right icon-1x btn btn-inverse'>Continuar</i>
+            
         
-<?php echo $this->Js->writeBuffer() ?>	
-</div>
+        </div>
+         </div>
+     <?php echo $this->Form->End(); ?>
+    <?php echo $this->Js->writeBuffer() ?>
+     </div>
+             
+
+<div id="resultado_informe"></div>
+    
+
+
 
 <script type="text/javascript">
         $("#select_encuesta").bind("change",function(){
@@ -124,11 +91,13 @@
         rules: {
             'data[Mail][tipo]': {
                required: true
+             
             },
             'data[Mail][tipo_envio]': {
                required: true
             }
         },
+        
         highlight: function(element) {
             $(element).closest('.form-group').addClass('has-error');
         },
@@ -150,7 +119,7 @@
      });
      if(validacion.form()==true){
          $("#parte_1").hide();
-         $("#parte_2").show();
+         <?php echo $this->Js->request(array("controller"=>"mails","action"=>"informe_pre_mail"),array("update"=>"#resultado_informe","before"=>"inicia_ajax()","complete"=>"fin_ajax()","escape"=>false,"data"=>"$(this).parents('form:first').serialize()","class"=>"btn btn-inverse","dataExpression"=>true,"method"=>"post"));  ?>
      }
    
  });

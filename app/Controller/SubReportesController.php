@@ -42,9 +42,10 @@ class SubReportesController extends AppController{
 					$filtrosInfo[$index] = array("Pregunta"=>array("nombre"=>$pregunta["Pregunta"]["nombre"],"tipo"=>$pregunta["Tipo"]["nombre"]),"boolean"=>$filtro["boolean"]);
 					break;
 			}
-		}
+		} // FIN FOREACH FILTROS
 		$resultados = array_values($resultados); // RESETEO EL INDEX DEL ARRAY YA QUE EL INDEX DE FILTROS PUEDE CAMBIAR DEPENDIENDO DE SI SE BORRAR UN FILTRO 
-				
+		// pr($resultados);
+		
 		// ORDENO LOS USUARIO_ID EN UN ARRAY X CADA RESULTADO DE FILTRO APLICADO
 		$tmp  = array();
 		$tmp2 = array();
@@ -53,8 +54,9 @@ class SubReportesController extends AppController{
 				$tmp2[$index2] = $tmpResultado["Respuesta"]["usuario_id"];
 			}
 			$tmp[$index] = array_unique($tmp2); // FILTRO POR SI QUEDARON USUARIOS_ID DUPLICADOS, PROBABLE EN UNA PREGUNTA DE TIPO MULTIPLECHOICE
+			$tmp2 = array();
 		}
-		
+				
 		$loops = count($tmp); // LOOPS = CANTIDAD DE FILTROS APLICADOS
 		switch(true){
 			case ($loops == 1):
@@ -74,7 +76,7 @@ class SubReportesController extends AppController{
 				  $usuarios_id = $tmp3;
 		}
 		} // FIN IF SI VIENE CON FILTROS...
-			
+		
 		
 		switch($this->data["SubReporte"]["grafico_tipo"]){
 			case 1:
@@ -119,13 +121,23 @@ class SubReportesController extends AppController{
 						$datosInfo["Resultados"]["total"] = $cont_opciones["NO"]["contador"] + $cont_opciones["SI"]["contador"];
 				} // fin switch pregunta tipo_id
 				break;
+			/****************************************************************************************************
+			 * ***************************************** STACKED BARS *******************************************
+			 * *************************************************************************************************/	
+				
 				
 			case 2:  // Normalized stacked bars.
+				$totalesY = array();
 				$preguntaGraficoX = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_x"]),"contain"=>array("Tipo","Opcion"),"recursive"=>-1));
 				$preguntaGraficoY = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_y"]),"contain"=>array("Tipo","Opcion"),"recursive"=>-1));
 				
 				$opcionesX = $preguntaGraficoX["Opcion"];
+				$nombrePreguntaX = $preguntaGraficoX["Pregunta"]["nombre"];
 				$opcionesY = $preguntaGraficoY["Opcion"];
+				$nombrePreguntaY = $preguntaGraficoY["Pregunta"]["nombre"];
+				
+				$this->set("preguntaY",$nombrePreguntaY);
+				$this->set("preguntaX",$nombrePreguntaX);
 				
 				$datos = array();
 				$categoriasY = array();
@@ -147,20 +159,29 @@ class SubReportesController extends AppController{
 					foreach($tmpsY as $tmpY){
 						$usuariosY[] = $tmpY["Respuesta"]["usuario_id"];
 					}
+					if(!isset($totalesY[$nombreY])) $totalesY[$nombreY] = 0;
 					foreach($opcionesX as $opcionX){
 						$nombreX = $opcionX["nombre"];
 						$categoriasX[] = $nombreX;
 						$pregIdX = $opcionX["pregunta_id"];
 						$opcIdX  = $opcionX["id"];
 						$joins   = null;
-						
 						$joins[] = array("table"=>"respuestas_opciones","alias"=>"RespuestaOpcion","type"=>"inner","conditions"=>array("RespuestaOpcion.respuesta_id = Respuesta.id","RespuestaOpcion.opcion_id = $opcIdX"));
 						$datos[$nombreX]["Resultados"][$nombreY] = $this->Respuesta->find('count',array("conditions"=>array("Respuesta.pregunta_id"=>$pregIdX,"Respuesta.usuario_id"=>$usuariosY),"joins"=>$joins));
-					
+						$totalesY[$nombreY] += $datos[$nombreX]["Resultados"][$nombreY];
 						$datos[$nombreX]["categoriaX"] = $nombreX;
 					}
 				}
+				
 				$datosInfoStacked = $datos;
+				foreach($datosInfoStacked as $key=>$data){
+				    	$datosInfoStacked[$key]["Total"] = array_sum($data["Resultados"]);
+				    	$totalGeneral =+ $datosInfoStacked[$key]["Total"];
+				}
+				$this->set("totalGeneral",$totalGeneral);
+				$this->set("totalesY",$totalesY);
+								
+				
 				$datos = array_values($datos);
 				foreach($datos as $index=>$dato){
 					foreach($dato["Resultados"] as $nombreY => $valor){
@@ -173,14 +194,14 @@ class SubReportesController extends AppController{
 						$datos[$index]["Resultados"][$nombreY] = null;
 						$datos[$index]["Resultados"][$nombreY]["categoriaY"] = $nombreY;
 						$datos[$index]["Resultados"][$nombreY]["offset"] = (float)$offset;
-						$datos[$index]["Resultados"][$nombreY]["altura"] = (float) ($valor+$fuck)  / $datos[$index]["Total"] ;
+						$datos[$index]["Resultados"][$nombreY]["altura"] = ($datos[$index]["Total"] != 0)?((float) ($valor+$fuck)  / $datos[$index]["Total"]):0 ;
 						$fuck += $valor;
 						$offset = $datos[$index]["Resultados"][$nombreY]["altura"];
 					}
 					$datos[$index]["Resultados"] = array_values($datos[$index]["Resultados"]);
 				
 				}
-                                $this->set('preguntaGraficoX',$preguntaGraficoX);
+                $this->set('preguntaGraficoX',$preguntaGraficoX);
 				$this->set("categoriasX",array_unique($categoriasX));
 				$this->set("categoriasY",$categoriasY);
 				$this->set("datos",$datos);
@@ -190,7 +211,7 @@ class SubReportesController extends AppController{
 		
                 $resultados = Set::extract($datosInfoStacked, '{s}');
                 $this->set('resultados',$resultados);
-                
+        $this->set("datos",$datos);        
 		$this->set("resultados",$resultados);
 		$this->set("cont_opciones",$cont_opciones);
 		$this->set("datosInfo",$datosInfo);
