@@ -54,7 +54,7 @@ class ImportarController extends AppController{
 		$importInfo["rows"]     	 = $data->rowcount(0);
 		$importInfo["rowsChunks"]    = ceil($importInfo["rows"] / 50);
 		$importInfo["RowSliceSize"]  = 50;
-		$importInfo["cols"]			 = $data->colcount(0)-12; // 13 x offset los datos del usuario no cuentan
+		$importInfo["cols"]			 = $data->colcount(0)-14; // 13 x offset los datos del usuario no cuentan
 		$importInfo["colsChunks"]	 = ceil($importInfo["cols"] / 10);
 		$importInfo["ColSliceSize"]  = 10;
 		$importInfo["path"]	   		 = $path;
@@ -93,7 +93,7 @@ class ImportarController extends AppController{
 		}
 	
 		$encuesta_id = $importInfo["survey_id"];
-		for($col = $offset + 12; $col<= $size+12;$col++){
+		for($col = $offset + 14; $col<= $size+14;$col++){
 			$pregunta = array();
 
            $valor  = $data->val(1,$col);
@@ -106,7 +106,7 @@ class ImportarController extends AppController{
                                          
 			
 			$pregunta["Encuestas"][$col]["encuesta_id"] = $importInfo["survey_id"];
-			$pregunta["Encuestas"][$col]["orden"] = $col - 12;
+			$pregunta["Encuestas"][$col]["orden"] = $col - 14;
             $pregunta["Pregunta"]["nombre"] = $valor;
             
 			$opciones = array();
@@ -156,6 +156,12 @@ class ImportarController extends AppController{
 		$this->autoRender = false;
 		$remplazar = array('à'=>'a','á'=>'a','è'=>'e','é'=>'e','ì'=>'i','í'=>'i','ò'=>'o','ó'=>'o','ù'=>'u','ú'=>'u');
 		$ajaxInception = false;
+		if($loop != 1){
+			$usuarios = $this->Session->read("UsuariosCache");
+		}else{
+			$usuarios = array();
+		}
+		
 		if($excelName == null){
 			$offset = $this->passedArgs["offset"];
 			$size   = $this->passedArgs["size"];
@@ -182,39 +188,45 @@ class ImportarController extends AppController{
 		$columnas = $data->colcount(0);
 		$contResp = 0;
 		for($offset ; $offset <= $size; ++$offset){
-			$dni = preg_replace( '/[^0-9]/', '', $data->val($offset,5));
-			$usuario = $this->Pregunta->Usuario->find("first",array("conditions"=>array("Usuario.dni"=>$dni),"recursive"=>-1));
-			if($usuario == null){
-				$email = $data->val($offset,12);
-				$usuario = $this->Pregunta->Usuario->find("first",array("conditions"=>array("Usuario.usuario"=>$email)));
-				if($usuario == null){
-					$nombreApellido = str_replace(" ","",$data->val($offset,2));
-					$usuario = $this->Pregunta->Usuario->find("first",array("conditions"=>array("Usuario.usuario"=>$nombreApellido)));
+			$email  = utf8_encode(strtolower(trim($data->val($offset,13))));
+			$dni = utf8_encode(preg_replace( '/[^0-9]/', '', trim($data->val($offset,5))));
+			$nombre = utf8_encode(trim($data->val($offset,2)));
+			$apellido = utf8_encode(trim($data->val($offset,3)));
 			
-				}
-			}
-			
+			$usuario = $this->Pregunta->Usuario->find("first",array("conditions"=>array("Usuario.usuario"=>$email),"recursive"=>-1));
+			if($usuario == null) $usuario = $this->Pregunta->Usuario->find("first",array("conditions"=>array("Usuario.usuario"=>$dni),"recursive"=>-1));
+			if($usuario == null) $usuario = $this->Pregunta->Usuario->find("first",array("conditions"=>array("Usuario.usuario"=>$nombre),"recursive"=>-1)); 
+			if($usuario == null) $usuario = $this->Pregunta->Usuario->find("first",array("conditions"=>array("Usuario.usuario"=>$apellido),"recursive"=>-1));
+				
 			if($usuario == null) {
+				echo "email: $email <br> dni: $dni <br> nombre: $nombre <br> apellido: $apellido<br>";
 				echo "Paso X veces <br>"; continue;
 			}
 			$nombrePregunta = null;
-			$pregunta = null;
 			$opcion = null;
 			$usuario_id = $usuario["Usuario"]["id"];
-			for($col = 13; $col <= $columnas; $col++){
+			if(!in_array($usuario_id, $usuarios)){
+				$usuarios[] = $usuario_id;
+			}else{
+				// ya fue procesado... repetido en la planilla excell.
+				continue;
+			}
+			
+			for($col = 14; $col <= $columnas; $col++){
+				$pregunta = null;
 				switch($col){
-					case ($col >= 13):
+					case ($col >  13):
 						$pregNom  = $data->val(1,$col);
                         $strpos   = strpos($pregNom, "-")+1;
                         $fin      = strlen($pregNom) - $strpos;     
                         $tmp      = trim(substr($pregNom,$strpos,$fin));
                         $pregNom  = utf8_encode($tmp);
 				        $nombrePregunta =  pg_escape_string($pregNom);
-                        $valor    = strtolower($data->val($offset,$col));
+				        $valor    = strtolower($data->val($offset,$col));
 						$valor    = utf8_encode($valor);
 						$contResp++;
 							
-						$EncuestaPregunta = $this->Encuesta->EncuestaPregunta->find("first",array("conditions"=>array("EncuestaPregunta.nombre"=>$nombrePregunta,"EncuestaPregunta.encuesta_id"=>$encuesta_id,"EncuestaPregunta.orden"=>$col-12),"recursive"=>-1));
+						$EncuestaPregunta = $this->Encuesta->EncuestaPregunta->find("first",array("conditions"=>array("EncuestaPregunta.nombre"=>$nombrePregunta,"EncuestaPregunta.encuesta_id"=>$encuesta_id,"EncuestaPregunta.orden"=>$col-14),"recursive"=>-1));
 						$pregunta["Pregunta"] = $EncuestaPregunta["EncuestaPregunta"];
 																
 						if($pregunta == null) {
@@ -238,7 +250,7 @@ class ImportarController extends AppController{
 									break;
 								case 4:
 									if($valor === '' || $valor === ' '){
-										$valor = "-";
+										utf8_encode($valor = "-");
 									}
 									$opcion = $this->Pregunta->Opcion->find("first",array("conditions"=>array("Opcion.nombre"=>$valor,"Opcion.pregunta_id"=>$pregunta["Pregunta"]["id"]),"recursive"=>-1));
 									$respuesta[$contResp]["Respuesta"]["id"] = '';
@@ -247,11 +259,11 @@ class ImportarController extends AppController{
 									$respuesta[$contResp]["Respuesta"]["pregunta_id"] = $pregunta["Pregunta"]["id"];
 									$respuesta[$contResp]["Respuesta"]["tipo_id"] = $pregunta["Pregunta"]["tipo_id"];
 									$respuesta[$contResp]["Respuesta"]["Opciones"][] = $opcion["Opcion"]["id"];
-									break;
+									break; 
 								case 5:
 									// NO HAY TIEMPO X AHORA
 									break;
-								case 6:
+								case 6: 
 									$respuesta[$contResp]["Respuesta"]["id"] = '';
 									$respuesta[$contResp]["Respuesta"]["usuario_id"] = $usuario["Usuario"]["id"];
 									$respuesta[$contResp]["Respuesta"]["encuesta_id"] = $encuesta_id;
@@ -263,8 +275,9 @@ class ImportarController extends AppController{
 							} // FIN SWITCH PREGUNTA TIPO_ID
 				} // FIN SWITCH COLUMNA
 				} // FIN FOR COLUMNA
-				
 			} // FIN FOR FILA
+			$this->Session->write("UsuariosCache",$usuarios);
+		
 			$this->Pregunta->Respuesta->saveMany($respuesta,array("deep"=>true));
 			if($ajaxInception){
 				// $this->Session->write("resultadoUsuarios",$resultado);
@@ -317,16 +330,16 @@ class ImportarController extends AppController{
 			for($j = 2; $j <= 13; $j++){
 				switch($j-1){
 					case 1:
-						$usuario["Usuario"]["nombre"] = @utf8_encode($data->val($i,$j));
+						$usuario["Usuario"]["nombre"] = @utf8_encode(trim($data->val($i,$j)));
 						break;
                     case 2:
-                    	$usuario["Usuario"]["apellido"] = @utf8_encode($data->val($i,$j));		
+                    	$usuario["Usuario"]["apellido"] = @utf8_encode(trim($data->val($i,$j)));		
                         break;
                     case 3:
                 		$usuario["Usuario"]["sexo"] = @strtolower($data->val($i,$j));		
                     	break;
 					case 4:
-						$usuario["Usuario"]["dni"] =  @preg_replace( '/[^0-9]/', '', $data->val($i,$j));
+						$usuario["Usuario"]["dni"] =  @utf8_encode(trim(preg_replace( '/[^0-9]/', '', $data->val($i,$j))));
 						break;
 					case 5:
 						$fecha_nac = @$data->val($i,$j);
@@ -359,7 +372,7 @@ class ImportarController extends AppController{
 						$usuario["Usuario"]["celular"] = $data->val($i,$j);
 						break;
 					case 12:
-						$usuario["Usuario"]["email_1"] = strtolower($data->val($i,$j));
+						$usuario["Usuario"]["email_1"] = utf8_encode(strtolower(trim($data->val($i,$j))));
 						break;
 					} // FIN IF SWTICH
 				} // FIN FOR COLUMNAS 
@@ -389,7 +402,10 @@ class ImportarController extends AppController{
 				$usuario["Usuario"]["rol"] = "graduado";
 									
 				$this->Usuario->set($usuario);
-				if(true){ /* $this->Usuario->validates() */
+				$this->Usuario->validator()->remove('fecha_nac');
+				$this->Usuario->validator()->remove('dni');
+				$this->Usuario->validator()->remove('password');
+				if($this->Usuario->validates()){ /* $this->Usuario->validates() */
 					if($grupo_id != null){
 						$usuario["Grupos"]["Grupos"][] = $grupo_id;
 					}
