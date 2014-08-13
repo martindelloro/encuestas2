@@ -28,7 +28,7 @@
 			    success:function (data, textStatus) {$("#exec_js").html(data);}, 
 			    type:"get", 
 			    async:false,
-			    url:"\/encuestas2\/importar\/importarUsuarios/offset:"+offset+"\/size:"+size+"\/loop:"+i});
+			    url:"importarUsuarios/offset:"+offset+"\/size:"+size+"\/loop:"+i});
 	   
 	
 
@@ -37,4 +37,10 @@
 <?php if(isset($loop)):?>
 </script>
 <?php endif; ?>
+<?php endif; ?>
+
+<?php if(isset($endLoop)): ?>
+<script type="text/javascript">
+	$("#step5").unblock();
+</script>
 <?php endif; ?>

@@ -28,7 +28,7 @@
 			    success:function (data, textStatus) {$("#exec_js").html(data);}, 
 			    type:"get", 
 			    async:true,
-			    url:"\/encuestas2\/importar\/cargarContenido/offset:"+offset+"\/size:"+size+"\/loop:"+i});
+			    url:"cargarContenido/offset:"+offset+"\/size:"+size+"\/loop:"+i});
 	   
 	
 
@@ -38,3 +38,6 @@
 </script>
 <?php endif; ?>
 <?php endif; ?>
+
+
+<?php echo $this->Mensajes->mostrar(); ?>

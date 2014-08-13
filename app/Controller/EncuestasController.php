@@ -15,7 +15,7 @@ class EncuestasController extends AppController{
 
         }	
 	function crear($seccion = "Encuesta"){
-		$grupos = $this->Encuesta->Grupos->find("list");
+		$grupos = $this->Encuesta->Grupos->find("list",array('fields'=>'Grupos.nombre'));
 		$this->set("grupos",$grupos);
 		switch($seccion){
 			case "Encuesta":
@@ -24,9 +24,11 @@ class EncuestasController extends AppController{
 					if($this->data["Encuesta"]["cantXpag"] != null){
 						$this->request->data["Encuesta"]["partes"] = ceil($cantPreg / $this->data["Encuesta"]["cantXpag"]);
 					}
-					if($this->Encuesta->saveAll($this->data)){
+					if($this->Encuesta->saveAll($this->data)){ 
+                                            
 						$this->Session->setFlash("Encuesta creada con exito",null,null,"mensaje_sistema");
 						$this->render("/Elements/guardo_ok");
+                                                $this->redirect(array('controller'=>'encuestas','action'=>'display','crear'));
 					}
 					else{
 						$this->Session->setFLash("Ocurrio un error al intentar guardar la encuesta",null,null,"mensaje_sistema");
@@ -37,18 +39,19 @@ class EncuestasController extends AppController{
 			case "Importar":
 				$this->Encuesta->set($this->data);
 				if($this->Encuesta->validates()){
-					if($this->Encuesta->save()){
+					if($this->Encuesta->saveAssociated()){
 						$this->set("survey_id",$this->Encuesta->getInsertId());
-						$this->set("group_id",$this->data["Grupo"]["id"]);
+						$this->set("group_id",$this->data["Grupos"]["Grupos"]);
+						$this->set("paso2ok",true);
 						$this->Session->setFlash("Paso 1, completado con exito",null,null,"mensaje_sistema");
-						$this->render("/Elements/Importar/Encuesta/paso1OK");
-						
 					}else{
 						$this->Session->setFlash("Ocurrio un error de base de datos al intentar crear la encuesta, contacte al administrador",null,null,"mensaje_sistema");
 					}
 				}else{
 					$this->Session->setFlash("Error de validacion",null,null,"mensaje_sistema");
 				}
+				$this->render("/Elements/Import/Survey/step1");
+				break;
 		}
 		
 	}
@@ -78,7 +81,7 @@ class EncuestasController extends AppController{
 		$this->autoRender = false;
 		$encuesta = $this->Encuesta->find("first",array("conditions"=>array("Encuesta.id"=>2),"contain"=>array("Preguntas"=>array("Respuesta"=>array("conditions"=>array("Respuesta.encuesta_id"=>2))))));
 		debug($encuesta);
-		break;
+		
 	}
 	
 	function completar($encuesta_id = null, $parte = 1,$partes = null,$cantXpag = null){

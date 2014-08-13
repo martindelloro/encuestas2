@@ -27,7 +27,7 @@
 			    success:function (data, textStatus) {$("#exec_js").html(data);}, 
 			    type:"get", 
 			    async:false,
-			    url:"\/encuestas2\/importar\/createAnswers\/"+offset+"\/"+size+"\/"+i});
+			    url:"createAnswers\/"+offset+"\/"+size+"\/"+i});
 	   
 	
 
@@ -36,4 +36,10 @@
 <?php if(isset($loop)):?>
 </script>
 <?php endif; ?>
+<?php endif; ?>
+
+<?php if(isset($endLoop)): ?>
+<script type="text/javascript">
+	$("#step4").unblock();
+</script>
 <?php endif; ?>

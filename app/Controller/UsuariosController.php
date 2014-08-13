@@ -1,7 +1,7 @@
 <?php 
 
 class UsuariosController extends AppController {
-    var $uses = array("Usuario","Provincia","Localidad","Departamento");
+    var $uses = array("Usuario","Provincia","Localidad","Departamento","Encuesta","Grupo","GruposUsuarios",'EncuestaGrupos','VistaUsuarios');
     var $helpers= array('Js'=>array('Jquery'));
     var $userData = array();
     var $OUsuario=null;
@@ -198,6 +198,26 @@ class UsuariosController extends AppController {
          parent::beforeFilter();
             $sesion=$this->Session->Read();
             //debug($sesion);
+            $provincias=$this->Provincia->find('list');
+                     $this->set("provincias", $provincias);
+                 $keys = array_keys($provincias);
+
+                 $departamentos=$this->Provincia->Departamento->find('list',array(
+                     'conditions'=>array(
+                         'Departamento.cod_prov'=>$keys[0]
+                         )
+                     )
+                 );
+                 $this->set("departamentos",$departamentos);
+                 $keys = array_keys($departamentos);
+
+                 $localidades= $this->Provincia->Departamento->Localidad->find('list',array(
+                     'conditions'=>array(
+                         'Localidad.cod_depto'=>$keys[0]
+                         )
+                     )
+                 );
+                 $this->set("localidades",$localidades); 
             if($sesion['OUsuario']==null){
 
                 $this->Session->setFlash("Debe loguearse para acceder a esta sección.<br>"
@@ -219,7 +239,60 @@ class UsuariosController extends AppController {
             }
      
          }
+        function editar_usuario($id){
+         parent::beforeFilter();
+            $sesion=$this->Session->Read();
+            //debug($sesion);
+            if($sesion['OUsuario']==null){
 
+                $this->Session->setFlash("Debe loguearse para acceder a esta sección.<br>"
+                            . "               El administrador ha sido notificado del error",null,null,"mensaje_sistema");
+                $this->redirect(array('controller'=>'pages','action'=>'display','inicio'));
+            }else{
+                $provincias=$this->Provincia->find('list');
+                     $this->set("provincias", $provincias);
+                 $keys = array_keys($provincias);
+
+                 $departamentos=$this->Provincia->Departamento->find('list',array(
+                     'conditions'=>array(
+                         'Departamento.cod_prov'=>$keys[0]
+                         )
+                     )
+                 );
+                 $this->set("departamentos",$departamentos);
+                 $keys = array_keys($departamentos);
+
+                 $localidades= $this->Provincia->Departamento->Localidad->find('list',array(
+                     'conditions'=>array(
+                         'Localidad.cod_depto'=>$keys[0]
+                         )
+                     )
+                 );
+                 $this->set("localidades",$localidades); 
+                if(!empty($this->data)){
+                       if($this->Usuario->save($this->data)){
+                               $this->Session->setFlash("Usuario editado con exito",null,null,"mensaje_sistema");
+                               $this->set("id","#editarUsuario");
+                               $this->render("/Elements/guardo_ok");
+                       }
+                       else{
+                               $this->Session->setFlash("Ocurrio un error al intentar editar el usuario",null,null,"mensaje_sistema");
+                       }
+                }else{
+                       $this->data=$this->Usuario->findById($id);
+                }
+            }
+     
+         }
+         function chequeo_de_encuestas($id_usuario){
+             $encuesta=$this->VistaUsuarios->find('first', array('conditions'=>array('VistaUsuarios.usuario_id'=>$id_usuario)));
+             //pr($encuesta);
+             //17/1/1/20
+             //enc/1/1/canxpag
+             $this->redirect(array('controller'=>'encuestas','action'=>'completar',$encuesta['VistaUsuarios']['encuesta_id'],1,1,20));
+             //$this->render('completar/'.$encuesta['VistaUsuarios']['encuesta_id']."/"."1"."1"."316");
+             
+         }
 
 
 }

@@ -21,27 +21,90 @@
 <?php endforeach; ?>
 <?php endif; ?>
 
+<!-- ********************************************** -->
+<!-- ***** COMIENZO RESULTADOS GRAFICO BARRAS ***** -->
+<!-- ********************************************** -->
+
 <?php if(!empty($datosInfo)): ?>
 <div class="well label-titular color-3">Resultados</div>
-<?php foreach($datosInfo["Resultados"]["Opciones"] as $nombre=>$valor): ?>
-	<div class="row-fluid resumen-resultados">
-		<div class="span6 color-1 borde-1 borde-abajo"><span><?php echo $nombre ?></span></div>
-		<div class="span6 color-2 borde-1"><span><?php echo $valor ?></span></div>
-	</div>
-<?php endforeach;?>
+	
+	<?php foreach($datosInfo["Resultados"]["Opciones"] as $nombre=>$valor): ?>
+		<div class="row-fluid resumen-resultados">
+			<div class="span6 color-1 borde-1 borde-abajo"><span><?php echo $nombre ?></span></div>
+			<div class="span6  borde-1"><span><?php echo $valor ?></span></div>
+		</div>
+	<?php endforeach;?>
+
 	<div class="row-fluid resumen-resultados">
 		<div class="span6 color-1"><span>Total</span></div>
-		<div class="span6 color-2"><span><?php echo $datosInfo["Resultados"]["total"] ?></span></div>
+		<div class="span6 "><span><?php echo $datosInfo["Resultados"]["total"] ?></span></div>
 	</div>
 
-<div class="well label-titular color-3"><?php echo $datosInfo["Pregunta"]["nombre"] ?></div>
+	<div class="well label-titular color-3"><?php echo $datosInfo["Pregunta"]["nombre"] ?></div>
+<?php endif; ?>
+<!--  ***** FIN IF RESULTADOS GRAFICO TIPO BARRAS *****  -->
+
+
+
+<!-- **************************************************** -->
+<!-- ***** COMIENZO RESULTADOS GRAFICO STACKED BARS ***** -->
+<!-- **************************************************** -->
+<?php if(!empty($datosInfoStacked)): ?>
+<table class="table table-striped">
+	<thead>
+		<tr class="preguntasTabla">
+			<th><?php echo $preguntaX ?></th>
+			<th colspan="<?php echo count($categoriasY)+1; ?>"><?php echo $preguntaY ?></th>
+		
+		</tr>
+		<tr>
+			<th></th>
+			<?php foreach($categoriasY as $categoriaY): ?>
+				<th><?php echo $categoriaY ?></th>
+			<?php endforeach; ?>
+			<th>Total</th>
+		</tr>
+	</thead>
+	
+	<tbody>
+	<?php foreach($datosInfoStacked as $categoriaX=>$datosY): ?>
+		<tr>
+			<td><?php echo $categoriaX ?></td>
+			<?php foreach($datosY["Resultados"] as $categoriaY=>$valor): ?>
+			<td><?php echo $valor ?></td>	
+			<?php endforeach; ?>
+			<td><?php echo $datosY["Total"] ?></td>
+		</tr>
+	</tbody>
+	<?php endforeach; ?>
+	<tr>
+		<td>Total</td>
+		<?php foreach($totalesY as $totalY): ?>
+			<td><?php echo $totalY ?></td>	
+		<?php endforeach; ?>
+		<td><?php echo array_sum($totalesY); ?></td>		
+	</tr>
+	</table>
+<?php endif; ?>
+<!--  ***** FIN IF RESULTADOS GRAFICO STACKED BARS *****  -->
+
+<?php if(isset($preguntaY)): ?>
+<div class="well label-titular color-3">
+	<?php echo $preguntaY ?>
+</div>
 <?php endif; ?>
 
-<div id="leyenda" class="leyenda">
+<div id="leyenda" class="leyenda" style="display:none"></div>
 
-</div>
 <div id="graficoBarras" class="grafico" >
 </div>
+
+<?php if(isset($preguntaX)): ?>
+<div class="well label-titular color-3">
+	<?php echo $preguntaX ?>
+</div>
+<?php endif; ?>
+
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
@@ -71,8 +134,7 @@ var yAxis = d3.svg.axis().scale(y).orient("left").ticks(20);
 var svg = d3.select("#graficoBarras").append("svg")
 .attr("width", width + margin.left + margin.right)
 .attr("height", height + margin.top + margin.bottom)
-.append("g")
-.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+.append("g");
 
 
 </script>

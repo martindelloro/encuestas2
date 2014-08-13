@@ -358,6 +358,16 @@ body .mensaje-contenido{
     /********  REPORTES  *********/
 /*************************************************/
 
+.preguntasTabla th{
+	text-align:center;
+	background-color:#8A091D;
+	color:white !important;
+	font-weight:bold !important;
+}
+
+.preguntasTabla th:first-child{
+	border-right:1px solid white !important;
+}
 .contenedor-reportes .resultados:nth-child(odd){
     background-color:#DDDDDD;
 }
@@ -970,7 +980,7 @@ border-radius: 2px;
 
 .grafico {
 	width:100% !important;
-	height:400px;
+	height:600px;
 }
 
 .bar {
@@ -998,10 +1008,9 @@ border-radius: 2px;
 
 .leyenda {
 	width:100%;
-	height:250px;
-	float:right;
+	
 	margin-top:20px;
-	margin-left:45px;
+
 }
 
 
@@ -1013,13 +1022,21 @@ border-radius: 2px;
 	
 }
 
+.contenedorResultados .resultado:nth-child(odd){
+	background-color: white !important;
+}
+
+.contenedorResultados .resultado:nth-child(even){
+	background-color:#DBDBDB !important;
+	
+}
 
 /*************************************************/
-/*************   IMPORTAR ENCUESTA ***************/
+/*************    IMPORT SURVEY    ***************/
 /*************************************************/
 
 
-#importarEncuesta {
+#importSurvey {
     border-left: 20px solid #474747;
     border-right: 20px solid #474747;
     border-top: 20px solid #474747;
@@ -1033,24 +1050,22 @@ border-radius: 2px;
     margin-bottom: 0.15em;
     margin-top: 0.4em !important;
     padding: 5px !important;
-    float:left;
-    display:inline;
+    display:block;
 }
 
-#importarEncuesta .pasos{
+#importSurvey .steps{
 	padding:2px !important;
-	min-height:110px;
-	margin-bottom:4px;
+	
 }
 
-#importarEncuesta .pasos .titular {
+#importSurvey .steps .titular {
     background-color: white !important;
     border-bottom: 1px solid #730220 !important;
     height: 28px;
 }
 
 
-#importarEncuesta .pasos .titular span {
+#importSurvey .steps .titular span {
     color: #730220 !important;
     display: block;
     font-family: helvetica;
@@ -1061,20 +1076,20 @@ border-radius: 2px;
     text-align: center;
 }
 
-#importarEncuesta .crear {
+#importSurvey .crear {
     float: right;
     margin-right: 0.2em;
     margin-top: 0.75em;
 }
 
-#importarEncuesta #paso2 button{
+#importSurvey #step2 button{
 	border: 1px solid #730220 !important;
 	background-color: white;
 	color: #730220 !important;
 	width:100%;
 }
 
-#importarEncuesta #paso2 .datosArchivo{
+#importSurvey  .datosArchivo{
 	border: 1px solid #730220 !important;
 	background-color: white;
 	color: #730220 !important;
@@ -1082,19 +1097,19 @@ border-radius: 2px;
 	height:23px;
 }
 
-#importarEncuesta #paso2 .datosArchivo div{
+#importSurvey #step2 .datosArchivo div{
 	border-right: 2px solid black;
     height: 28px;
     margin-top: -2px;
     min-height: 0;
 }
 
-#importarEncuesta #paso2 .datosArchivo div:last-child{
+#importSurvey #step2 .datosArchivo div:last-child{
 	border-right: none;
  
 }
 
-#importarEncuesta #paso2 .progressBar {
+#importSurvey  .progressBar {
 	background-color: green;
     border-radius: 3px;
     height: 23px;
@@ -1106,7 +1121,7 @@ border-radius: 2px;
     display:none;
 }
 
-#importarEncuesta #paso2 .datosArchivo .subLabel span{
+#importSurvey #step2 .datosArchivo .subLabel span{
 	 color: #115373;
     display: block;
     line-height: 25px;
@@ -1114,11 +1129,26 @@ border-radius: 2px;
 	
 }
 
-#importarEncuesta #paso2 .fileInfo  span{
+#importSurvey #step2 .fileInfo  span{
 	 display: block;
      line-height: 25px;
 }
 
+#importSurvey .checkbox{
+	width:100%;
+}
+
+#importSurvey .checkbox label{
+	width:100%;
+	
+}
+#importSurvey .checkbox input[type="checkbox"] {
+    float: left;
+    height: 20px !important;
+    margin-left: 0 !important;
+    margin-top: 0 !important;
+    width: 20px !important;
+}
 
 
 .color-input-1 {
@@ -1143,4 +1173,9 @@ border-radius: 2px;
 
 .color-5{
 	background-color: #BFB6B0 !important;
+}
+
+
+.contenedor-opciones .checkbox input{
+	width:22px !important;
 }

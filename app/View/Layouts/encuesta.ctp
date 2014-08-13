@@ -88,7 +88,7 @@ echo $this->Helpers->Html->script("d3.min");
                       ?>
                 </ul>
                 <ul class="nav pull-right">
-                	<?php echo $this->element("BarraMenu/login"); ?>
+                	<?php  echo $this->element("BarraMenu/login"); ?>
                 </ul>
                 </div> <!-- FIN DIV NAV-COLLAPSE -->
                
@@ -102,6 +102,7 @@ echo $this->Helpers->Html->script("d3.min");
             <div class="span10" id="contenedor-paginador">
                <?php echo $this->fetch("content") ?>
                    <?php
+                   //pr($OUsuario);
                            /* if(isset($OUsuario)){
                                 debug($OUsuario);
                             }else{

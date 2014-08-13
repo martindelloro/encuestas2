@@ -1,10 +1,10 @@
-<?php echo $this->Mensajes->mostrar(); ?>
+    <?php echo $this->Mensajes->mostrar(); ?>
 
 <?php echo $this->Form->create("Pregunta"); ?>
 <div class="modal-header header-ficha azul">
     <div class="botonera-header">
-    	<?php echo $this->Js->link("<i class='icon-save icon-white'> Guardar</i>",array("controller"=>"preguntas","action"=>"crear"),array("class"=>"btn btn-inverse","update"=>"#exec_js","before"=>"inicia_ajax()","complete"=>"fin_ajax()","data"=>"$(this).parents('form:first').serialize()","escape"=>false,"method"=>"post","dataExpression"=>true)) ?>
-        <?php echo $this->Html->link("<i class='icon-white icon-remove-sign'></i>","#",array("class"=>"btn btn-inverse","data-dismiss"=>"modal","escape"=>false)) ?>
+    	<?php echo $this->Js->link("<i class='icon icon-save icon-white'> Guardar</i>",array("controller"=>"preguntas","action"=>"crear"),array("class"=>"btn btn-inverse","update"=>"#exec_js","before"=>"inicia_ajax()","complete"=>"fin_ajax()","data"=>"$(this).parents('form:first').serialize()","escape"=>false,"method"=>"post","dataExpression"=>true)) ?>
+        <?php echo $this->Html->link("<i class='icon icon-white icon-remove-sign'></i>","#",array("class"=>"btn btn-inverse","data-dismiss"=>"modal","escape"=>false)) ?>
     	
     </div>
 </div>
