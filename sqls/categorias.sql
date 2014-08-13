@@ -1,5 +1,6 @@
--- Table: categorias
+set search_path to encuestas;
 
+-- Table: categorias
 -- DROP TABLE categorias;
 
 CREATE TABLE categorias
@@ -7,12 +8,14 @@ CREATE TABLE categorias
   id serial NOT NULL,
   name character varying,
   type character(1),
-  created timestamp with time zone,
-  modified timestamp with time zone,
+  created timestamp without time zone,
+  modified timestamp without time zone,
+  owner_id integer,
   pregunta_count integer,
   opcion_count integer,
   encuesta_count integer,
   reporte_count integer,
+  subcategoria_count integer,
   CONSTRAINT "Categorias.id" PRIMARY KEY (id)
 )
 WITH (
@@ -38,5 +41,4 @@ CREATE INDEX "Categorias.type"
   ON categorias
   USING hash
   (type COLLATE pg_catalog."default");
- 
 

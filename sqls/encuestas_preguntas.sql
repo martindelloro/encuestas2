@@ -1,5 +1,5 @@
+set search_path to encuestas;
 -- Table: encuestas_preguntas
-
 -- DROP TABLE encuestas_preguntas;
 
 CREATE TABLE encuestas_preguntas
@@ -8,6 +8,8 @@ CREATE TABLE encuestas_preguntas
   encuesta_id integer,
   pregunta_id integer,
   orden integer,
+  created timestamp without time zone,
+  modified timestamp without time zone,
   CONSTRAINT "EncuestasPreguntas.id.primaryKey" PRIMARY KEY (id)
 )
 WITH (
