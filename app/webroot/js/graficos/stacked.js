@@ -100,11 +100,11 @@ var despues = null;
  // heightLeyenda  = $(".leyenda:first").height() - margin.top - margin.bottom;
   widthLeyenda = $('.tab-content').width();
   heightLeyenda = altoFinal ;
-
+  
   $("#leyenda").show();
   var svgLeyenda = d3.select("#leyenda").append("svg")
   					.attr("width",widthLeyenda)
-  					.attr("height",altoFinal + margin.top + margin.bottom)
+  					.attr("height",120)
   					.append("g");
   					
   
