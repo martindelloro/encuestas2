@@ -1,3 +1,4 @@
+set search_path to encuestas;
 -- View: v_encuesta_grupos
 
 -- DROP VIEW v_encuesta_grupos;

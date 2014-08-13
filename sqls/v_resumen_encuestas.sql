@@ -1,3 +1,4 @@
+set search_path to encuestas;
 -- View: v_resumen_encuestas
 
 -- DROP VIEW v_resumen_encuestas;
