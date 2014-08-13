@@ -88,11 +88,22 @@
 <?php endif; ?>
 <!--  ***** FIN IF RESULTADOS GRAFICO STACKED BARS *****  -->
 
+<?php if(isset($preguntaY)): ?>
+<div class="well label-titular color-3">
+	<?php echo $preguntaY ?>
+</div>
+<?php endif; ?>
 
-<div id="leyenda" class="leyenda"></div>
+<div id="leyenda" class="leyenda" style="display:none"></div>
 
 <div id="graficoBarras" class="grafico" >
 </div>
+
+<?php if(isset($preguntaX)): ?>
+<div class="well label-titular color-3">
+	<?php echo $preguntaX ?>
+</div>
+<?php endif; ?>
 
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -123,8 +134,7 @@ var yAxis = d3.svg.axis().scale(y).orient("left").ticks(20);
 var svg = d3.select("#graficoBarras").append("svg")
 .attr("width", width + margin.left + margin.right)
 .attr("height", height + margin.top + margin.bottom)
-.append("g")
-.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+.append("g");
 
 
 </script>

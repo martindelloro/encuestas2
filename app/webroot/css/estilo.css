@@ -980,7 +980,7 @@ border-radius: 2px;
 
 .grafico {
 	width:100% !important;
-	height:400px;
+	height:600px;
 }
 
 .bar {
@@ -1009,9 +1009,8 @@ border-radius: 2px;
 .leyenda {
 	width:100%;
 	height:250px;
-	float:right;
 	margin-top:20px;
-	margin-left:45px;
+
 }
 
 
