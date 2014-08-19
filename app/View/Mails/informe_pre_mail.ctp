@@ -1,3 +1,5 @@
+<?php ?>
+
 <div class="modal-body">
     
     <div style="text-align: center">
@@ -25,9 +27,16 @@
                      
                      </tr>              
                      <td><b>Grupos:</b>
-                        <?php foreach($datos['Mail']['grupos_nombre'] as $grupo_id=>$name): 
-                                       echo $name.'. ';
-                               endforeach; ?>
+                       <?php //pr($grupos_lista);
+                       foreach($datos['Mail']['grupos'] as $grupo_id=>$name): 
+                           
+                            foreach($grupos_lista as $lista_id=>$nombre_id):
+                                    
+                                       if($lista_id==$name){
+                                            echo $nombre_id.'. ';
+                                       }
+                                   endforeach;
+                        endforeach; ?>
                      </td>
                     
 
@@ -36,9 +45,17 @@
                      <!-- Si seleccionó Datos de Usuario -->
                      <tr>
                          <td><b>Grupos:</b>
-                        <?php foreach($datos['Mail']['grupos_nombre'] as $grupo_id=>$name): 
-                                       echo $name.'. ';
-                               endforeach; ?>
+                             
+                        <?php //pr($grupos_lista);
+                       foreach(@$datos['Mail']['grupos'] as $grupo_id=>$name): 
+                           
+                            foreach(@$grupos_lista as $lista_id=>$nombre_id):
+                                    
+                                       if($lista_id==$name){
+                                            echo $nombre_id.'. ';
+                                       }
+                                   endforeach;
+                        endforeach; ?>
                      </tr>
                                           <?php }?>
                  </table>

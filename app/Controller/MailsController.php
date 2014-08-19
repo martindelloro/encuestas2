@@ -1,7 +1,7 @@
 <?php
 
 class MailsController extends AppController{
-    var $uses=array('Encuesta','EncuestaGrupos','EncuestaUsuarios','VistaCantUsuariosEnc','Grupo');
+    var $uses=array('Encuesta','EncuestaGrupos','EncuestaUsuarios','VistaCantUsuariosEnc','Grupo','Usuario','GruposUsuarios');
 	function beforeFilter() {
             parent::beforeFilter();
             $sesion=$this->Session->Read();
@@ -61,16 +61,31 @@ class MailsController extends AppController{
         $id_encuesta=$this->request->data['Mail']['encuesta'];
         $datos=$this->request->data;
         $nombre_encuesta=$this->Encuesta->find('first',array('fields'=>'Encuesta.nombre','conditions'=>array('Encuesta.id'=>$id_encuesta),'recursive'=>-1));
-        pr($datos);
+        //pr($this->request->data['Mail']['grupos']);
+        $grupos_lista=$this->Grupo->find('list',array('conditions'=>array($this->request->data['Mail']['grupos']=>'Grupo.id')));
+        //pr($datos);
+        $this->set('grupos_lista',$grupos_lista);
         $this->set("id_encuesta",$id_encuesta);
         if(!empty($nombre_encuesta)){
             $this->set('nombre_encuesta',$nombre_encuesta['Encuesta']['nombre']);
         }
         $this->set("datos",$datos);
     }
-    function enviar_mail(){
-        
-    }
+    function enviar_mail($grupo=false){
+        $grupo='15';
+        $grupos=$this->GruposUsuarios->find('all',array('conditions'=>array('grupo_id'=>$grupo)));
+        pr($grupos);
+        $usuarios = $this->Usuario->find('all', array('fields'=>array('email_1','nombre','apellido'),'conditions'=>array('Usuario.email_1 not'=>''),'recursive'=>1));
+        pr($usuarios);
+        foreach ($usuarios as $user) {
+            $this->Email->reset();
+            $this->Email->from     = '<no-reply@noreply.com>';
+            //$this->Email->to       =  $user['email'];
+            $this->Email->subject  =  $subject ;
+            $this->Email->sendAs   = 'html';
+            $this->Email->send('body');
+        }
+}
 	
 }
 

@@ -9,6 +9,10 @@
 /dist
 /tags
 
+
+*.orig
+.xls
+
 # OS generated files #
 ######################
 .DS_Store

@@ -1,13 +1,13 @@
 -- Table: encuestas
 
-DROP TABLE encuestas;
+-- DROP TABLE encuestas;
 
 CREATE TABLE encuestas
 (
   id serial NOT NULL,
   usuario_id integer,
-  created date,
-  modified date,
+  created timestamp without time zone,
+  modified timestamp without time zone,
   preguntas_count integer,
   grupo_count integer,
   nombre character varying,

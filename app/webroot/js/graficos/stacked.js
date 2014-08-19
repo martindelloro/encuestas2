@@ -11,8 +11,17 @@ var despues = null;
     
   svg.append("g")
       .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")") // Agrega elemento G clase X axis es el que va a tener los tags de cada eje x lo manda al fondo x eso el height
-      .call(xAxis); // lo agrego al objecto xAxis d3.js
+      .attr("transform", "translate(0," + height + ")")
+       // Agrega elemento G clase X axis es el que va a tener los tags de cada eje x lo manda al fondo x eso el height
+      .call(xAxis).selectAll("text")  
+      .style("text-anchor", "end")
+      .attr("dx", "-.8em")
+      .attr("dy", ".15em")
+      .attr("transform", function(d) {
+          return "rotate(-65)"; 
+          });
+  
+   // svg.append("text").attr("x", 0).attr("y", 0).style("text-anchor", "middle").style("fill", "#515151").style("font-family", "arial").style("font-size", "12px").text("Grade Range (%)");
 
   svg.append("g")
       .attr("class", "y axis")
@@ -32,40 +41,45 @@ var despues = null;
       .attr("alt",function(d){return d.categoriaY});
 
   
-  var legend = svg.select(".state:last-child").selectAll(".legend")
-      .data(function(d) { return d.Resultados; })
-    .enter().append("g")
-      .attr("class", "legend")
-      .attr("transform", function(d) { return "translate(" + x.rangeBand() / 2 + "," + y((d.offset + d.altura) / 2) + ")"; });
 
   
   j = 0;
   largo = 0;
   largos = new Array();
   cantLeyendas = color.domain().slice().reverse().length -1;
+  
   console.log(cantLeyendas);
 
   $(color.domain().slice().reverse()).each(function(indice,valor){
-	 switch(true){
+	switch(true){
 	 	case (((indice % 4) != 0 || indice == 0) && (indice != cantLeyendas)):
 	 		 if(((valor.length * 10) + 20) > largo){
 	 			  largo = (valor.length * 10) + 20;
 	 		 }
 	 		 break;
-	 	case ((indice % 4) == 0 && (indice != 0)):
-	 		 largos[(indice  / 4 ) -1] = largo;
-	 		 largo = 0;
-	 		 break;
-	 	case (indice == cantLeyendas):
+	 	case ((indice % 4) == 0 && (indice != 0) && (indice != cantLeyendas)):
+	 		 largos[(indice  / 4) -1] = largo;
+	  		 break;
+	 	case (indice == cantLeyendas && ((indice %4)==0)):
 	 		 if(cantLeyendas < 4){
 	 			 largos[0] = largo;
 	 		 }
 	 		 else{
-	 			largos[Math.floor((indice / 4)) -1] = largo; // Por si los del resto son mas largos para numeros impares
+	 			 largos[Math.floor((indice / 4))-1] = largo; // Por si los del resto son mas largos para numeros impares
+	 		 }
+	 		 break;
+	 	case (indice == cantLeyendas && ((indice %4)!=0)):
+	 		 if(cantLeyendas < 4){
+	 			 largos[0] = largo;
+	 		 }
+	 		 else{
+	 			 console.log("Entro con indice:"+indice);
+	 			 largos[Math.floor((indice / 4))] = largo; // Por si los del resto son mas largos para numeros impares
 	 		 }
 	 		 break;
 	 }
   });
+  console.log(largos);
   if(cantLeyendas < 4){
 	  altoFinal = cantLeyendas * 20;
   }
@@ -84,69 +98,55 @@ var despues = null;
   
  // widthLeyenda   = $(".leyenda:first").width() - margin.left - margin.right;
  // heightLeyenda  = $(".leyenda:first").height() - margin.top - margin.bottom;
-  widthLeyenda = anchoFinal ;
+  widthLeyenda = $('.tab-content').width();
   heightLeyenda = altoFinal ;
-  $(".leyenda:first").css("width",anchoFinal);
-  $(".leyenda:first").height(altoFinal);
+  
+  $("#leyenda").show();
   var svgLeyenda = d3.select("#leyenda").append("svg")
-  					.attr("width",anchoFinal + margin.left + margin.right)
-  					.attr("height",altoFinal + margin.top + margin.bottom)
+  					.attr("width",widthLeyenda)
+  					.attr("height",120)
   					.append("g");
   					
   
+  lock = -1;
   var legend = svgLeyenda.selectAll(".legend").data(color.domain().slice().reverse())	
   									   .enter().append("g")
   									   .attr("class", "legend")
   									   .attr("transform", function(d, i) {
-  										   		switch(true){
-  										   			case (((i % 4) != 0) || (i == 0)):
-  										   				if(i <= 3){
-  										   					x = largos[0] - widthLeyenda;
-  										   				}
-  										   				else{
-  										   					x = (largos[Math.floor(i / 4)] + largos[Math.floor((i/4) -1)]) - widthLeyenda;
-  										   				}
-  										   				
-  										   				translate = "translate("+x+"," + y * 20 + ")";
-  										   				y += 1;
-  										   				break;
-  										   			case (((i % 4) == 0) && (i != 0)):
-  										   				if((i < (Math.floor(cantLeyendas/4) * 4) -1 )){
-  										   					y = 0
-  										   				}else{
-  										   				
-  										   				}
-  										   				if(Math.floor(i/4) == 1){
-  										   					if(cantLeyendas < 4){
-  										   						x = largos[Math.floor(i/4)-1] - widthLeyenda;
-  										   					}
-  										   					else{
-  										   						x = (largos[Math.floor(i / 4)] + largos[Math.floor(i/4)-1]) - widthLeyenda;
-  										   					}
-  										   					
-  										   				}
-  										   				else{
-  										   					x = (largos[Math.floor(i / 4) - 1] + largos[Math.floor(i/4) - 2]) - widthLeyenda;
-  										   				}
-  										   				  										   				
-  										   				translate = "translate("+x+"," + y * 20 + ")"; 
-  										   				y += 1;
-  										   				break;
-  										   			}
-  										   		return translate  });
+  										   		if(y != 0 && y != 4 && i != 0) y += 1;
+  										   		if(i==0) trampa = -largos[0];
+  										        if(y == 0){
+  										        	x = largos[Math.floor(i/4)]+trampa;
+  										           	y += 1;
+  										        }
+  										   		if(y == 4){
+  										        	y=0;
+  										        	if(i == 4){
+  										        		trampa = x + largos[0];
+  										        	}
+  										        	else{
+  										        		trampa = x;
+  										        	}
+  										        	
+  										        }
+  										   		k = -x;
+  										        translate = "translate("+k+"," + y * 20 + ")"; 
+  										   		return translate; });
 
   legend.append("rect")
-  	.attr("x", anchoFinal - 18)
+  	.attr("x", widthLeyenda - 18)
   	.attr("width", 18)
   	.attr("height", 18)
   	.style("fill", color);
 
   legend.append("text")
-  	.attr("x", anchoFinal - 24)
+  	.attr("x", widthLeyenda - 24)
   	.attr("y", 9)
   	.attr("dy", ".35em")
   	.style("text-anchor", "end")
   	.text(function(d) { return d; });
+  
+
 
 
 
