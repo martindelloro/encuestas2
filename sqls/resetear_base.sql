@@ -1,3 +1,4 @@
+set search_path to encuestas;
 delete from encuestas.encuestas;
 delete from encuestas.preguntas;
 delete from encuestas.opciones;

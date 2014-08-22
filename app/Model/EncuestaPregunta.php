@@ -6,7 +6,7 @@ class EncuestaPregunta extends AppModel{
 	var $displayField = "nombre";
 	
 	
-	var $belongsTo = array("Pregunta"=>array("className"=>"Pregunta","foreignKey"=>"id"));
+	var $belongsTo = array("Pregunta"=>array("className"=>"Pregunta","foreignKey"=>"pregunta_id"));
 }
 
 ?>

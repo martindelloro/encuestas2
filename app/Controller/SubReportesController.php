@@ -201,25 +201,17 @@ class SubReportesController extends AppController{
 					$datos[$index]["Resultados"] = array_values($datos[$index]["Resultados"]);
 				
 				}
-<<<<<<< HEAD
                 $this->set("categoriasX",array_unique($categoriasX));
-=======
                 $this->set('preguntaGraficoX',$preguntaGraficoX);
 				$this->set("categoriasX",array_unique($categoriasX));
->>>>>>> 5e4c6b20d4b56c18c0a4b065bc0edbe91d260725
 				$this->set("categoriasY",$categoriasY);
 				$this->set("datos",$datos);
 				break;
 		} // FIN SWITCH GRAFICO TIPO
                 
 		
-<<<<<<< HEAD
         $resultados = Set::extract($datosInfoStacked, '{s}');
         $this->set('resultados',$resultados);
-=======
-                $resultados = Set::extract($datosInfoStacked, '{s}');
-                $this->set('resultados',$resultados);
->>>>>>> 5e4c6b20d4b56c18c0a4b065bc0edbe91d260725
         $this->set("datos",$datos);        
 		$this->set("resultados",$resultados);
 		$this->set("cont_opciones",$cont_opciones);

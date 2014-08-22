@@ -29,13 +29,10 @@ class Usuario extends AppModel {
     var $hasAndBelongsToMany = array("Grupos"=>array("joinTable"=>"grupos_usuarios","class"=>"Grupo","foreignKey"=>"usuario_id","associationForeignKey"=>"grupo_id","with"=>"GruposUsuarios"));
     
     var $hasMany = array("Respuesta"=>array("className"=>"Respuesta","foreignKey"=>"usuario_id"),
-<<<<<<< HEAD
-                        "GruposUsuarios"=>array("className"=>"GruposUsuarios","foreignKey"=>"usuario_id"),
-                        "EncuestaGrupos"=>array("className"=>"EncuestaGrupos","foreignKey"=>"grupo_id"));
-=======
-    				     "GruposUsuarios"=>array("className"=>"GruposUsuarios","foreignKey"=>"usuario_id"),
-    					 "ResumenUsuario"=>array("className"=>"ResumenUsuario","foreignKey"=>"usuario_id"));
->>>>>>> 5e4c6b20d4b56c18c0a4b065bc0edbe91d260725
+                         "GruposUsuarios"=>array("className"=>"GruposUsuarios","foreignKey"=>"usuario_id"),
+                         "EncuestaGrupos"=>array("className"=>"EncuestaGrupos","foreignKey"=>"grupo_id"),
+	   					 "ResumenUsuario"=>array("className"=>"ResumenUsuario","foreignKey"=>"usuario_id"));
+
    
 }
 ?>
