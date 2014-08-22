@@ -48,4 +48,4 @@
 <?php endforeach; ?>
 </div>
 
-<?php debug($encuestas); ?>
+<?php //debug($encuestas); ?>
