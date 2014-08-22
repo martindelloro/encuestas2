@@ -5,7 +5,8 @@ CREATE TABLE encuestas.mail
   grupo_id integer,
   encuesta_id integer,
   usuario_id integer,
-  created date
+  created timestamp,
+  modified timestamp  
 )
 WITH (
   OIDS=FALSE
