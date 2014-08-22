@@ -3,9 +3,9 @@ set search_path to encuestas;
 -- DROP VIEW v_resumen_usuario_respuestas;
 
 CREATE OR REPLACE VIEW v_resumen_usuario_respuestas AS 
- SELECT a.id AS encuesta_id, d.usuario_id, count(e.usuario_id) AS cantrespuestas, count(b.encuesta_id) AS totalpreguntas, 
+ SELECT a.id AS encuesta_id, d.usuario_id, count(e.usuario_id) AS cantrespuestas, count(distinct(b.pregunta_id)) AS totalpreguntas, 
         CASE
-            WHEN count(b.encuesta_id)::double precision > 0::double precision THEN count(e.usuario_id)::double precision / count(b.encuesta_id)::double precision * 100::double precision
+            WHEN count(b.encuesta_id)::double precision > 0.0 THEN count(e.usuario_id)::double precision / count(distinct(b.pregunta_id))::double precision * 100::double precision
             ELSE 0::bigint::double precision
         END AS porcentaje
    FROM encuestas a
@@ -16,5 +16,4 @@ CREATE OR REPLACE VIEW v_resumen_usuario_respuestas AS
   GROUP BY a.id, d.usuario_id
   ORDER BY d.usuario_id DESC;
 
-ALTER TABLE v_resumen_usuario_respuestas
-  OWNER TO encuestas;
+ALTER TABLE v_resumen_usuario_respuestas OWNER TO encuestas;
