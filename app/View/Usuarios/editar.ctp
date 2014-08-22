@@ -141,7 +141,7 @@
 
 <?php echo $this->Js->writeBuffer() ?>
 <?php echo $this->Form->end() ?>
-<?php $js=$this->Js;
+<?php /*$js=$this->Js;
        echo $this->Js->get('#UsuarioCodProv')->event('change',
               $this->Js->request(
                     array('controller'=>'usuarios', 'action'=>'updateDepartamentos'),
@@ -169,5 +169,5 @@
                         'data'=>$js->serializeForm(array('isForm' => false, 'inline' => true))
           )));
       
-      ?>
+     */ ?>
 </div>

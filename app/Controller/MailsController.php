@@ -1,7 +1,8 @@
 <?php
 
 class MailsController extends AppController{
-    var $uses=array('Encuesta','EncuestaGrupos','EncuestaUsuarios','VistaCantUsuariosEnc','Grupo','Usuario','GruposUsuarios');
+    var $uses=array('Encuesta','EncuestaGrupos','EncuestaUsuarios','VistaCantUsuariosEnc','Grupo','Usuario','GruposUsuarios','VistaMail');
+    var $components = array('Email');
 	function beforeFilter() {
             parent::beforeFilter();
             $sesion=$this->Session->Read();
@@ -71,21 +72,65 @@ class MailsController extends AppController{
         }
         $this->set("datos",$datos);
     }
-    function enviar_mail($grupo=false){
-        $grupo='15';
-        $grupos=$this->GruposUsuarios->find('all',array('conditions'=>array('grupo_id'=>$grupo)));
-        pr($grupos);
-        $usuarios = $this->Usuario->find('all', array('fields'=>array('email_1','nombre','apellido'),'conditions'=>array('Usuario.email_1 not'=>''),'recursive'=>1));
-        pr($usuarios);
-        foreach ($usuarios as $user) {
-            $this->Email->reset();
-            $this->Email->from     = '<no-reply@noreply.com>';
-            //$this->Email->to       =  $user['email'];
-            $this->Email->subject  =  $subject ;
-            $this->Email->sendAs   = 'html';
-            $this->Email->send('body');
+    function enviar_mail($grupos=false, $id_encuesta=false,$tipo_envio=false){
+        $grupos=array('14','16');
+        $id_encuesta='38';
+        $tipo_envio='1';
+        $enviados=array();
+        $sin_enviar=array();
+        //Si es una encuesta a enviar --> Si trae el id de la encuesta entra
+        if ($id_encuesta!=false){
+            switch ($tipo_envio){
+                case '1': //Envío por primera vez
+                    //Recorro los grupos que seleccionaron
+                    foreach($grupos as $id_cake=>$id_grupo): 
+                    pr($id_grupo);
+                        //Traigo los usuarios de las encuestas y grupo
+                        $datos=$this->VistaMail->find('all',array('conditions'=>array('VistaMail.encuesta_id'=>$id_encuesta,'VistaMail.grupo_id'=>$id_grupo)));
+                            foreach($datos as $usuario):
+                                //Acá estoy trayendo todos los datos de el usuario
+                                //que paso por la condición del grupo y de la encuesta
+                                //Y QUE NO EXISTAN EN LA TABLA MAIL
+                                pr($usuario);
+                                $this->Email->reset();
+                                $this->Email->from='elpitialvarez@gmail.com';
+                                //$this->Email->to=$usuario['VistaMail']['email_1'];
+                                //$this->Email->to='esunapruebaigual@outlook.com';
+                                $this->Email->subject  =  'Universidad Nacional de Lanús' ;
+                                $this->Email->sendAs   = 'html';
+                                //Quiere decir que mando todo ok
+                                if ($this->Email->send('body')) {
+                                    $enviados[]=$usuario;
+                                    //Guardo en la tabla Mail el usuario
+                                    $temp_mail['Mail']['id']='';
+                                    $temp_mail['Mail']['grupo_id']=$usuario['VistaMail']['grupo_id'];
+                                    $temp_mail['Mail']['encuesta_id']=$usuario['VistaMail']['encuesta_id'];
+                                    $temp_mail['Mail']['usuario_id']=$usuario['VistaMail']['usuario_id'];
+                                    $this->Mail->save($temp_mail);
+                                    
+                                } else {
+                                    $sin_enviar[]=$usuario;
+                                }
+                            endforeach;                            
+                    endforeach;
+                    break; //TERMINA CASE DE ENVÍO POR PRIMERA VEZ
+                    
+                case '2': //Recordatorio -->Todos los usuarios que no hayan completado la encuesta
+                    pr('aca no entro');
+                    break;
+            }
         }
-}
+        //Si es para que completen los datos del contacto
+        if($id_encuesta==false && !empty($grupos)){
+            switch ($tipo_envio){
+                case '1': //Envío por primera vez
+                    break;
+            }
+            pr("pasa por acaá");
+        }
+        
+        
+    }
 	
 }
 
