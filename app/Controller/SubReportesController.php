@@ -23,6 +23,7 @@ class SubReportesController extends AppController{
 		$filtrosInfo = array();
 		$datosInfo   = array();
 		$cont_opciones = array();
+		$datos = array();
 		$datosInfoStacked = null;
 		if(!empty($this->data["SubReporte"]["Filtro"])){
 		foreach($this->data["SubReporte"]["Filtro"] as $index=>$filtro){
