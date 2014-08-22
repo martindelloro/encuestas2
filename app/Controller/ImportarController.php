@@ -193,6 +193,7 @@ class ImportarController extends AppController{
 			$nombre = utf8_encode(trim($data->val($offset,2)));
 			$apellido = utf8_encode(trim($data->val($offset,3)));
 			
+<<<<<<< HEAD
 			$usuario = $this->Pregunta->Usuario->find("first",array("conditions"=>array("Usuario.usuario"=>$email),"recursive"=>-1));
 			if($usuario == null) $usuario = $this->Pregunta->Usuario->find("first",array("conditions"=>array("Usuario.usuario"=>$dni),"recursive"=>-1));
 			if($usuario == null) $usuario = $this->Pregunta->Usuario->find("first",array("conditions"=>array("Usuario.usuario"=>$nombre),"recursive"=>-1)); 
@@ -200,6 +201,12 @@ class ImportarController extends AppController{
 				
 			if($usuario == null) {
 				echo "email: $email <br> dni: $dni <br> nombre: $nombre <br> apellido: $apellido<br>";
+=======
+				}
+			}
+			
+			if($usuario == null) {
+>>>>>>> 5e4c6b20d4b56c18c0a4b065bc0edbe91d260725
 				echo "Paso X veces <br>"; continue;
 			}
 			$nombrePregunta = null;

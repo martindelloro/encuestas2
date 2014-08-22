@@ -1,4 +1,3 @@
-<?php ?>
 <div class="well buscador">
 	<?php echo $this->Form->create("buscar",array("url"=>array("controller"=>"Encuestas","action"=>"buscar"))); ?>
 	<div class="row-fluid">

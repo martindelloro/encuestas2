@@ -1,27 +1,26 @@
 <<<<<<< HEAD
-set search_path to encuestas;
--- View: v_resumen_usuario_respuestas
 -- DROP VIEW v_resumen_usuario_respuestas;
 
 CREATE OR REPLACE VIEW v_resumen_usuario_respuestas AS 
- SELECT a.id AS encuesta_id, d.usuario_id, count(e.usuario_id) AS cantrespuestas, count(b.encuesta_id) AS totalpreguntas, 
-        CASE
-            WHEN count(b.encuesta_id)::double precision > 0::double precision THEN count(e.usuario_id)::double precision / count(b.encuesta_id)::double precision * 100::double precision
-            ELSE 0::bigint::double precision
+ SELECT a.id AS encuesta_id, c.usuario_id, count(c.usuario_id) AS cantrespuestas, count(b.encuesta_id) AS totalpreguntas, count(c.usuario_id) / count(b.encuesta_id) * 100 AS porcentaje
+   FROM encuestas a
+   JOIN encuestas_preguntas b ON a.id = b.encuesta_id
+   JOIN respuestas c ON b.pregunta_id = c.pregunta_id AND c.encuesta_id = a.id
+  GROUP BY a.id, c.usuario_id
+  ORDER BY c.usuario_id DESC;
 =======
 -- View: v_resumen_usuario_respuestas
 
 -- DROP VIEW v_resumen_usuario_respuestas;
-set search_path to encuestas;
+
 CREATE OR REPLACE VIEW v_resumen_usuario_respuestas AS 
  SELECT a.id AS encuesta_id,
     d.usuario_id,
     count(e.usuario_id) AS cantrespuestas,
     count(b.encuesta_id) AS totalpreguntas,
         CASE
-            WHEN count(b.encuesta_id)::float > 0 THEN count(e.usuario_id)::float / count(b.encuesta_id)::float * 100
+            WHEN count(b.encuesta_id) > 0 THEN count(e.usuario_id) / count(b.encuesta_id) * 100
             ELSE 0::bigint
->>>>>>> 5e4c6b20d4b56c18c0a4b065bc0edbe91d260725
         END AS porcentaje
    FROM encuestas a
    LEFT JOIN encuestas_preguntas b ON a.id = b.encuesta_id
@@ -30,10 +29,7 @@ CREATE OR REPLACE VIEW v_resumen_usuario_respuestas AS
    LEFT JOIN respuestas e ON b.pregunta_id = e.pregunta_id AND e.encuesta_id = a.id AND e.usuario_id = d.usuario_id
   GROUP BY a.id, d.usuario_id
   ORDER BY d.usuario_id DESC;
+>>>>>>> e3d4cc815d8e1708660672a1877bcd909c0cbaa5
 
 ALTER TABLE v_resumen_usuario_respuestas
-<<<<<<< HEAD
   OWNER TO encuestas;
-=======
-  OWNER TO encuestas;
->>>>>>> 5e4c6b20d4b56c18c0a4b065bc0edbe91d260725
