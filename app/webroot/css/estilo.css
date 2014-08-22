@@ -133,7 +133,9 @@ body .mensaje-contenido{
 /***************************************************************/
 /******************* PRESETS GENERALES *************************/
 /***************************************************************/
-
+.btn-group input {
+    width:auto !important;
+}
 .submit{
 	float:right;
 	clear:both;

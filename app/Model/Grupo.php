@@ -2,6 +2,7 @@
 
 class Grupo extends AppModel{
     var $useTable = "grupos";
+    var $displayField = "nombre";
    var $hasAndBelongsToMany = array('Usuarios' =>
                         array(
                             'className' => 'Usuario',
@@ -33,7 +34,7 @@ class Grupo extends AppModel{
                             )
                         )
                     );
-        var $displayField = "nombre";
+        
 	
 }
 
