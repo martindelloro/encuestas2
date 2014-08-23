@@ -83,20 +83,13 @@
 <div id="leyenda" class="leyenda" style="display:none"></div>
 <div id="graficoBarras" class="grafico" >
 </div>
-<<<<<<< HEAD
 
-
-=======
->>>>>>> e76a69e8dff06371e9985df5f8ce0e2a4d8efb4c
 <?php if(isset($preguntaX)): ?>
 <div class="well label-titular color-3">
 <?php echo $preguntaX ?>
 </div>
 <?php endif; ?>
-<<<<<<< HEAD
 
-=======
->>>>>>> e76a69e8dff06371e9985df5f8ce0e2a4d8efb4c
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 <?php switch($this->data["SubReporte"]["grafico_tipo"]): ?>
