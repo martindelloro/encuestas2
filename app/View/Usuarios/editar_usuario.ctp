@@ -1,11 +1,21 @@
-<?php 
+
+	<?php echo $this->element("mensaje_sistema"); ?>
+    <?php echo $this->Mensajes->mostrar(); ?>
 	
-?>
+    <style>
+        #fecha_nac {
+            z-index: 100000;
+         }
+    </style>
 <div class="modal-body">
 	<?php echo $this->Form->create("Usuario",array("action"=>"editar_usuario")) ?>
 	<?php echo $this->Form->input("Usuario.id",array("type"=>"hidden")); ?>
    <div class="well titulo-general">
+            <?php if($OUsuario['Usuario']['rol']=='admin'){?>
+                   <span>Actualizar Datos de Contacto : </span>
+            <?php } if($OUsuario['Usuario']['rol']=='graduado'){ ?>
 		<span>Actualizar Datos de Contacto : <?php echo $OUsuario['Usuario']['nombre']. ' '. $OUsuario['Usuario']['apellido']; ?></span>
+            <?php } ?>
 	</div>
 
 	<div class="row-fluid">
@@ -24,7 +34,7 @@
 	</div>
 	<div class="row-fluid">
 		<div class="span3">
-			<?php echo $this->Form->input("fecha_nac",array("type"=>'text',"label"=>"Fecha de Nac")); ?>
+			<?php echo $this->Form->input("fecha_nac",array("type"=>'text',"label"=>"Fecha de Nac",'id'=>'fecha_nac')); ?>
 		</div>
 		<div class="span3">
 			<?php echo $this->Form->input("rol",array("type"=>'text', "label"=>"Rol",  "readOnly"=>true)); ?>
@@ -129,11 +139,11 @@
       <?php echo $this->Js->link("Guardar cambios",array("controller"=>"usuarios","action"=>"editar"), array("class"=>"btn","before"=>"inicia_ajax()","complete"=>"fin_ajax()","data"=>"$(this).parents('form:first').serialize()","dataExpression"=>true,"method"=>"post","update"=>"#editarUsuario")); ?>
    </div>
 </div>
-	
-
-
-<?php echo $this->Js->writeBuffer() ?>
-<?php echo $this->Form->end() ?>
+<script>
+    $(function() {
+        $( "#fecha_nac" ).datepicker();
+    });
+    </script>
 <?php $js=$this->Js;
 echo $this->Js->get('#UsuarioCodProv')->event('change',
               $this->Js->request(
@@ -145,8 +155,7 @@ echo $this->Js->get('#UsuarioCodProv')->event('change',
                         'before'=>'$("body").modalmanager("loading")',
                         'complete'=>'$("body").modalmanager("loading")',
                         'method'=>'post',
-                        'data'=>$js->serializeForm(array('isForm' => false, 'inline' => true
-                            ))
+                        'data'=>$js->serializeForm(array('isForm' => false, 'inline' => true))
             )));
         
         echo $this->Js->get('#UsuarioCodDepto')->event('change',
@@ -162,4 +171,9 @@ echo $this->Js->get('#UsuarioCodProv')->event('change',
                         'data'=>$js->serializeForm(array('isForm' => false, 'inline' => true))
           )));
         ?>
+
+<?php echo $this->Js->writeBuffer() ?>
+<?php echo $this->Form->end() ?>
+
+     
 </div>

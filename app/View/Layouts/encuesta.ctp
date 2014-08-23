@@ -43,6 +43,7 @@ echo $this->Helpers->Html->script("blueimp/jquery.fileupload.js");
 echo $this->Helpers->Html->script("blueimp/jquery.fileupload-process.js");
 echo $this->Helpers->Html->script("blueimp/jquery.fileupload-validate.js");
 echo $this->Helpers->Html->script("blueimp/jquery.iframe-transport.js");
+echo $this->Helpers->Html->script("jquery.validate.min.js");
 
 
 echo $this->Helpers->Html->script("d3.min");

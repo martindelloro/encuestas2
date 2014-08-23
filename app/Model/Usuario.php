@@ -4,7 +4,7 @@ class Usuario extends AppModel {
     var $validate = array(
                         'fecha_nac' => array(
                             'rule' => array("date","dmy"),
-                            'message' => 'Ingrese una fecha válida usando el formato AAAA-MM-AAAA.',
+                            'message' => 'Ingrese una fecha válida usando el formato DD-MM-AAAA.',
                             'allowEmpty' => true
                           ),
                           'usuario' => array(

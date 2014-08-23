@@ -1,7 +1,7 @@
 <?php 
 
 class GruposController extends AppController {
-    var $uses=array("Grupo","GruposUsuarios",'Usuario');
+    var $uses=array("Grupo","GruposUsuarios",'Usuario','GruposEncuesta');
     function beforeFilter() {
         parent::beforeFilter();
         $sesion=$this->Session->Read();
@@ -129,6 +129,23 @@ class GruposController extends AppController {
               $this->paginate = array("order"=>"Grupo.nombre ASC","fields"=>array('Grupo.nombre','Grupo.id'),'conditions'=>$buscar);
               //$this->paginate = array("order"=>"Grupo.nombre ASC","fields"=>array('Grupo.nombre'),'conditions'=>$buscar);
               $this->set('grupos',$this->paginate("Grupo"));
+    }
+    
+    function listar($encuesta_id=null,$vista){ //LISTA LOS GRUPOS QUE TIENE ASOCIADA UNA ENCUESTA
+        if($encuesta_id==true){
+        $grupos=$this->GruposEncuesta->find('list',array('conditions'=>array('GruposEncuesta.encuesta_id'=>$encuesta_id)));         
+       }else{
+        $grupos=$this->Grupos->find('list',array('fields'=>'nombre'));
+       }
+        $this->autoRender=false;
+        switch ($vista){
+            case 'encuesta_grupo':
+                
+                $this->set("grupos",$grupos);
+                $this->render('encuesta_grupo');
+                break;
+        }
+        
     }
     
 }

@@ -9,7 +9,7 @@
 /dist
 /tags
 
-
+*.htaccess
 *.orig
 .xls
 
