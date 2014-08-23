@@ -8,10 +8,18 @@
 /build
 /dist
 /tags
-
-
+/app/**/
+/lib/**/
+/nbproject/**/
 *.orig
 .xls
+build.xml
+composer.json
+build.properties
+CONTRIBUTION.md
+index.php
+README.md
+
 
 # OS generated files #
 ######################
