@@ -1031,6 +1031,10 @@ border-radius: 2px;
 	
 }
 
+.contenedorResultados .resultado .row-fluid:first-child{
+	
+}
+
 /*************************************************/
 /*************    IMPORT SURVEY    ***************/
 /*************************************************/
