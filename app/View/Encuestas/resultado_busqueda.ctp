@@ -44,12 +44,13 @@
 			<div class="span1 centrado"><span><?php echo $encuesta["ResumenEncuesta"]["grupos"] ?></span></div>
 			<div class="span3 centrado"><span><?php echo $encuesta["Encuesta"]["created"] ?></span></div>
 			<div class="span3 botones">
-				<?php echo $this->Js->link("<i class='icon icon-eye'></i>",array("controller"=>"Encuestas","action"=>"ver",$encuesta["Encuesta"]["id"]),array("class"=>"btn btn-inverse btn-small","before"=>"modales('verEncuesta','modal-ficha')","complete"=>"fin_ajax('verEncuesta')","escape"=>false)); ?>
-				<?php echo $this->Js->link("<i class='icon icon-edit'></i>",array("controller"=>"Encuestas","action"=>"editar",$encuesta["Encuesta"]["id"]),array("class"=>"btn btn-inverse btn-small","before"=>"modales('verEncuesta','modal-ficha')","complete"=>"fin_ajax('verEncuesta')","escape"=>false)); ?>
-				<?php echo $this->Js->link("<i class='icon icon-times'></i>",array("controller"=>"Encuestas","action"=>"borrar",$encuesta["Encuesta"]["id"]),array("class"=>"btn btn-inverse btn-small","before"=>"modales('verEncuesta','modal-ficha')","complete"=>"fin_ajax('verEncuesta')","escape"=>false)); ?>
+				<?php echo $this->Js->link("<i class='icon icon-eye'></i>",array("controller"=>"Encuestas","action"=>"ver",$encuesta["Encuesta"]["id"]),array("update"=>"#verEncuesta","class"=>"btn btn-inverse btn-small","before"=>"modales('verEncuesta','modal-ficha')","complete"=>"fin_ajax('verEncuesta')","escape"=>false)); ?>
+				<?php echo $this->Js->link("<i class='icon icon-edit'></i>",array("controller"=>"Encuestas","action"=>"editar",$encuesta["Encuesta"]["id"]),array("update"=>"#editarEncuesta","class"=>"btn btn-inverse btn-small","before"=>"modales('editarEncuesta','modal-ficha')","complete"=>"fin_ajax('editarrEncuesta')","escape"=>false)); ?>
+				<?php echo $this->Js->link("<i class='icon icon-times'></i>",array("controller"=>"Encuestas","action"=>"borrar",$encuesta["Encuesta"]["id"]),array("update"=>"#exec_js","class"=>"btn btn-inverse btn-small","before"=>"inicia_ajax()","complete"=>"fin_ajax()","escape"=>false)); ?>
 			</div>
 		</div>
 	</div>
 <?php endforeach; ?>
 </div>
+<?php echo $this->Js->writeBuffer(); ?>
 
