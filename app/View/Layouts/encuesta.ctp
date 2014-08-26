@@ -14,8 +14,7 @@
 
 echo $this->Helpers->Html->css('estilo');
 echo $this->Helpers->Html->css('jquery-ui-1.10.4');
-echo $this->Helpers->Html->css('bootstrap-combined.no-icons.min');
-echo $this->Helpers->Html->css('bootstrap-responsive');
+echo $this->Helpers->Html->css('bootstrap');
 echo $this->Helpers->Html->css('font-awesome');
 echo $this->Helpers->Html->css('bootstrap-modal');
 echo $this->Helpers->Html->css('bootstrap-modal-bs3patch');
@@ -30,7 +29,7 @@ echo $this->Helpers->Html->script("jquery");
 echo $this->Helpers->Html->script("jquery-ui-1.10.4.min");
 echo $this->Helpers->Html->script("jquery.ui.widget");
 echo $this->Helpers->Html->script("controles");
-echo $this->Helpers->Html->script("bootstrap.min");
+echo $this->Helpers->Html->script("bootstrap");
 echo $this->Helpers->Html->script("hogan");
 echo $this->Helpers->Html->script("bootstrap-modal");
 echo $this->Helpers->Html->script("bootstrap-modalmanager");
@@ -97,9 +96,7 @@ echo $this->Helpers->Html->script("d3.min");
     
       
     <div class="container">
-        <div class="row-fluid">
-            <div class="span1"></div>
-            <div class="span10" id="contenedor-paginador">
+            <div  id="contenedor-paginador">
                <?php echo $this->fetch("content") ?>
                    <?php
                    //pr($OUsuario);
@@ -111,8 +108,6 @@ echo $this->Helpers->Html->script("d3.min");
                         //debug($this->data);
                         ?>
             </div> <!-- FIN DIV CONTENEDOR-PAGINADOR -->
-            <div class="span1"><br/> </div>
-        </div> <!-- FIN DIV ROW-FLUID -->
     </div> <!-- FIN DIV CONTAINER -->
         
 
