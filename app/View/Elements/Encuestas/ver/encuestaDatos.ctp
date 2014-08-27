@@ -62,5 +62,26 @@
 	</div>
 </div>
 
+<div class="row-fluid">
+	<div class="span2">
+		<span class="label">Respuestas totales aprox</span>
+		<span><?php echo $encuesta["ResumenEncuesta"]["respuestas_aprox"] ?></span>
+	</div>
+	<div class="span2">
+		<span class="label">Respuestas cargadas</span>
+		<span><?php echo $encuesta["ResumenEncuesta"]["respuestas_cargadas"] ?></span>
+	</div>
+	<div class="span2">
+		<span class="label">Fecha ultima respuesta</span>
+		<span><?php echo $encuesta["ResumenEncuesta"]["fecha_ultima_respuesta"] ?></span>
+	</div>
+	<div class="span2">
+		<span class="label">Fecha primer respuesta</span>
+		<span><?php echo $encuesta["ResumenEncuesta"]["fecha_primer_respuesta"] ?></span>
+	</div>
+	
+
+</div>
+
 
 </div>
