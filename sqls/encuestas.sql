@@ -16,6 +16,8 @@ CREATE TABLE encuestas
   partes integer,
   categoria_id integer,
   subcategoria_id integer,
+  importada boolean DEFAULT false,
+  estado INTEGER DEFAULT 0,
   CONSTRAINT "Encuestas.id.PrimaryKey" PRIMARY KEY (id)
 )
 WITH (
