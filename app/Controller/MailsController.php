@@ -1,7 +1,7 @@
 <?php
 
 class MailsController extends AppController{
-    var $uses=array('Encuesta','EncuestaGrupos','EncuestaUsuarios','VistaCantUsuariosEnc','Grupo','Usuario','GruposUsuarios','VistaMail');
+    var $uses=array('Encuesta','EncuestaGrupos','EncuestaUsuarios','VistaCantUsuariosEnc','Grupo','Usuario','GruposUsuarios','VistaMail','VistaRecordatorio');
     var $components = array('Email');
 	function beforeFilter() {
             parent::beforeFilter();
@@ -73,9 +73,9 @@ class MailsController extends AppController{
         $this->set("datos",$datos);
     }
     function enviar_mail($grupos=false, $id_encuesta=false,$tipo_envio=false){
-        $grupos=array('14','16');
-        $id_encuesta='38';
-        $tipo_envio='1';
+        $grupos=array('14','15','16','17','18','19');
+        $id_encuesta='40';
+        $tipo_envio='2';
         $enviados=array();
         $sin_enviar=array();
         //Si es una encuesta a enviar --> Si trae el id de la encuesta entra
@@ -87,10 +87,11 @@ class MailsController extends AppController{
                     pr($id_grupo);
                         //Traigo los usuarios de las encuestas y grupo
                         $datos=$this->VistaMail->find('all',array('conditions'=>array('VistaMail.encuesta_id'=>$id_encuesta,'VistaMail.grupo_id'=>$id_grupo)));
-                            foreach($datos as $usuario):
+                           
+                             foreach($datos as $usuario):
                                 //Acá estoy trayendo todos los datos de el usuario
                                 //que paso por la condición del grupo y de la encuesta
-                                //Y QUE NO EXISTAN EN LA TABLA MAIL
+                                //No existe en la tabla mail
                                 pr($usuario);
                                 $this->Email->reset();
                                 $this->Email->from='elpitialvarez@gmail.com';
@@ -114,10 +115,45 @@ class MailsController extends AppController{
                             endforeach;                            
                     endforeach;
                     break; //TERMINA CASE DE ENVÍO POR PRIMERA VEZ
-                    
-                case '2': //Recordatorio -->Todos los usuarios que no hayan completado la encuesta
-                    pr('aca no entro');
-                    break;
+                
+                /* Recordatorio -->Todos los usuarios que no hayan completado la encuesta
+                 * Mandar mail a los usuarios que tienen menos del 90% (rango de 0 a 90)
+                 * completada la encuesta */
+                case '2': 
+                    foreach($grupos as $id_cake=>$id_grupo): 
+                    pr($id_grupo);
+                        /*Traigo los usuarios de las encuestas que el porcentaje sea menor al 90 %
+                         *Son a todos los usuarios que se les ha enviado el mail pero no respondieron
+                         * o les falta completar.                         */
+                        $datos=$this->VistaRecordatorio->find('all',array('conditions'=>array('VistaRecordatorio.encuesta_id'=>$id_encuesta,'VistaRecordatorio.grupo_id'=>$id_grupo)));
+                        //pr($datos);
+                            foreach($datos as $usuario):
+                                //Acá estoy trayendo todos los datos de el usuario
+                                //que paso por la condición del grupo y de la encuesta
+                                //No existe en la tabla mail
+                                pr($usuario);
+                                $this->Email->reset();
+                                $this->Email->from='elpitialvarez@gmail.com';
+                                //$this->Email->to=$usuario['VistaMail']['email_1'];
+                                //$this->Email->to='esunapruebaigual@outlook.com';
+                                $this->Email->subject  =  'Universidad Nacional de Lanús' ;
+                                $this->Email->sendAs   = 'html';
+                                //Quiere decir que mando todo ok
+                                if ($this->Email->send('body')) {
+                                    $enviados[]=$usuario;
+                                    //Hago un update de la tabla de mails
+                                    $temp_mail['Mail']['id']=$usuario['VistaRecordatorio']['id'];
+                                    $temp_mail['Mail']['grupo_id']=$usuario['VistaRecordatorio']['grupo_id'];
+                                    $temp_mail['Mail']['encuesta_id']=$usuario['VistaRecordatorio']['encuesta_id'];
+                                    $temp_mail['Mail']['usuario_id']=$usuario['VistaRecordatorio']['usuario_id'];
+                                    $this->Mail->save($temp_mail);
+                                    
+                                } else {
+                                    $sin_enviar[]=$usuario;
+                                }
+                            endforeach;                            
+                    endforeach;
+                    break; //Termina Case de Recordatorio.
             }
         }
         //Si es para que completen los datos del contacto
