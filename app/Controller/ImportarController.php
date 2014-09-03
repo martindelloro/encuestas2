@@ -54,7 +54,7 @@ class ImportarController extends AppController{
 		$importInfo["rows"]     	 = $data->rowcount(0);
 		$importInfo["rowsChunks"]    = ceil($importInfo["rows"] / 50);
 		$importInfo["RowSliceSize"]  = 50;
-		$importInfo["cols"]			 = $data->colcount(0)-14; // 13 x offset los datos del usuario no cuentan
+		$importInfo["cols"]			 = $data->colcount(0)-13; // 13 x offset los datos del usuario no cuentan
 		$importInfo["colsChunks"]	 = ceil($importInfo["cols"] / 10);
 		$importInfo["ColSliceSize"]  = 10;
 		$importInfo["path"]	   		 = $path;
@@ -93,20 +93,18 @@ class ImportarController extends AppController{
 		}
 	
 		$encuesta_id = $importInfo["survey_id"];
-		for($col = $offset + 14; $col<= $size+14;$col++){
+		for($col = $offset + 13; $col<= $size+13;$col++){
 			$pregunta = array();
 
            $valor  = $data->val(1,$col);
            $strpos = strpos($valor, "-")+1;
-                        $fin    = strlen($valor) - $strpos;
-                        
-                        
-                        $tmp = trim(substr($valor,$strpos,$fin));
-                        $valor = utf8_encode($tmp);
+           $fin    = strlen($valor) - $strpos;
+           $tmp = trim(substr($valor,$strpos,$fin));
+           $valor = utf8_encode($tmp);
                                          
 			
 			$pregunta["Encuestas"][$col]["encuesta_id"] = $importInfo["survey_id"];
-			$pregunta["Encuestas"][$col]["orden"] = $col - 14;
+			$pregunta["Encuestas"][$col]["orden"] = $col - 13;
             $pregunta["Pregunta"]["nombre"] = $valor;
             
 			$opciones = array();
@@ -199,7 +197,6 @@ class ImportarController extends AppController{
 			if($usuario == null) $usuario = $this->Pregunta->Usuario->find("first",array("conditions"=>array("Usuario.usuario"=>$apellido),"recursive"=>-1));
 				
 			if($usuario == null) {
-				echo "email: $email <br> dni: $dni <br> nombre: $nombre <br> apellido: $apellido<br>";
 				echo "Paso X veces <br>"; continue;
 			}
 			$nombrePregunta = null;
@@ -221,14 +218,14 @@ class ImportarController extends AppController{
                         $fin      = strlen($pregNom) - $strpos;     
                         $tmp      = trim(substr($pregNom,$strpos,$fin));
                         $pregNom  = utf8_encode($tmp);
-				        $nombrePregunta =  pg_escape_string($pregNom);
+				        $nombrePregunta = $pregNom;
 				        $valor    = strtolower($data->val($offset,$col));
 						$valor    = utf8_encode($valor);
 						$contResp++;
 							
-						$EncuestaPregunta = $this->Encuesta->EncuestaPregunta->find("first",array("conditions"=>array("EncuestaPregunta.nombre"=>$nombrePregunta,"EncuestaPregunta.encuesta_id"=>$encuesta_id,"EncuestaPregunta.orden"=>$col-14),"recursive"=>-1));
+						$EncuestaPregunta = $this->Encuesta->EncuestaPregunta->find("first",array("conditions"=>array("EncuestaPregunta.nombre"=>$nombrePregunta,"EncuestaPregunta.encuesta_id"=>$encuesta_id),"recursive"=>-1));
 						$pregunta["Pregunta"] = $EncuestaPregunta["EncuestaPregunta"];
-																
+												
 						if($pregunta == null) {
 							$resultado["PreguntaInexistente"][] = $nombrePregunta;
 							continue;
@@ -326,7 +323,7 @@ class ImportarController extends AppController{
 			$data = new Spreadsheet_Excel_Reader($excelName, false);
 			if(!isset($filas)) $filas = $data->rowcount(0);
 			for($i; $i <= $filas; $i++){
-			$usuario["Usuario"]["id"] = "";
+			$usuario = null;
 			for($j = 2; $j <= 13; $j++){
 				switch($j-1){
 					case 1:
@@ -396,7 +393,7 @@ class ImportarController extends AppController{
 						  $usuario["Usuario"]["usuario"] = $usuario["Usuario"]["apellido"];
 						  break;	
 				}
-								
+				$usuario["Usuario"]["id"] = null;				
 				$usuario["Usuario"]["hashactivador"] = md5($usuario["Usuario"]["usuario"]);
 				$usuario["Usuario"]["activado"] = true;
 				$usuario["Usuario"]["rol"] = "graduado";

@@ -202,6 +202,8 @@ class SubReportesController extends AppController{
 				
 				}
                 $this->set("categoriasX",array_unique($categoriasX));
+                $this->set('preguntaGraficoX',$preguntaGraficoX);
+				$this->set("categoriasX",array_unique($categoriasX));
 				$this->set("categoriasY",$categoriasY);
 				$this->set("datos",$datos);
 				break;

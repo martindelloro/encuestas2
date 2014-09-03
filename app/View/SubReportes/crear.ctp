@@ -99,12 +99,15 @@
 <div id="graficoBarras" class="grafico" >
 </div>
 
+<<<<<<< HEAD
 <?php if(isset($preguntaX)): ?>
 <div class="well label-titular color-3">
 	<?php echo $preguntaX ?>
 </div>
 <?php endif; ?>
 
+=======
+>>>>>>> 5e4c6b20d4b56c18c0a4b065bc0edbe91d260725
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>

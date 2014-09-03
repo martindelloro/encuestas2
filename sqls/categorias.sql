@@ -1,7 +1,6 @@
 set search_path to encuestas;
 
--- Table: categorias
--- DROP TABLE categorias;
+DROP TABLE categorias;
 
 CREATE TABLE categorias
 (
@@ -25,7 +24,6 @@ ALTER TABLE categorias
   OWNER TO encuestas;
 
 -- Index: "Categorias.name"
-
 -- DROP INDEX "Categorias.name";
 
 CREATE INDEX "Categorias.name"
@@ -34,11 +32,9 @@ CREATE INDEX "Categorias.name"
   (name COLLATE pg_catalog."default");
 
 -- Index: "Categorias.type"
-
 -- DROP INDEX "Categorias.type";
 
 CREATE INDEX "Categorias.type"
   ON categorias
   USING hash
-  (type COLLATE pg_catalog."default");
-
+	 (type COLLATE pg_catalog."default");

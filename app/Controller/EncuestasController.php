@@ -56,6 +56,17 @@ class EncuestasController extends AppController{
 		
 	}
 	
+	/* 
+	 * OPCIONES:
+	 * 	NUEVA: Genera el formulario de busqueda y div contenedor de resultado pero no realiza la busqueda
+	 *  PAGINAR: Se llama cuando se necesitan que la funcion devuelva resultado lee parametros de busqueda 
+	 *  guardados en la primer llamada a la funcion paginar "$this->data no esta vacio"
+	 * 
+	 * Tiene 2 vistas:
+	 *  nueva: buscar.ctp con formulario de busqueda
+	 *  paginar: resultadoBusqueda pagina el resultado de la busqueda.
+	 * */ 
+	
 	function buscar($tipo = "nueva"){
 		if(!empty($this->data)){
 			$condiciones = null;
@@ -66,22 +77,22 @@ class EncuestasController extends AppController{
 		}
 		
 		switch($tipo){
-			case "nueva":
+			case "nueva":  
 				$this->set("categorias",$this->Encuesta->Categoria->find("list"));
 				$this->set("subcategorias",$this->Encuesta->Subcategoria->find("list"));
+				
 				break;
 			case "paginar":
 				$condiciones = $this->Session->read("busquedaEncuesta");
+				$this->paginate = array("contain"=>array("ResumenEncuesta"));
 				$this->set("encuestas",$this->paginate("Encuesta",$condiciones));
 				$this->render("resultadoBusqueda");
 		}
 	}
 	
-	function ver(){
-		$this->autoRender = false;
-		$encuesta = $this->Encuesta->find("first",array("conditions"=>array("Encuesta.id"=>2),"contain"=>array("Preguntas"=>array("Respuesta"=>array("conditions"=>array("Respuesta.encuesta_id"=>2))))));
-		debug($encuesta);
-		
+	function ver($encuesta_id = null){
+		$encuesta = $this->Encuesta->find("first",array("conditions"=>array("Encuesta.id"=>$encuesta_id),"contain"=>array("ResumenEncuesta","Categoria","Subcategoria","Preguntas")));
+		$this->set("encuesta",$encuesta);		
 	}
 	
 	function completar($encuesta_id = null, $parte = 1,$partes = null,$cantXpag = null){
@@ -97,7 +108,7 @@ class EncuestasController extends AppController{
 				if(strcmp(serialize($encuesta),serialize($this->data)) == 0){
 					$guardar = false;
 				}
-			}
+			
 			if($guardar){
 				if($this->Usuario->saveAssociated($this->data,array("deep"=>true))){
 					$inserted_ids = $this->Usuario->Respuesta->inserted_ids;
@@ -150,6 +161,6 @@ class EncuestasController extends AppController{
 		$this->set("encuesta_id",$encuesta_id);
 	}
 	
+	}
 }
-
 ?>

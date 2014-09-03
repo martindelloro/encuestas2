@@ -1,4 +1,5 @@
 set search_path to encuestas;
+
 -- Table: respuestas_opciones
 -- DROP TABLE respuestas_opciones;
 
@@ -17,20 +18,21 @@ WITH (
 ALTER TABLE respuestas_opciones
   OWNER TO encuestas;
 
--- Index: "respuestas_opciones.opcion_id"
 
--- DROP INDEX "respuestas_opciones.opcion_id";
+-- Index: "RespuestasOpciones.opcion_id.Index"
 
-CREATE INDEX "respuestas_opciones.opcion_id"
+-- DROP INDEX "RespuestasOpciones.opcion_id.Index";
+
+CREATE INDEX "RespuestasOpciones.opcion_id.Index"
   ON respuestas_opciones
   USING btree
   (opcion_id);
 
--- Index: "respuestas_opciones.respuesta_id"
+-- Index: "RespuestasOpciones.respuesta_id"
 
--- DROP INDEX "respuestas_opciones.respuesta_id";
+-- DROP INDEX "RespuestasOpciones.respuesta_id";
 
-CREATE INDEX "respuestas_opciones.respuesta_id"
+CREATE INDEX "RespuestasOpciones.respuesta_id.Index"
   ON respuestas_opciones
   USING btree
   (respuesta_id);
