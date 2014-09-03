@@ -91,7 +91,7 @@ class EncuestasController extends AppController{
 	}
 	
 	function ver($encuesta_id = null){
-		$encuesta = $this->Encuesta->find("first",array("conditions"=>array("Encuesta.id"=>$encuesta_id),"contain"=>array("ResumenEncuesta","Categoria","Subcategoria","Preguntas")));
+		$encuesta = $this->Encuesta->find("first",array("conditions"=>array("Encuesta.id"=>$encuesta_id),"contain"=>array("ResumenEncuesta","Categoria","Subcategoria","EncuestaPregunta")));
 		$this->set("encuesta",$encuesta);		
 	}
 	
