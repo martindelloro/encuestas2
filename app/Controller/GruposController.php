@@ -40,10 +40,12 @@ class GruposController extends AppController {
             //ESTÁ: Mensaje: El usuario ya estaba asignado al grupo <<nro>>    
             $this->Session->setFlash("El usuario ya estaba asignado al grupo",null,null,"mensaje_sistema");
         }else{
-            $usuario["Usuario"]["id"] = $id_usuario;
-            $usuario["Grupos"][] = $id_grupo;
+            $usuario["GruposUsuarios"]["id"]='';
+            $usuario["GruposUsuarios"]["usuario_id"] = $id_usuario;
+            $usuario["GruposUsuarios"]["grupo_id"] = $id_grupo;
+            pr($usuario);
             //NO ESTÁ: Asignarlo. Mensaje: El usuario ha sido asignado
-            if($this->Usuario->save($usuario)){
+            if($this->GruposUsuarios->save($usuario)){
                 
                 $this->Session->setFlash("El usuario ha sido asignado al grupo",null,null,"mensaje_sistema");
             }
