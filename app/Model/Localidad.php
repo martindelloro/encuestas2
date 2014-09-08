@@ -1,7 +1,7 @@
 <?php
 
 class Localidad extends AppModel{
-        var $useDbConfig = 'gis';
+    var $useDbConfig = 'gis';
     var $name = "Localidad";
     var $useTable = "localidades_g";
     var $primaryKey = "cod_loc";

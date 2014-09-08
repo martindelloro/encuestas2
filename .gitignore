@@ -9,7 +9,7 @@
 /dist
 /tags
 
-
+*.htaccess
 *.orig
 .xls
 
@@ -24,4 +24,4 @@ Icon?
 ehthumbs.db
 Thumbs.db
 /nbproject/private/
-.settings/
+.settings/*
