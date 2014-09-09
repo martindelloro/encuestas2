@@ -8,7 +8,10 @@
 <meta name="author" content="">
 <?php $title_for_layout = "Sistema de Seguimiento de Graduados de la Universidad Lanus"; ?>
 <title><?php echo $title_for_layout?></title>
-
+<?php 
+	$base = isset($this->viewVars["base"])?$this->viewVars["base"]:null;
+	if($base) echo "<base href='$base' ></base>";
+ ?>
 <script type="text/javascript">var Hogan = {};</script>
 <?php
 

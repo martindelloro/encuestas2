@@ -40,11 +40,12 @@
 <!-- ***** COMIENZO RESULTADOS GRAFICO STACKED BARS ***** -->
 <!-- **************************************************** -->
 <?php if(!empty($datosInfoStacked)): ?>
+<div class="scrollTable">
 <table class="table table-striped">
 <thead>
 <tr class="preguntasTabla">
 <th><?php echo $preguntaX ?></th>
-<th colspan="<?php echo count($categoriasY)+1; ?>"><?php echo $preguntaY ?></th>
+<th colspan="<?php echo count($categoriasY)+1; ?>"><span style="width:800px;display:block"><?php echo $preguntaY ?></span></th>
 </tr>
 <tr>
 <th></th>
@@ -73,6 +74,7 @@
 <td><?php echo array_sum($totalesY); ?></td>
 </tr>
 </table>
+</div>
 <?php endif; ?>
 <!-- ***** FIN IF RESULTADOS GRAFICO STACKED BARS ***** -->
 <?php if(isset($preguntaY)): ?>
@@ -80,7 +82,7 @@
 <?php echo $preguntaY ?>
 </div>
 <?php endif; ?>
-<div id="leyenda" class="leyenda" style="display:none"></div>
+<div id="leyenda" class="leyenda" style="display:none;width:800px;height:180px"></div>
 <div id="graficoBarras" class="grafico" >
 </div>
 
@@ -91,38 +93,46 @@
 <?php endif; ?>
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
-<script>
-<?php switch($this->data["SubReporte"]["grafico_tipo"]): ?>
-<?php case 1: ?>
-datos = <?php echo json_encode(array_values($cont_opciones)); ?>;
-<?php break; ?>
-<?php case 2: ?>
-datos = <?php echo json_encode($datos); ?>;
-categoriasX = <?php echo json_encode($categoriasX); ?>;
-categoriasY = <?php echo json_encode($categoriasY); ?>;
-<?php break; ?>
-<?php endswitch; ?>
-var margin = {top: 20, right: 20, bottom: 80, left: 40},
-width = $(".grafico:first").width() - margin.left - margin.right;
-height = $(".grafico:first").height() - margin.top - margin.bottom;
-var x = d3.scale.ordinal().rangeRoundBands([0, width], .1);
-var y = d3.scale.linear().range([height, 0]);
-var xAxis = d3.svg.axis().scale(x).orient("bottom");
-var yAxis = d3.svg.axis().scale(y).orient("left").ticks(20);
-var svg = d3.select("#graficoBarras").append("svg")
-.attr("width", width + margin.left + margin.right)
-.attr("height", height + margin.top + margin.bottom)
-.append("g");
-</script>
 <?php
 switch($this->data["SubReporte"]["grafico_tipo"]){
-case 1:
-echo $this->Html->script("/js/graficos/barras.js");
-break;
-case 2:
-echo $this->Html->script("/js/graficos/stacked.js");
+	case 1:
+		echo $this->Html->script("/js/graficos/barras.js");
+		break;
+	case 2:
+		echo $this->Html->script("/js/graficos/stacked.js");
 }
 ?>
+<script type="text/javascript">
+$(document).ready(function(){
+	var margin = {top: 20, right: 20, bottom: 80, left: 40};
+	width = $(".grafico:first").width() - margin.left - margin.right;
+	height = $(".grafico:first").height() - margin.top - margin.bottom;
+	width = 800;
+	height = 500;
+	var x = d3.scale.ordinal().rangeRoundBands([0, width], .1);
+	var y = d3.scale.linear().range([height, 0]);
+	var xAxis = d3.svg.axis().scale(x).orient("bottom");
+	var yAxis = d3.svg.axis().scale(y).orient("left").ticks(20);
+	var svg = d3.select("#graficoBarras").append("svg")
+	.attr("width", width + margin.left + margin.right)
+	.attr("height", height + margin.top + margin.bottom)
+	.append("g");
+	
+
+	<?php if($this->data["SubReporte"]["grafico_tipo"] == 1): ?>
+		datos = <?php echo json_encode(array_values($cont_opciones)); ?>;
+	<?php endif; ?>
+	<?php if($this->data["SubReporte"]["grafico_tipo"] == 2): ?>
+		datos = <?php echo json_encode($datos); ?>;
+		categoriasX = <?php echo json_encode($categoriasX); ?>;
+		categoriasY = <?php echo json_encode($categoriasY); ?>;
+		stackedBars(x,y,xAxis,yAxis,svg,width,height,d3,categoriasY,categoriasX,datos);
+	<?php endif; ?>
+
+});
+
+</script>
+
 <?php
 //echo $this->element("sql_dump");
 ?>

@@ -16,6 +16,7 @@ class SubReportesController extends AppController{
         }
 
 	function crear(){
+		
 		$encuesta_id = $this->data["Reporte"]["encuesta_id"];
 		
 		// PROCESO FILTROS
@@ -237,6 +238,31 @@ class SubReportesController extends AppController{
 				$this->render("/Elements/Reportes/tipoGrafico/stacked");
 			
 		}
+	}
+	
+	function pdf($css = 'pdf'){
+		if(!file_exists(TMP."pdfs")){
+			mkdir(TMP."pdfs",0777);
+		}
+		$contenido = $this->requestAction(array("controller"=>"SubReportes","action"=>"crear"),array("return","data"=>$this->request->data));
+		$vista = new View($this,true);
+		$vista->layout = "encuesta";
+		$vista->autoRender = false;
+		$vista->set("contenido",$contenido);
+		$vista->set("base","http://localhost/");
+		$vista->set("css",$css);
+		$towrite = $vista->render("/Elements/Reportes/dummy_pdf");
+		$rand_nom = md5(uniqid(rand(),TRUE));
+		$html = TMP."pdfs/$rand_nom.html";
+		$pdf  = TMP."pdfs/$rand_nom.pdf";
+		$tmp   = fopen($html,"w");
+		fwrite($tmp,$towrite);
+		fclose($tmp);
+		exec("wkhtmltopdf  --viewport-size 1280x1024 --javascript-delay 5500 --zoom 0.75 $html $pdf");
+		$archivo = file_get_contents($pdf);
+		// unlink($html); unlink($pdf);
+		$this->layout= null;
+		$this->set("pdf",$archivo);
 	}
 }
 

@@ -1,14 +1,11 @@
+var stackedBars = function(x,y,xAxis,yAxis,svg,width,height,d3,categoriasY,categoriasX,datos){
 var color = d3.scale.ordinal()
     .range(["#98abc5", "#8a89a6", "#7b6888", "#cccccc", "#a05d56", "#d0743c", "#ff8c00", "#ccc333","#FFFf00"]);
 
-
-var antes = null;
-var despues = null;
   
   color.domain(categoriasY); // NOMBRES DE eje "Y" domain acepta array ['nombre1','nombre2']
   x.domain(categoriasX);
-  var test = null;
-    
+      
   svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
@@ -23,9 +20,6 @@ var despues = null;
   
    // svg.append("text").attr("x", 0).attr("y", 0).style("text-anchor", "middle").style("fill", "#515151").style("font-family", "arial").style("font-size", "12px").text("Grade Range (%)");
 
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis);
 
   var EjeX = svg.selectAll(".state")
       .data(datos)
@@ -33,14 +27,12 @@ var despues = null;
       .attr("class", "state")
       .attr("transform", function(d) {return "translate(" + x(d.categoriaX) + ",0)"; }); // generan muchos contenedores svg G para alojar futuramente las sub-barras.
  
-  EjeX.selectAll("rect").data(function(d){return d.Resultados})
+  EjeX.selectAll("rect").data(function(d){return d.Resultados;})
   	  .enter().append("rect").attr("width", x.rangeBand())
       .attr("y", function(d) {  return y(d.altura); }) 
       .attr("height", function(d) {return y(d.offset) - y(d.altura); })
       .style("fill", function(d) {return color(d.categoriaY); })
-      .attr("alt",function(d){return d.categoriaY});
-
-  
+      .attr("alt",function(d){return d.categoriaY;});
 
   
   j = 0;
@@ -73,13 +65,12 @@ var despues = null;
 	 			 largos[0] = largo;
 	 		 }
 	 		 else{
-	 			 console.log("Entro con indice:"+indice);
 	 			 largos[Math.floor((indice / 4))] = largo; // Por si los del resto son mas largos para numeros impares
 	 		 }
 	 		 break;
 	 }
   });
-  console.log(largos);
+
   if(cantLeyendas < 4){
 	  altoFinal = cantLeyendas * 20;
   }
@@ -93,12 +84,9 @@ var despues = null;
   });
 
  
-  x = 0;
-  y = 0;
-  
  // widthLeyenda   = $(".leyenda:first").width() - margin.left - margin.right;
  // heightLeyenda  = $(".leyenda:first").height() - margin.top - margin.bottom;
-  widthLeyenda = $('.tab-content').width();
+  widthLeyenda = width;
   heightLeyenda = altoFinal ;
   
   $("#leyenda").show();
@@ -108,29 +96,30 @@ var despues = null;
   					.append("g");
   					
   
+  x = 0;
+  y = 0;  
   lock = -1;
+  console.log(largos);
   var legend = svgLeyenda.selectAll(".legend").data(color.domain().slice().reverse())	
   									   .enter().append("g")
   									   .attr("class", "legend")
   									   .attr("transform", function(d, i) {
-  										   		if(y != 0 && y != 4 && i != 0) y += 1;
-  										   		if(i==0) trampa = -largos[0];
-  										        if(y == 0){
-  										        	x = largos[Math.floor(i/4)]+trampa;
-  										           	y += 1;
+  										   		if(y != 0 && y != 4){
+  										   			translate = "translate("+k+"," + y * 20 + ")"; 
+  										   			y += 1;
+  										   		}
+  										   		if(y == 0){
+  										        	if(Math.floor(i/4) != 0){
+  										        	   x = largos[Math.floor(i/4) -1] +x;	
+  										        	}
+  										        	k = -x;
+  										        	translate = "translate("+k+"," + y * 20 + ")"; 
+  										        	y += 1;
   										        }
   										   		if(y == 4){
   										        	y=0;
-  										        	if(i == 4){
-  										        		trampa = x + largos[0];
-  										        	}
-  										        	else{
-  										        		trampa = x;
-  										        	}
-  										        	
   										        }
-  										   		k = -x;
-  										        translate = "translate("+k+"," + y * 20 + ")"; 
+  										   		
   										   		return translate; });
 
   legend.append("rect")
@@ -138,14 +127,15 @@ var despues = null;
   	.attr("width", 18)
   	.attr("height", 18)
   	.style("fill", color);
-
+ 
   legend.append("text")
   	.attr("x", widthLeyenda - 24)
   	.attr("y", 9)
   	.attr("dy", ".35em")
   	.style("text-anchor", "end")
   	.text(function(d) { return d; });
-  
+
+};
 
 
 

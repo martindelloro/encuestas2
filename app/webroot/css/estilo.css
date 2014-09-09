@@ -976,6 +976,10 @@ border-radius: 2px;
     top: 4px !important
 }
 
+.scrollTable{
+	overflow-x:scroll;
+}
+
 /*************************************************/
 /*********     ESTILO GRAFICO BARRAS    **********/
 /*************************************************/
