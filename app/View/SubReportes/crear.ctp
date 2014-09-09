@@ -99,7 +99,7 @@
     </div>
 <?php endif; ?>
     <div id="leyenda" class="leyenda" style="display:none"></div>
-    <?php if($this->data["SubReporte"]["grafico_tipo"]==1){ ?>
+    <?php if($this->data["SubReporte"]["grafico_tipo"]==1 || $this->data["SubReporte"]["grafico_tipo"]==2){ ?>
             <div id="graficoBarras" class="grafico" ></div>
     <?php } ?>
     <?php if($this->data["SubReporte"]["grafico_tipo"]==3){ ?>

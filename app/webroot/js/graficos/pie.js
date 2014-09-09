@@ -1,4 +1,4 @@
-x.domain(datos.map(function(d) { return d.nombre; }));
+/*x.domain(datos.map(function(d) { return d.nombre; }));
 y.domain([0, d3.max(datos, function(d) { return d.contador; })]);
 //console.log(datos.map(function(d){return d.nombre;}));
 
@@ -12,7 +12,7 @@ console.log(contenido);
 //json encode array 
 //var data = <?php echo $jsonencode?>
 //console.log()
- 
+ */
 var pie = new d3pie("graficoPie", {
     data: { 
        content: contenido
