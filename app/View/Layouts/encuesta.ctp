@@ -39,6 +39,7 @@ echo $this->Helpers->Html->script("typeahead");
 echo $this->Helpers->Html->script("bootstrap-tooltip");
 echo $this->Helpers->Html->script("jquery.blockUI");
 echo $this->Helpers->Html->script("d3.min");
+echo $this->Helpers->Html->script("d3pie.js");
 echo $this->Helpers->Html->script("blueimp/jquery.fileupload.js");
 echo $this->Helpers->Html->script("blueimp/jquery.fileupload-process.js");
 echo $this->Helpers->Html->script("blueimp/jquery.fileupload-validate.js");
