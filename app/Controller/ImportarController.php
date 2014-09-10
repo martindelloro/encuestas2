@@ -323,7 +323,7 @@ class ImportarController extends AppController{
 			$data = new Spreadsheet_Excel_Reader($excelName, false);
 			if(!isset($filas)) $filas = $data->rowcount(0);
 			for($i; $i <= $filas; $i++){
-			$usuario["Usuario"]["id"] = "";
+			$usuario = null;
 			for($j = 2; $j <= 13; $j++){
 				switch($j-1){
 					case 1:
@@ -393,7 +393,7 @@ class ImportarController extends AppController{
 						  $usuario["Usuario"]["usuario"] = $usuario["Usuario"]["apellido"];
 						  break;	
 				}
-								
+				$usuario["Usuario"]["id"] = null;				
 				$usuario["Usuario"]["hashactivador"] = md5($usuario["Usuario"]["usuario"]);
 				$usuario["Usuario"]["activado"] = true;
 				$usuario["Usuario"]["rol"] = "graduado";

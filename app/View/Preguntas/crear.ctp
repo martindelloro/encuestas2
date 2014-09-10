@@ -1,4 +1,4 @@
-    <?php echo $this->Mensajes->mostrar(); ?>
+<?php echo $this->Mensajes->mostrar(); ?>
 
 <?php echo $this->Form->create("Pregunta"); ?>
 <div class="modal-header header-ficha azul">

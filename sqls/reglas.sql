@@ -2,7 +2,7 @@ set search_path to encuestas;
 
 -- Table: reglas
 
-DROP TABLE reglas;
+-- DROP TABLE reglas;
 
 CREATE TABLE reglas
 (

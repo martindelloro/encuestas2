@@ -11,13 +11,24 @@ class Encuesta extends AppModel{
 							  "Categoria"=>array("className"=>"Categoria","foreignKey"=>"categoria_id","conditions"=>array("Categoria.type"=>"S")),
 							  "Subcategoria"=>array("className"=>"Subcategoria","foreignKey"=>"subcategoria_id","conditions"=>array("Subcategoria.type"=>"S")));
 	
-	public $hasOne = array("ResumenEncuesta"=>array("className"=>"ResumenEncuesta","foreignKey"=>"encuesta_id"));
+	public $hasOne    = array("ResumenEncuesta"=>array("className"=>"ResumenEncuesta","foreignKey"=>"encuesta_id"));
 	
 	public $hasMany   = array("Reporte"=>array("className"=>"Reporte","foreignKey"=>"encuesta_id"),
+<<<<<<< HEAD
 						  	  "EncuestaPregunta"=>array("className"=>"EncuestaPregunta","foreignKey"=>"encuesta_id"));
 	
 	public $hasAndBelongsToMany = array("Preguntas"=>array("className"=>"Pregunta","joinTable"=>"encuestas_preguntas","foreignKey"=>"encuesta_id","associationForeignKey"=>"pregunta_id"),
 								        "Grupos"=>array("className"=>"Grupo","joinTable"=>"encuestas_grupos","foreignKey"=>"encuesta_id","associationForeignKey"=>"grupo_id"));
+=======
+                              "EncuestaPregunta"=>array("className"=>"EncuestaPregunta","foreignKey"=>"encuesta_id"),
+                              "EncuestaGrupos"=>array("className"=>"EncuestaGrupos","foreignKey"=>"grupo_id"));
+	
+	public $hasAndBelongsToMany = array("Preguntas"=>array("className"=>"Pregunta","joinTable"=>"encuestas_preguntas","foreignKey"=>"encuesta_id","associationForeignKey"=>"pregunta_id"),
+                                        "Grupos"=>array("className"=>"Grupo","joinTable"=>"encuestas_grupos","foreignKey"=>"encuesta_id","associationForeignKey"=>"grupo_id"));
+                                            
+            
+
+>>>>>>> ver_encuesta
 	
 }
 

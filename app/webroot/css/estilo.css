@@ -2,7 +2,7 @@ select {
     width:98% !important;
 }
 input{
-    width: 98% !important;
+    width: 93% !important;
 }
 
 body{
@@ -236,16 +236,23 @@ body .mensaje-contenido{
 .izquierda{
 	float:left;
 }
+
+
+.no-space [class*="span"] {
+    margin-left: 0;
+}
+
+.no-space {
+	 margin-left:0;
+}
+
 /***************************************************************/
 /****************** USUARIOS INDEX/LISTADO *********************/
 /***************************************************************/
 
-#UsuarioCrearUsuarioForm .row-fluid{
-    width:93% !important;
-    margin: 0 auto;
-}
+
 #UsuarioCrearUsuarioForm input{
-    width:95% !important;
+    width:93% !important;
     
 }
 #UsuarioCrearUsuarioForm select{
@@ -712,6 +719,10 @@ body .mensaje-contenido{
 	width:100% !important;
 }
 
+.centrado{
+	text-align:center;
+}
+
 
 /*************************************************/
 /*********  FICHA CREAR USUARIO GRUPO   **********/
@@ -1019,6 +1030,14 @@ border-radius: 2px;
 
 }
 
+/*************************************************/
+/************* 	  VER ENCUESTA    ****************/
+/*************************************************/
+
+#verEncuesta .label{
+	display:block;
+}
+
 
 /*************************************************/
 /*********   PRESETS GENERALES BUSCAR   **********/
@@ -1028,6 +1047,10 @@ border-radius: 2px;
 	
 }
 
+.contenedorResultados {
+	margin-top:5px;
+}
+
 .contenedorResultados .resultado:nth-child(odd){
 	background-color: white !important;
 }
@@ -1035,6 +1058,53 @@ border-radius: 2px;
 .contenedorResultados .resultado:nth-child(even){
 	background-color:#DBDBDB !important;
 	
+}
+
+.contenedorResultados .resultado .row-fluid{
+	border:1px solid #ccc;
+}
+
+.contenedorResultados .resultado .row-fluid:first-child{
+	border-bottom: none;
+}
+
+.contenedorResultados .resultado .row-fluid div{
+	border-left:1px solid #ccc;
+	
+}
+
+.contenedorResultados .resultado .row-fluid div:first-child{
+	border-left:none;
+}
+
+.contenedorResultados .resultado .row-fluid div:last-child{
+	border-right:none;
+}
+
+.contenedorResultados .resultado .row-fluid span{
+	display:block;
+	margin-left:5px;
+	margin-top:5px;
+}
+
+.infoBusqueda{
+	margin-top:4px;
+}
+
+.infoBusqueda:first-child {
+	margin-top: 0px;
+}
+
+
+.infoBusqueda span {
+    display: block;
+    margin-top: 6px;
+    text-align: center;
+    width: 100%;
+}
+
+#resultadoBusqueda .infoBusqueda:last-child {
+    border-bottom: 2px solid #702834 !important;
 }
 
 /*************************************************/
@@ -1185,3 +1255,9 @@ border-radius: 2px;
 .contenedor-opciones .checkbox input{
 	width:22px !important;
 }
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> ver_encuesta

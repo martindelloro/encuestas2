@@ -88,11 +88,9 @@ class EncuestasController extends AppController{
 		}
 	}
 	
-	function ver(){
-		$this->autoRender = false;
-		$encuesta = $this->Encuesta->find("first",array("conditions"=>array("Encuesta.id"=>2),"contain"=>array("Preguntas"=>array("Respuesta"=>array("conditions"=>array("Respuesta.encuesta_id"=>2))))));
-		debug($encuesta);
-		
+	function ver($encuesta_id = null){
+		$encuesta = $this->Encuesta->find("first",array("conditions"=>array("Encuesta.id"=>$encuesta_id),"contain"=>array("ResumenEncuesta","Categoria","Subcategoria","EncuestaPregunta")));
+		$this->set("encuesta",$encuesta);		
 	}
 	
 	function completar($encuesta_id = null, $parte = 1,$partes = null,$cantXpag = null){
@@ -108,7 +106,7 @@ class EncuestasController extends AppController{
 				if(strcmp(serialize($encuesta),serialize($this->data)) == 0){
 					$guardar = false;
 				}
-			}
+			
 			if($guardar){
 				if($this->Usuario->saveAssociated($this->data,array("deep"=>true))){
 					$inserted_ids = $this->Usuario->Respuesta->inserted_ids;
@@ -161,6 +159,6 @@ class EncuestasController extends AppController{
 		$this->set("encuesta_id",$encuesta_id);
 	}
 	
+	}
 }
-
 ?>
