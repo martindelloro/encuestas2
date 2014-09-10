@@ -1,7 +1,7 @@
 set search_path to encuestas;
 -- View: v_resumen_encuestas
 
-DROP VIEW v_resumen_encuestas;
+-- DROP VIEW v_resumen_encuestas;
 
 CREATE OR REPLACE VIEW v_resumen_encuestas AS 
  SELECT a.id AS encuesta_id, b.completas, b.incompletas, b.usuarios, c.grupos, d.preguntas, b.completas::double precision / b.usuarios::double precision * 100::double precision AS porcentaje,

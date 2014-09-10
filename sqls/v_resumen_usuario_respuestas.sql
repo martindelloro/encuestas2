@@ -11,6 +11,7 @@ CREATE OR REPLACE VIEW v_resumen_usuario_respuestas AS
             WHEN count(b.encuesta_id)::double precision > 0.0::double precision THEN count(e.usuario_id)::double precision / count(DISTINCT b.pregunta_id)::double precision * 100::double precision
             ELSE 0::bigint::double precision
         END AS porcentaje,
+    min(DISTINCT e.created) as fecha_primer_respuesta,
     max(DISTINCT e.created) AS fecha_ultima_respuesta
    FROM encuestas a
    LEFT JOIN encuestas_preguntas b ON a.id = b.encuesta_id
