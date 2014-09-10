@@ -186,9 +186,12 @@ class UsuariosController extends AppController {
                           $buscar['Usuario.rol ilike'] = '%'.$this->data['buscar']['tipo_usuario'].'%';
                       }
                       //debug($buscar);
-                      $this->paginate = array("order"=>"Usuario.apellido ASC","fields"=>array('Usuario.usuario','Usuario.apellido','Usuario.nombre','Usuario.email_1', 'Usuario.id'),'conditions'=>$buscar);
+                      $total_busqueda=$this->Usuario->find('all',array('conditions'=>$buscar,'recursive'=>0));
+                      
+                      $this->paginate = array("order"=>"Usuario.apellido ASC","fields"=>array('Usuario.usuario','Usuario.apellido','Usuario.nombre','Usuario.email_1', 'Usuario.id','Usuario.sexo','Usuario.fecha_nac','Usuario.dni','Usuario.estado_civil','Usuario.calle','Usuario.localidad','Usuario.provincia','Usuario.tel_fijo','Usuario.celular'),'conditions'=>$buscar);
                       $this->set('usuarios',$this->paginate("Usuario"));
-            }
+                      $this->set('total_users',$total_busqueda);
+            }                                                                 
      }
      function ver($id){
          $usuario=$this->Usuario->findById($id);
@@ -293,7 +296,12 @@ class UsuariosController extends AppController {
              //$this->render('completar/'.$encuesta['VistaUsuarios']['encuesta_id']."/"."1"."1"."316");
              
          }
-
+         function export($conditions=false) {
+             
+            $data = $this->Usuario->find('all',array('conditions'=>array('Usuario.nombre ilike'=>'%martin%'),'recursive'=>0));
+            $this->set('models', $data);
+            pr($data);
+         }
 
 }
 
