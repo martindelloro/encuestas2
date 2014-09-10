@@ -1,6 +1,45 @@
 <?php 
 $this->Paginator->options(array('update' => '#resultado_busqueda','before' => 'inicia_ajax()','evalScripts' => true, 'url'=>array('controller'=>'usuarios','action'=>'buscar')));
-?>
+ ?>
+<div id="usuarios" style="display: none">
+<table >
+        
+		<tr>
+			<td></td>
+			<td>nombre</td>
+                        <td>apellido</td>
+                        <td>sexo</td>
+                        <td>dni</td>
+                        <td>fecha_nac</td>
+                        <td>estado_civil</td>
+                        <td>calle</td>
+                        <td>localidad</td>
+                        <td>provincia</td>
+                        <td>tel_fijo</td>
+                        <td>celular</td>
+                        <td>email_1</td>
+		</tr>
+	 <?php foreach($total_users as $usuario2): ?>
+		<tr>
+			<td></td>
+			<td><?php echo $usuario2['Usuario']['nombre']; ?></td>
+			<td><?php echo $usuario2['Usuario']['apellido']; ?></td>
+			<td><?php echo $usuario2['Usuario']['sexo']; ?></td>
+                        <td><?php echo $usuario2['Usuario']['dni']; ?></td>
+                        <td><?php echo $usuario2['Usuario']['fecha_nac']; ?></td>
+                        <td><?php echo $usuario2['Usuario']['estado_civil']; ?></td>
+                        <td><?php echo $usuario2['Usuario']['calle']; ?></td>
+                        <td><?php echo $usuario2['Usuario']['localidad']; ?></td>
+                        <td><?php echo $usuario2['Usuario']['provincia']; ?></td>
+                        <td><?php echo $usuario2['Usuario']['tel_fijo']; ?></td>
+                        <td><?php echo $usuario2['Usuario']['celular']; ?></td>
+                        <td><?php echo $usuario2['Usuario']['email_1']; ?></td>
+                                              
+		</tr>
+        <?php endforeach; ?>
+                
+</table>
+</div>
 
 <div class="paginador">
 		<?php echo $this->Paginator->counter('Pagina {:page} de {:pages}, mostrando {:current} resultados de {:count} totales, empezando en el resultado {:start}, terminando en {:end}'); ?>
@@ -38,4 +77,11 @@ $this->Paginator->options(array('update' => '#resultado_busqueda','before' => 'i
     ?>
 </ul>
 </div>
+<input type="button" id="btnExport" value="Exportar a Excel" />
+<script>
+    $("#btnExport").click(function(e) {
+    window.open('data:application/vnd.ms-excel,' + $('#usuarios').html());
+    e.preventDefault();
+    });
+        </script>
 <?php echo $this->Js->writeBuffer(); ?>
