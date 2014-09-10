@@ -40,7 +40,9 @@ $this->Paginator->options(array('update' => '#resultado_busqueda','before' => 'i
                 
 </table>
 </div>
-
+<button type="button" id="btnExport" >
+    <i class="icon icon-download"></i>Descargar Excel
+</button>
 <div class="paginador">
 		<?php echo $this->Paginator->counter('Pagina {:page} de {:pages}, mostrando {:current} resultados de {:count} totales, empezando en el resultado {:start}, terminando en {:end}'); ?>
 </div>
@@ -77,7 +79,7 @@ $this->Paginator->options(array('update' => '#resultado_busqueda','before' => 'i
     ?>
 </ul>
 </div>
-<input type="button" id="btnExport" value="Exportar a Excel" />
+
 <script>
     $("#btnExport").click(function(e) {
     window.open('data:application/vnd.ms-excel,' + $('#usuarios').html());
