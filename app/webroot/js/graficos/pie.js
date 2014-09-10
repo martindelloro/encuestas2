@@ -13,6 +13,7 @@ console.log(contenido);
 //var data = <?php echo $jsonencode?>
 //console.log()
  */
+var torta = function(contenido){
 var pie = new d3pie("graficoPie", {
     size: {
 		"canvasHeight": 600,
@@ -86,3 +87,5 @@ function type(d) {
   d.contador = +d.contador;
   return d;
 } */
+
+};
