@@ -82,7 +82,7 @@
 <?php echo $preguntaY ?>
 </div>
 <?php endif; ?>
-<div id="leyenda" class="leyenda" style="display:none;width:800px;height:180px"></div>
+<div id="leyenda" class="leyenda" style="display:none"></div>
 <div id="graficoBarras" class="grafico" >
 </div>
 
@@ -92,23 +92,32 @@
 </div>
 <?php endif; ?>
 
+
 <script src="http://d3js.org/d3.v3.min.js"></script>
+<?php echo $this->Html->script("/js/graficos/stacked.js"); ?>
 <?php
 switch($this->data["SubReporte"]["grafico_tipo"]){
 	case 1:
 		echo $this->Html->script("/js/graficos/barras.js");
 		break;
 	case 2:
-		echo $this->Html->script("/js/graficos/stacked.js");
+		
 }
 ?>
 <script type="text/javascript">
 $(document).ready(function(){
 	var margin = {top: 20, right: 20, bottom: 80, left: 40};
-	width = $(".grafico:first").width() - margin.left - margin.right;
-	height = $(".grafico:first").height() - margin.top - margin.bottom;
-	width = 800;
-	height = 500;
+	<?php if(isset($pdf)): ?>
+		width = 970;
+		height = 500;
+		$(".leyenda").width(width);
+		$(".leyenda").height(160);
+	<?php endif; ?>
+	<?php if(!isset($pdf)): ?>
+		width = $(".grafico:first").width() - margin.left - margin.right;
+		height = $(".grafico:first").height() - margin.top - margin.bottom;
+	<?php endif; ?>
+		
 	var x = d3.scale.ordinal().rangeRoundBands([0, width], .1);
 	var y = d3.scale.linear().range([height, 0]);
 	var xAxis = d3.svg.axis().scale(x).orient("bottom");

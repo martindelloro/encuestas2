@@ -1,6 +1,6 @@
 var stackedBars = function(x,y,xAxis,yAxis,svg,width,height,d3,categoriasY,categoriasX,datos){
 var color = d3.scale.ordinal()
-    .range(["#98abc5", "#8a89a6", "#7b6888", "#cccccc", "#a05d56", "#d0743c", "#ff8c00", "#ccc333","#FFFf00"]);
+    .range(["#1E2424", "#44555A", "#5C8A8C", "#8DBCC0", "#99748C", "#5D7799", "#638FA3", "#5C8A8C","#63A394"]);
 
   
   color.domain(categoriasY); // NOMBRES DE eje "Y" domain acepta array ['nombre1','nombre2']
@@ -86,7 +86,7 @@ var color = d3.scale.ordinal()
  
  // widthLeyenda   = $(".leyenda:first").width() - margin.left - margin.right;
  // heightLeyenda  = $(".leyenda:first").height() - margin.top - margin.bottom;
-  widthLeyenda = width;
+  widthLeyenda = 970;
   heightLeyenda = altoFinal ;
   
   $("#leyenda").show();

@@ -213,6 +213,9 @@ class SubReportesController extends AppController{
                 
 		
         $resultados = Set::extract($datosInfoStacked, '{s}');
+        if(isset($this->data["pdf"])){
+        	$this->set("pdf",true);
+        }
         $this->set('resultados',$resultados);
         $this->set("datos",$datos);        
 		$this->set("resultados",$resultados);
@@ -244,11 +247,14 @@ class SubReportesController extends AppController{
 		if(!file_exists(TMP."pdfs")){
 			mkdir(TMP."pdfs",0777);
 		}
-		$contenido = $this->requestAction(array("controller"=>"SubReportes","action"=>"crear"),array("return","data"=>$this->request->data));
+		$data = $this->request->data;
+		$data["pdf"] = true;
+		$contenido = $this->requestAction(array("controller"=>"SubReportes","action"=>"crear"),array("return","data"=>$data));
 		$vista = new View($this,true);
 		$vista->layout = "encuesta";
 		$vista->autoRender = false;
 		$vista->set("contenido",$contenido);
+		$vista->set("OUsuario",$this->Session->read('OUsuario'));
 		$vista->set("base","http://localhost/");
 		$vista->set("css",$css);
 		$towrite = $vista->render("/Elements/Reportes/dummy_pdf");
@@ -258,7 +264,7 @@ class SubReportesController extends AppController{
 		$tmp   = fopen($html,"w");
 		fwrite($tmp,$towrite);
 		fclose($tmp);
-		exec("wkhtmltopdf  --viewport-size 1280x1024 --javascript-delay 5500 --zoom 0.75 $html $pdf");
+		exec("wkhtmltopdf --enable-smart-shrinking --viewport-size 1280x1024 --javascript-delay 5500 --zoom 0.75 $html $pdf");
 		$archivo = file_get_contents($pdf);
 		// unlink($html); unlink($pdf);
 		$this->layout= null;
