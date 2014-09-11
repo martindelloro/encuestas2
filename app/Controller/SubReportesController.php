@@ -16,6 +16,7 @@ class SubReportesController extends AppController{
         }
 
 	function crear(){
+		
 		$encuesta_id = $this->data["Reporte"]["encuesta_id"];
 		
 		// PROCESO FILTROS
@@ -202,16 +203,76 @@ class SubReportesController extends AppController{
 					$datos[$index]["Resultados"] = array_values($datos[$index]["Resultados"]);
 				
 				}
-                $this->set("categoriasX",array_unique($categoriasX));
-                $this->set('preguntaGraficoX',$preguntaGraficoX);
+                                $this->set("categoriasX",array_unique($categoriasX));
+                                $this->set('preguntaGraficoX',$preguntaGraficoX);
 				$this->set("categoriasX",array_unique($categoriasX));
 				$this->set("categoriasY",$categoriasY);
 				$this->set("datos",$datos);
 				break;
+                         /****************************************************************************************************
+			 * ***************************************** TORTA *******************************************
+			 * *************************************************************************************************/	
+			case 3:
+                                $preguntaGrafico = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_x"]),"contain"=>array("Tipo"),"recursive"=>-1));
+				if(!empty($this->data["SubReporte"]["Filtro"])){ // SIN HAY FITROS APLICADOS FILTRO X $USUARIOS_ID intersectados
+					$datos_x = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.usuario_id"=>$usuarios_id,"Respuesta.pregunta_id"=>$this->data["SubReporte"]["variable_x"])));
+				}
+				else{ // SI NO HAY FILTRO SOLO BUSCO LAS RESPUESTAS DE TODOS LOS USARIOS
+					$datos_x = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.pregunta_id"=>$this->data["SubReporte"]["variable_x"])));
+				}
+				
+				$datosInfo = array("Pregunta"=>array("nombre"=>$preguntaGrafico["Pregunta"]["nombre"],"tipo"=>$preguntaGrafico["Tipo"]["nombre"]));
+				switch($preguntaGrafico["Pregunta"]["tipo_id"]){
+					case 4:
+						$opciones = $this->Opcion->find("list",array("conditions"=>array("Opcion.pregunta_id"=>$this->data["SubReporte"]["variable_x"])));
+						foreach($opciones as $opcion_id => $nombre){
+							$cont_opciones[$opcion_id] = array("nombre"=>$nombre,"contador"=>0);
+                                                        
+						}
+						foreach($datos_x as $dato){
+							foreach($dato["Opciones"] as $opcion){
+								$opcion_id = $opcion["id"];
+								$cont_opciones[$opcion_id]["contador"] += 1;
+							}
+						}
+						foreach($cont_opciones as $opcion_id=>$tmp){
+							$nombre = $opciones[$opcion_id];
+							$datosInfo["Resultados"]["Opciones"][$nombre] = $tmp["contador"];
+                                                         $contenido[]=array('label'=>$tmp['nombre'],'value'=>$tmp['contador']);
+                                                         
+						}
+						$datosInfo["Resultados"]["total"] = count($datos_x);
+                                               
+                                                $this->set('contenido',$contenido);
+						break;
+					case 6:
+						$cont_opciones["SI"]["contador"] = 0;
+						$cont_opciones["SI"]["nombre"] = "SI";
+						$cont_opciones["NO"]["contador"] = 0;
+						$cont_opciones["NO"]["nombre"] = "NO";
+						foreach($datos_x as $dato){
+							$boolean = $dato["Respuesta"]["respuesta_sino"]?"SI":"NO";
+							$cont_opciones[$boolean]["contador"] += 1;
+						}
+						$datosInfo["Resultados"]["Opciones"]["NO"] = $cont_opciones["NO"]["contador"];
+						$datosInfo["Resultados"]["Opciones"]["SI"] = $cont_opciones["SI"]["contador"];
+						$datosInfo["Resultados"]["total"] = $cont_opciones["NO"]["contador"] + $cont_opciones["SI"]["contador"];
+                                                $contenido=array('label'=>$cont_opciones['nombre'],'value'=>$cont_opciones['contador']);
+                                                $this->set('contenido',$contenido);
+                                                /*$miArray = array("manzana"=>"verde", "uva"=>"Morada", "fresa"=>"roja");
+                                                print_r(json_encode($miArray));
+
+                                                {"manzana":"verde","uva":"Morada","fresa":"roja"} */
+				} // fin switch pregunta tipo_id
+                                
+                                break;
 		} // FIN SWITCH GRAFICO TIPO
                 
 		
         $resultados = Set::extract($datosInfoStacked, '{s}');
+        if(isset($this->data["pdf"])){
+        	$this->set("pdf",true);
+        }
         $this->set('resultados',$resultados);
         $this->set("datos",$datos);        
 		$this->set("resultados",$resultados);
@@ -235,8 +296,42 @@ class SubReportesController extends AppController{
 				$preguntas = $this->SubReporte->Reporte->Encuesta->EncuestaPregunta->find("list",array("conditions"=>array("encuesta_id"=>$encuesta_id,"tipo_id"=>array(4))));
 				$this->set("preguntas",$preguntas);
 				$this->render("/Elements/Reportes/tipoGrafico/stacked");
+                                break;
+                        case 3:
+				$preguntas = $this->SubReporte->Reporte->Encuesta->EncuestaPregunta->find("list",array("conditions"=>array("encuesta_id"=>$encuesta_id,"tipo_id"=>array(4,6))));
+				$this->set("preguntas",$preguntas);
+				$this->render("/Elements/Reportes/tipoGrafico/pie");		
+				break;
 			
 		}
+	}
+	
+	function pdf($css = 'pdf'){
+		if(!file_exists(TMP."pdfs")){
+			mkdir(TMP."pdfs",0777);
+		}
+		$data = $this->request->data;
+		$data["pdf"] = true;
+		$contenido = $this->requestAction(array("controller"=>"SubReportes","action"=>"crear"),array("return","data"=>$data));
+		$vista = new View($this,true);
+		$vista->layout = "encuesta";
+		$vista->autoRender = false;
+		$vista->set("contenido",$contenido);
+		$vista->set("OUsuario",$this->Session->read('OUsuario'));
+		$vista->set("base","http://localhost/");
+		$vista->set("css",$css);
+		$towrite = $vista->render("/Elements/Reportes/dummy_pdf");
+		$rand_nom = md5(uniqid(rand(),TRUE));
+		$html = TMP."pdfs/$rand_nom.html";
+		$pdf  = TMP."pdfs/$rand_nom.pdf";
+		$tmp   = fopen($html,"w");
+		fwrite($tmp,$towrite);
+		fclose($tmp);
+		exec("wkhtmltopdf --enable-smart-shrinking --viewport-size 1280x1024 --javascript-delay 5500 --zoom 0.75 $html $pdf");
+		$archivo = file_get_contents($pdf);
+		// unlink($html); unlink($pdf);
+		$this->layout= null;
+		$this->set("pdf",$archivo);
 	}
 }
 

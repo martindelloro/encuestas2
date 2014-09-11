@@ -1,5 +1,9 @@
 var preSeleccionadas = {};
 
+function descargaPdf(){
+	window.open('data:application/pdf,'+escape($('#exec_js').html()));
+}
+
 function modales(id,clase){
 	$('body').modalmanager('loading');
     $("body").append("<div id='"+id+"' class='modal volatil hide fade in "+clase+"' ></div>");

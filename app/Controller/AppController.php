@@ -33,12 +33,14 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller {
     var $helpers = array('Js' => array('Jquery'), 'Mensajes', 'Form', 'Paginator','Html');
-    var $components = array('RequestHandler', 'Session',"Paginator");
+    var $components = array('RequestHandler', 'Session',"Paginator",'DebugKit.Toolbar');
     var $layout = "encuesta";
     
     function beforeRender(){
     	$OUsuario=$this->Session->read('OUsuario');
     	$this->set("OUsuario",$OUsuario);
     }
+	
+
     
 }

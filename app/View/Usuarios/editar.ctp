@@ -6,7 +6,7 @@
 ?>
 <div class="modal-header header-ficha azul">
    <div class="botonera-header">
-      <?php echo $this->Html->link("<i class='icon-white icon-remove-sign'></i>","#",array("class"=>"btn btn-inverse","data-dismiss"=>"modal","escape"=>false)) ?>
+      <?php echo $this->Html->link("<i class='icon-white icon-remove-sign'>X</i>","#",array("class"=>"btn btn-inverse","data-dismiss"=>"modal","escape"=>false)) ?>
    </div>
 </div>
 
@@ -14,7 +14,7 @@
 	<?php echo $this->Form->create("Usuario",array("action"=>"editar")) ?>
 	<?php echo $this->Form->input("Usuario.id",array("type"=>"hidden")); ?>
    <div class="well titulo-general">
-		<span>Crear Nuevo Usuario</span>
+		<span>Editar Usuario:</span>
 	</div>
 
 	<div class="row-fluid">
@@ -46,13 +46,13 @@
 
 	<div class="row-fluid">
 		<div class="span3">
-			<?php echo $this->Form->input("cod_prov",array("type"=>'select',"options"=>$provincias,"label"=>"Provincia")); ?>
+			<?php echo $this->Form->input("Usuario.cod_prov",array("type"=>'select',"options"=>$provincias,"label"=>"Provincia", "empty"=>true)); ?>
 		</div>
 		<div class="span3">
-			<?php echo $this->Form->input("cod_depto",array("type"=>'select',"options"=>$departamentos,"label"=>"Departamento")); ?>
+			<?php echo $this->Form->input("cod_depto",array("type"=>'select',"options"=>$departamentos,"label"=>"Departamento", "empty"=>true)); ?>
 		</div>
 		<div class="span3">
-			<?php echo $this->Form->input("cod_loc",array("type"=>'select',"options"=>$localidades,"label"=>"Localidad")); ?>
+			<?php echo $this->Form->input("cod_loc",array("type"=>'select',"options"=>$localidades,"label"=>"Localidad", "empty"=>true)); ?>
 		</div>
 		<div class="span3">
 			<?php echo $this->Form->input("calle",array("type"=>'text',"label"=>"Calle")); ?>
@@ -141,5 +141,33 @@
 
 <?php echo $this->Js->writeBuffer() ?>
 <?php echo $this->Form->end() ?>
-
+<?php /*$js=$this->Js;
+       echo $this->Js->get('#UsuarioCodProv')->event('change',
+              $this->Js->request(
+                    array('controller'=>'usuarios', 'action'=>'updateDepartamentos'),
+                    array('update'=>'#UsuarioCodDepto',
+                        'frequency'=>'1',
+                        'async'=>true,
+                        'dataExpression'=>true,
+                        'before'=>'$("body").modalmanager("loading")',
+                        'complete'=>'$("body").modalmanager("loading")',
+                        'method'=>'post',
+                        'data'=>$js->serializeForm(array('isForm' => false, 'inline' => true
+                            ))
+            )));
+        
+        echo $this->Js->get('#UsuarioCodDepto')->event('change',
+              $this->Js->request(
+                    array('controller'=>'usuarios', 'action'=>'updateLocalidades'),
+                    array('update'=>'#UsuarioCodLoc',
+                        'frequency'=>'1',
+                        'async'=>true,
+                        'dataExpression'=>true,
+                        'before'=>'$("body").modalmanager("loading")',
+                        'complete'=>'$("body").modalmanager("loading")',
+                        'method'=>'post',
+                        'data'=>$js->serializeForm(array('isForm' => false, 'inline' => true))
+          )));
+      
+     */ ?>
 </div>

@@ -1,7 +1,7 @@
 <?php 
 
 class GruposController extends AppController {
-    var $uses=array("Grupo","GruposUsuarios",'Usuario');
+    var $uses=array("Grupo","GruposUsuarios",'Usuario','GruposEncuesta');
     function beforeFilter() {
         parent::beforeFilter();
         $sesion=$this->Session->Read();
@@ -40,10 +40,12 @@ class GruposController extends AppController {
             //ESTÁ: Mensaje: El usuario ya estaba asignado al grupo <<nro>>    
             $this->Session->setFlash("El usuario ya estaba asignado al grupo",null,null,"mensaje_sistema");
         }else{
-            $usuario["Usuario"]["id"] = $id_usuario;
-            $usuario["Grupos"][] = $id_grupo;
+            $usuario["GruposUsuarios"]["id"]='';
+            $usuario["GruposUsuarios"]["usuario_id"] = $id_usuario;
+            $usuario["GruposUsuarios"]["grupo_id"] = $id_grupo;
+            pr($usuario);
             //NO ESTÁ: Asignarlo. Mensaje: El usuario ha sido asignado
-            if($this->Usuario->save($usuario)){
+            if($this->GruposUsuarios->save($usuario)){
                 
                 $this->Session->setFlash("El usuario ha sido asignado al grupo",null,null,"mensaje_sistema");
             }
@@ -129,6 +131,23 @@ class GruposController extends AppController {
               $this->paginate = array("order"=>"Grupo.nombre ASC","fields"=>array('Grupo.nombre','Grupo.id'),'conditions'=>$buscar);
               //$this->paginate = array("order"=>"Grupo.nombre ASC","fields"=>array('Grupo.nombre'),'conditions'=>$buscar);
               $this->set('grupos',$this->paginate("Grupo"));
+    }
+    
+    function listar($encuesta_id=null,$vista){ //LISTA LOS GRUPOS QUE TIENE ASOCIADA UNA ENCUESTA
+        if($encuesta_id==true){
+        $grupos=$this->GruposEncuesta->find('list',array('conditions'=>array('GruposEncuesta.encuesta_id'=>$encuesta_id)));         
+       }else{
+        $grupos=$this->Grupos->find('list',array('fields'=>'nombre'));
+       }
+        $this->autoRender=false;
+        switch ($vista){
+            case 'encuesta_grupo':
+                
+                $this->set("grupos",$grupos);
+                $this->render('encuesta_grupo');
+                break;
+        }
+        
     }
     
 }
