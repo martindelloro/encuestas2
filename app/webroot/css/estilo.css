@@ -638,7 +638,7 @@ body .mensaje-contenido{
 .validacion{
 	background-color: white !important;
 	border: 2px solid black !important;
-	margin-top:4px;
+	margin-top:30px;
 	padding: 5px 5px 0 !important;
 }
 
@@ -648,12 +648,11 @@ body .mensaje-contenido{
 }
 
 .validacion .boton-borrar{
-	background-color: #000000;
-    border: 1px solid #000000 !important;
-    color: #FFFFFF !important;
+	background: none repeat scroll 0 0 #702834;
+    border: 1px solid #702834 !important;
+    color: white;
     float: right;
-    opacity: 0.7;
-    margin-bottom:2px;
+    margin-bottom: 2px;
 }
 
 .validacion .boton-borrar:hover{

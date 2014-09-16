@@ -1,5 +1,5 @@
 <div class="well validacion">
-	<i class="btn btn-small icon-remove boton-borrar"></i>
+	<i class="btn btn-small icon icon-times boton-borrar"></i>
 	<div style="clear: both"></div>
 	<div class='row-fluid'>
 		<div class="span6">

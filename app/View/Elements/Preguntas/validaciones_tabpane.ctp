@@ -1,7 +1,7 @@
 <div class="tab-pane" id="validaciones">
 	<div class="well titulo-opciones">
 		<span>Validaciones</span><a
-			class="btn btn-mini btn-inverse boton-agregar"><i class="icon-plus">
+			class="btn btn-mini btn-inverse boton-agregar"><i class="icon icon-plus">
 				Agregar validacion</i>
 		</a>
 	</div>

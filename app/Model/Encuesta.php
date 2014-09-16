@@ -3,7 +3,7 @@ App::uses('AppModel', 'Model');
 
 class Encuesta extends AppModel{
 	var $actsAs = array("Containable");
-	var $virtualFields = array("nombreAnio"=>"CONCAT(Encuesta.nombre,' Año: ',Encuesta.anio)");
+	var $virtualFields = array("nombreAnio"=>"CONCAT(nombre,' Año: ',anio)");
 	var $displayField = "nombreAnio";
 	var $order = "nombreAnio ASC";
 	

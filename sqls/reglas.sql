@@ -115,3 +115,5 @@ ALTER TABLE ONLY reglas
 --
 -- PostgreSQL database dump complete
 --
+
+   
