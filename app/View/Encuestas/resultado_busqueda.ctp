@@ -53,4 +53,4 @@
 <?php endforeach; ?>
 </div>
 <?php echo $this->Js->writeBuffer(); ?>
-
+<?php //debug($encuestas); ?>

@@ -1,4 +1,5 @@
 <?php
+
 App::uses('AppModel', 'Model');
 
 class Encuesta extends AppModel{
@@ -20,11 +21,5 @@ class Encuesta extends AppModel{
 	public $hasAndBelongsToMany = array("Preguntas"=>array("className"=>"Pregunta","joinTable"=>"encuestas_preguntas","foreignKey"=>"encuesta_id","associationForeignKey"=>"pregunta_id"),
                                         "Grupos"=>array("className"=>"Grupo","joinTable"=>"encuestas_grupos","foreignKey"=>"encuesta_id","associationForeignKey"=>"grupo_id"));
                         
-            
-
-
-	
 }
-
-
 ?>

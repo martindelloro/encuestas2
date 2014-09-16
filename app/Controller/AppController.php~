@@ -40,7 +40,13 @@ class AppController extends Controller {
     	$OUsuario=$this->Session->read('OUsuario');
     	$this->set("OUsuario",$OUsuario);
     }
-	
+	public function beforeFilter() {
+	    parent::beforeFilter();
+
+	    if(in_array($this->action, array('export'))) {
+		$this->Components->unload('DebugKit.Toolbar');
+	    }
+	}
 
     
 }

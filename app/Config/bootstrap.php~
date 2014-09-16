@@ -106,7 +106,7 @@ CakeLog::config('error', array(
 	'file' => 'error',
 ));
 
-CakePlugin::load('DebugKit');
+//CakePlugin::load('DebugKit');
 
 App::uses('AppError', 'Lib');
 

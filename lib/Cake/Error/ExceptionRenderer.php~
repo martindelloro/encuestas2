@@ -242,7 +242,7 @@ class ExceptionRenderer {
 			'error' => $error,
 			'_serialize' => array('name', 'message')
 		));
-		echo ($error);
+		pr($error);
 		$this->_outputMessage('error500');
 	}
 
