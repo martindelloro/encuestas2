@@ -2,7 +2,7 @@
 
 class Pregunta extends AppModel{
 	var $actsAs = array("Containable");
-	
+            
 	var $belongsTo = array("Usuario"=>array("className"=>"Usuario","foreignKey"=>"owner_id"),
 						   "Tipo"=>array("className"=>"Tipo","foreignKey"=>"tipo_id"));
 	

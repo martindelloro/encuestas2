@@ -185,6 +185,18 @@ class UsuariosController extends AppController {
                       if(!empty($this->data['buscar']['tipo_usuario'])){
                           $buscar['Usuario.rol ilike'] = '%'.$this->data['buscar']['tipo_usuario'].'%';
                       }
+                      if(!empty($this->data['buscar']['fecha_emision_titulo'])){
+                          $buscar['Usuario.fecha_emision_titulo ilike'] = '%'.$this->data['buscar']['fecha_emision_titulo'].'%';
+                      }
+                      if(!empty($this->data['buscar']['cohorte'])){
+                          $buscar['Usuario.cohorte ilike'] = '%'.$this->data['buscar']['cohorte'].'%';
+                      }
+                      if(!empty($this->data['buscar']['carrera'])){
+                          $buscar['Usuario.carrera ilike'] = '%'.$this->data['buscar']['carrera'].'%';
+                      }
+                      if(!empty($this->data['buscar']['departamento'])){
+                          $buscar['Usuario.departamento ilike'] = '%'.$this->data['buscar']['departamento'].'%';
+                      }
                       //debug($buscar);
                       $total_busqueda=$this->Usuario->find('all',array('conditions'=>$buscar,'recursive'=>0));
                       

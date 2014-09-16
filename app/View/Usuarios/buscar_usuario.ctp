@@ -24,6 +24,20 @@
 		<div class="span4">
 			<?php echo $this->Form->input("mail",array("type"=>'text',"label"=>"E-mail","empty"=>true)); ?>
 		</div>
+                <div class="span4">
+			<?php echo $this->Form->input("fecha_emision_titulo",array("type"=>'text',"label"=>"Año de Egreso","empty"=>true)); ?>
+		</div>
+	</div>
+        <div class="row-fluid">
+		<div class="span4">
+			<?php echo $this->Form->input("cohorte",array("type"=>'text',"label"=>"Año de Ingreso:","empty"=>true)); ?>
+		</div>
+		<div class="span4">
+			<?php echo $this->Form->input("carrera",array("type"=>'text',"label"=>"Carrera","empty"=>true)); ?>
+		</div>
+                <div class="span4">
+			<?php echo $this->Form->input("departamento",array("type"=>'text',"label"=>"Departamento","empty"=>true)); ?>
+		</div>
 	</div>
 	
 	<div>
