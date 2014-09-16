@@ -1,7 +1,11 @@
 set search_path to encuestas;
 
+<<<<<<< HEAD
 -- Table: categorias
 -- DROP TABLE categorias;
+=======
+DROP TABLE categorias;
+>>>>>>> ver_encuesta
 
 CREATE TABLE categorias
 (
@@ -40,5 +44,9 @@ CREATE INDEX "Categorias.name"
 CREATE INDEX "Categorias.type"
   ON categorias
   USING hash
+<<<<<<< HEAD
   (type COLLATE pg_catalog."default");
 
+=======
+	 (type COLLATE pg_catalog."default");
+>>>>>>> ver_encuesta
