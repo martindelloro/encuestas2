@@ -18,9 +18,7 @@ var color = d3.scale.ordinal()
           return "rotate(-65)"; 
           });
   
-   // svg.append("text").attr("x", 0).attr("y", 0).style("text-anchor", "middle").style("fill", "#515151").style("font-family", "arial").style("font-size", "12px").text("Grade Range (%)");
-
-
+    
   var EjeX = svg.selectAll(".state")
       .data(datos)
     .enter().append("g")
