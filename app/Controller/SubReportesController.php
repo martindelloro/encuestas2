@@ -196,7 +196,8 @@ class SubReportesController extends AppController{
 						$datos[$index]["Resultados"][$nombreY] = null;
 						$datos[$index]["Resultados"][$nombreY]["categoriaY"] = $nombreY;
 						$datos[$index]["Resultados"][$nombreY]["offset"] = (float)$offset;
-						$datos[$index]["Resultados"][$nombreY]["altura"] = ($datos[$index]["Total"] != 0)?((float) ($valor+$fuck)  / $datos[$index]["Total"]):0 ;
+						$datos[$index]["Resultados"][$nombreY]["altura"] = ($datos[$index]["Total"] != 0)?((float) ($valor+$fuck)  / $datos[$index]["Total"]):0;
+						$datos[$index]["Resultados"][$nombreY]["total"]  = $valor;
 						$fuck += $valor;
 						$offset = $datos[$index]["Resultados"][$nombreY]["altura"];
 					}
