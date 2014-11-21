@@ -121,6 +121,7 @@ class SubReportesController extends AppController{
 						$datosInfo["Resultados"]["Opciones"]["NO"] = $cont_opciones["NO"]["contador"];
 						$datosInfo["Resultados"]["Opciones"]["SI"] = $cont_opciones["SI"]["contador"];
 						$datosInfo["Resultados"]["total"] = $cont_opciones["NO"]["contador"] + $cont_opciones["SI"]["contador"];
+                                                
 				} // fin switch pregunta tipo_id
 				break;
 			/****************************************************************************************************

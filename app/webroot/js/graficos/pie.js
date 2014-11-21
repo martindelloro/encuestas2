@@ -32,7 +32,7 @@ var pie = new d3pie("graficoPie", {
 		"percentage": {
 			"color": "#0f0e0e",
 			"fontSize": 10,
-			"decimalPlaces": 3
+			"decimalPlaces": 1
 		}}
 });
 /*svg.selectAll(".bar")

@@ -28,12 +28,12 @@
 <?php foreach($datosInfo["Resultados"]["Opciones"] as $nombre=>$valor): ?>
     <div class="row-fluid resumen-resultados">
         <div class="span6 color-1 borde-1 borde-abajo"><span><?php echo $nombre ?></span></div>
-        <div class="span6 borde-1"><span><?php echo $valor ?></span></div>
+        <div class="span6 borde-1"><span><?php echo $valor.' ('.round(($valor*100/($datosInfo["Resultados"]["total"])),1).'%)'?></span></div>
     </div>
 <?php endforeach;?>
     <div class="row-fluid resumen-resultados">
         <div class="span6 color-1"><span>Total</span></div>
-        <div class="span6 "><span><?php echo $datosInfo["Resultados"]["total"] ?></span></div>
+        <div class="span6 "><span><?php echo $datosInfo["Resultados"]["total"].' (100%)' ?></span></div>
     </div>
 <div class="well label-titular color-3"><?php echo $datosInfo["Pregunta"]["nombre"] ?></div>
 <?php endif; ?>
@@ -43,39 +43,39 @@
 <!-- **************************************************** -->
 <?php if(!empty($datosInfoStacked)): ?>
 <div class="scrollTable">
-<table class="table table-striped">
-<thead>
-<tr class="preguntasTabla">
-<th><?php echo $preguntaX ?></th>
-<th colspan="<?php echo count($categoriasY)+1; ?>"><span style="width:800px;display:block"><?php echo $preguntaY ?></span></th>
-</tr>
-<tr>
-<th></th>
-<?php foreach($categoriasY as $categoriaY): ?>
-<th><?php echo $categoriaY ?></th>
-<?php endforeach; ?>
-<th>Total</th>
-</tr>
-</thead>
-<tbody>
-<?php foreach($datosInfoStacked as $categoriaX=>$datosY): ?>
-<tr>
-<td><?php echo $categoriaX ?></td>
-<?php foreach($datosY["Resultados"] as $categoriaY=>$valor): ?>
-<td><?php echo $valor ?></td>
-<?php endforeach; ?>
-<td><?php echo $datosY["Total"] ?></td>
-</tr>
-</tbody>
-<?php endforeach; ?>
-<tr>
-<td>Total</td>
-<?php foreach($totalesY as $totalY): ?>
-<td><?php echo $totalY ?></td>
-<?php endforeach; ?>
-<td><?php echo array_sum($totalesY); ?></td>
-</tr>
-</table>
+    <table class="table table-striped">
+        <thead>
+            <tr class="preguntasTabla">
+                <th><?php echo $preguntaX ?></th>
+                <th colspan="<?php echo count($categoriasY)+1; ?>"><span style="width:800px;display:block"><?php echo $preguntaY ?></span></th>
+            </tr>
+        <tr>
+        <th></th>
+        <?php foreach($categoriasY as $categoriaY): ?>
+            <th><?php echo $categoriaY ?></th>
+        <?php endforeach; ?>
+            <th>Total</th>
+        </tr>
+        </thead>
+    <tbody>
+        <?php foreach($datosInfoStacked as $categoriaX=>$datosY): ?>
+        <tr>
+            <td><?php echo $categoriaX ?></td>
+            <?php foreach($datosY["Resultados"] as $categoriaY=>$valor): ?>
+            <td><?php echo $valor.' ('.round((($valor*100)/$datosY["Total"]),1).'%)' ?></td>
+            <?php endforeach; ?>
+            <td><?php echo $datosY["Total"].' ('.round((($datosY["Total"]*100)/array_sum($totalesY)),1).'%)' ?></td>
+        </tr>
+    </tbody>
+    <?php endforeach; ?>
+    <tr>
+        <td>Total</td>
+        <?php foreach($totalesY as $totalY): ?>
+        <td><?php echo $totalY ?></td>
+        <?php endforeach; ?>
+        <td><?php echo array_sum($totalesY).' (100%)'; ?></td>
+    </tr>
+    </table>
 </div>
 <?php endif; ?>
 <!-- ***** FIN IF RESULTADOS GRAFICO STACKED BARS ***** -->
