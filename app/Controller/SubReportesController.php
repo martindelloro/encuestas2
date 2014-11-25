@@ -273,7 +273,7 @@ class SubReportesController extends AppController{
 			 * *************************************************************************************************/	
                         case 4:  // Gráfico de Evolución.
 				$totalesY = array();
-				$preguntaGraficoX = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_x"]),"contain"=>array("Tipo","Opcion"),"recursive"=>-1));
+				$preguntaGraficoX = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_x"]),"contain"=>array("Tipo","Opcion"),"recursive"=>-1,"order"=>'Pregunta.nombre DESC'));
 				$preguntaGraficoY = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_y"]),"contain"=>array("Tipo","Opcion"),"recursive"=>-1));
 				
 				$opcionesX = $preguntaGraficoX["Opcion"];
@@ -285,7 +285,9 @@ class SubReportesController extends AppController{
 				$this->set("preguntaX",$nombrePreguntaX);
 				
 				$datos = array();
-				$categoriasY = array();
+                                $iteraciones='';
+                                $pruebinha= array();
+                                $categoriasY = array();
 				$categoriasX = array();
 				foreach($opcionesY as $opcionY){
 					$nombreY = $opcionY["nombre"];
@@ -304,6 +306,7 @@ class SubReportesController extends AppController{
 					foreach($tmpsY as $tmpY){
 						$usuariosY[] = $tmpY["Respuesta"]["usuario_id"];
 					}
+                                        
 					if(!isset($totalesY[$nombreY])) $totalesY[$nombreY] = 0;
 					foreach($opcionesX as $opcionX){
 						$nombreX = $opcionX["nombre"];
@@ -315,8 +318,33 @@ class SubReportesController extends AppController{
 						$datos[$nombreX]["Resultados"][$nombreY] = $this->Respuesta->find('count',array("conditions"=>array("Respuesta.pregunta_id"=>$pregIdX,"Respuesta.usuario_id"=>$usuariosY),"joins"=>$joins));
 						$totalesY[$nombreY] += $datos[$nombreX]["Resultados"][$nombreY];
 						$datos[$nombreX]["categoriaX"] = $nombreX;
+                                                $pruebinha[]+=$datos[$nombreX]["Resultados"][$nombreY];
+                                                
 					}
+                                        //$pruebinha[]+=$datos[$nombreX]["Resultados"][$nombreY];
+                                        $iteraciones+=1;
+                                        
+                                                                               
 				}
+                                $evolucion[]=array();
+                                $i=1;
+                                $i2=1;
+                                while ($i<=$iteraciones){
+                                    $cont=($i*count($pruebinha))/$iteraciones;
+                                    $evolucion[][$i-1]['name']=$categoriasY[$i-1];
+                                    while(list($clave, $valor) = each($pruebinha) && $i2<=$cont){
+                                        $evolucion[][]['data']+=$pruebinha[$valor];
+                                        $i2++;
+                                    }
+                                    $i++;                                    
+                                }
+                                $this->set('evolucion',$evolucion);
+                                $pruebita=array((array('name'=>'Bueno','data'=>array(3.0,0.0,3.0,6.0,9.0))),(array('name'=>'Malo','data'=>array(3.0,2.0,1.0))));
+                                                                
+                                //var_dump($evolucion);
+                                //var_dump($categoriasY);
+                                //var_dump(count($pruebinha));
+                                //var_dump($iteraciones);
 				
 				$datosInfoEvolucion = $datos;
 				foreach($datosInfoEvolucion as $key=>$data){
@@ -346,9 +374,10 @@ class SubReportesController extends AppController{
 					$datos[$index]["Resultados"] = array_values($datos[$index]["Resultados"]);
 				
 				}
-                                $pruebita=array('name'=>'Bueno','data'=>array(1.0,2.0,3.0));
-                                //$pruebita=array((array('name'=>'Bueno','data'=>array(1.0,2.0,3.0))),(array('name'=>'Malo','data'=>array(3.0,2.0,1.0))));
+                                //$pruebita=array('name'=>'Bueno','data'=>array(1.0,2.0,3.0));
+                                $pruebita=array((array('name'=>'Bueno','data'=>array(3.0,0.0,3.0,6.0,9.0))),(array('name'=>'Malo','data'=>array(3.0,2.0,1.0))));
                                 
+                                //var_dump($datosInfoEvolucion);
                                 $this->set('pruebita',$pruebita);
                                 $this->set('preguntaGraficoX',$preguntaGraficoX);
 				$this->set("categoriasX",array_unique($categoriasX));

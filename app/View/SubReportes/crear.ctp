@@ -199,7 +199,7 @@ $(document).ready(function(){
                 .attr("height", height + margin.top + margin.bottom)
                 .append("g");
                 
-		datos = <?php echo json_encode($pruebita); ?>;
+		datos = <?php echo json_encode($evolucion); ?>;
                 
 		categoriasX = <?php echo json_encode($categoriasX); ?>;
 		categoriasY = <?php echo json_encode($categoriasY); ?>;
