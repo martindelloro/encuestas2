@@ -27,7 +27,7 @@
 <div class="well label-titular color-3">Resultados</div>
 <?php foreach($datosInfo["Resultados"]["Opciones"] as $nombre=>$valor): ?>
     <div class="row-fluid resumen-resultados">
-        <div class="span6 color-1 borde-1 borde-abajo"><span><?php echo $nombre ?></span></div>
+        <div class="span6 color-1 borde-1 borde-abajo"><span><?php echo ucfirst($nombre); ?></span></div>
         <div class="span6 borde-1"><span><?php echo $valor.' ('.round(($valor*100/($datosInfo["Resultados"]["total"])),1).'%)'?></span></div>
     </div>
 <?php endforeach;?>
@@ -52,7 +52,7 @@
         <tr>
         <th></th>
         <?php foreach($categoriasY as $categoriaY): ?>
-            <th><?php echo $categoriaY ?></th>
+            <th><?php echo ucfirst($categoriaY) ?></th>
         <?php endforeach; ?>
             <th>Total</th>
         </tr>
@@ -60,7 +60,7 @@
     <tbody>
         <?php foreach($datosInfoStacked as $categoriaX=>$datosY): ?>
         <tr>
-            <td><?php echo $categoriaX ?></td>
+            <td><?php echo ucfirst($categoriaX) ?></td>
             <?php foreach($datosY["Resultados"] as $categoriaY=>$valor): ?>
             <td><?php echo $valor.' ('.round((($valor*100)/$datosY["Total"]),1).'%)' ?></td>
             <?php endforeach; ?>
@@ -80,23 +80,48 @@
 <?php endif; ?>
 <!-- ***** FIN IF RESULTADOS GRAFICO STACKED BARS ***** -->
 <!-- ********************************************** -->
-<!-- ***** COMIENZO RESULTADOS GRAFICO DE TORTA ***** -->
+<!-- ***** COMIENZO RESULTADOS GRAFICO DE EVOLUCIÓN ***** -->
 <!-- ********************************************** -->
-<!--<?php /* if(!empty($datosInfo)): ?>
-<div class="well label-titular color-3">Resultados</div>
-<?php foreach($datosInfo["Resultados"]["Opciones"] as $nombre=>$valor): ?>
-    <div class="row-fluid resumen-resultados">
-        <div class="span6 color-1 borde-1 borde-abajo"><span><?php echo $nombre ?></span></div>
-        <div class="span6 borde-1"><span><?php echo $valor ?></span></div>
-    </div>
-<?php endforeach;?>
-    <div class="row-fluid resumen-resultados">
-        <div class="span6 color-1"><span>Total</span></div>
-        <div class="span6 "><span><?php echo $datosInfo["Resultados"]["total"] ?></span></div>
-    </div>
-<div class="well label-titular color-3"><?php echo $datosInfo["Pregunta"]["nombre"] ?></div>
-<?php endif; */?> -->
-<!-- ***** FIN IF RESULTADOS GRAFICO DE TORTA ***** -->
+<?php if(!empty($datosInfoEvolucion)): ?>
+
+<div class="scrollTable">
+    <table class="table table-striped">
+        <thead>
+            <tr class="preguntasTabla">
+                <th><?php echo $preguntaX ?></th>
+                <th colspan="<?php echo count($categoriasY)+1; ?>"><span style="width:800px;display:block"><?php echo $preguntaY ?></span></th>
+            </tr>
+        <tr>
+        <th></th>
+        <?php foreach($categoriasY as $categoriaY): ?>
+            <th><?php echo ucfirst($categoriaY) ?></th>
+        <?php endforeach; ?>
+            <th>Total</th>
+        </tr>
+        </thead>
+    <tbody>
+        <?php foreach($datosInfoEvolucion as $categoriaX=>$datosY): ?>
+        <tr>
+            <td><?php echo ucfirst($categoriaX) ?></td>
+            <?php foreach($datosY["Resultados"] as $categoriaY=>$valor): ?>
+            <td><?php echo $valor.' ('.round((($valor*100)/$datosY["Total"]),1).'%)' ?></td>
+            <?php endforeach; ?>
+            <td><?php echo $datosY["Total"].' ('.round((($datosY["Total"]*100)/array_sum($totalesY)),1).'%)' ?></td>
+        </tr>
+    </tbody>
+    <?php endforeach; ?>
+    <tr>
+        <td>Total</td>
+        <?php foreach($totalesY as $totalY): ?>
+        <td><?php echo $totalY ?></td>
+        <?php endforeach; ?>
+        <td><?php echo array_sum($totalesY).' (100%)'; ?></td>
+    </tr>
+    </table>
+</div>
+<?php endif; ?>
+<!-- ***** FIN IF RESULTADOS GRAFICO DE EVOLUCIÒN ***** -->
+
 <?php if(isset($preguntaY)): ?>
     <div class="well label-titular color-3">
         <?php echo $preguntaY ?>
@@ -105,9 +130,14 @@
     <div id="leyenda" class="leyenda" style="display:none"></div>
     <?php if($this->data["SubReporte"]["grafico_tipo"]==1 || $this->data["SubReporte"]["grafico_tipo"]==2){ ?>
             <div id="graficoBarras" class="grafico" ></div>
+            
     <?php } ?>
     <?php if($this->data["SubReporte"]["grafico_tipo"]==3){ ?>
     <div id="graficoPie" class="grafico" ></div>
+    <?php } ?>
+    <?php if($this->data["SubReporte"]["grafico_tipo"]==4){ ?>
+    <div id="graficoEvolucion" class="grafico"></div>
+    
     <?php } ?>
     
 <?php if(isset($preguntaX)): ?>
@@ -115,13 +145,14 @@
         <?php echo $preguntaX ?>
     </div>
 <?php endif; ?>
-
+<!-- ***** FIN IF RESULTADOS GRAFICO DE TORTA ***** -->
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
 
 <?php echo $this->Html->script("/js/graficos/barras.js"); ?>
 <?php echo $this->Html->script("/js/graficos/stacked.js"); ?>
 <?php echo $this->Html->script("/js/graficos/pie.js"); ?>
+<?php echo $this->Html->script("/js/graficos/evolucion.js"); ?>
 
 <script type="text/javascript">
 $(document).ready(function(){
@@ -159,9 +190,24 @@ $(document).ready(function(){
 	<?php endif; ?>
 	<?php if($this->data["SubReporte"]["grafico_tipo"] == 3): ?>
 	 	datos = <?php echo json_encode(array_values($cont_opciones)); ?>;
-     	contenido = <?php echo json_encode($contenido); ?>;
-     	torta(contenido);
+                contenido = <?php echo json_encode($contenido); ?>;
+                torta(contenido);
 	<?php endif; ?>
+            <?php if($this->data["SubReporte"]["grafico_tipo"] == 4): ?>
+                var svg = d3.select("#graficoEvolucion").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g");
+                
+		datos = <?php echo json_encode($pruebita); ?>;
+                
+		categoriasX = <?php echo json_encode($categoriasX); ?>;
+		categoriasY = <?php echo json_encode($categoriasY); ?>;
+                titulo = <?php echo json_encode($preguntaGraficoX['Pregunta']['nombre']); ?>;
+                etiquetay = <?php echo json_encode($preguntaY); ?>;
+		evolucion(categoriasX,categoriasY,titulo,etiquetay, datos);
+	<?php endif; ?>
+            
 
 });
 

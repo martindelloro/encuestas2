@@ -123,7 +123,7 @@ class SubReportesController extends AppController{
 						$datosInfo["Resultados"]["total"] = $cont_opciones["NO"]["contador"] + $cont_opciones["SI"]["contador"];
                                                 
 				} // fin switch pregunta tipo_id
-				break;
+				break; //FIN GRÁFICO DE FRECUENCIAS
 			/****************************************************************************************************
 			 * ***************************************** STACKED BARS *******************************************
 			 * *************************************************************************************************/	
@@ -209,7 +209,8 @@ class SubReportesController extends AppController{
 				$this->set("categoriasX",array_unique($categoriasX));
 				$this->set("categoriasY",$categoriasY);
 				$this->set("datos",$datos);
-				break;
+				break; //FIN STACKED BARS
+                                
                          /****************************************************************************************************
 			 * ***************************************** TORTA *******************************************
 			 * *************************************************************************************************/	
@@ -266,7 +267,95 @@ class SubReportesController extends AppController{
                                                 {"manzana":"verde","uva":"Morada","fresa":"roja"} */
 				} // fin switch pregunta tipo_id
                                 
-                                break;
+                                break; //FIN GRÀFICO TORTA
+                         /****************************************************************************************************
+			 * ***************************************** EVOLUCIÓN *******************************************
+			 * *************************************************************************************************/	
+                        case 4:  // Gráfico de Evolución.
+				$totalesY = array();
+				$preguntaGraficoX = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_x"]),"contain"=>array("Tipo","Opcion"),"recursive"=>-1));
+				$preguntaGraficoY = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_y"]),"contain"=>array("Tipo","Opcion"),"recursive"=>-1));
+				
+				$opcionesX = $preguntaGraficoX["Opcion"];
+				$nombrePreguntaX = $preguntaGraficoX["Pregunta"]["nombre"];
+				$opcionesY = $preguntaGraficoY["Opcion"];
+				$nombrePreguntaY = $preguntaGraficoY["Pregunta"]["nombre"];
+				
+				$this->set("preguntaY",$nombrePreguntaY);
+				$this->set("preguntaX",$nombrePreguntaX);
+				
+				$datos = array();
+				$categoriasY = array();
+				$categoriasX = array();
+				foreach($opcionesY as $opcionY){
+					$nombreY = $opcionY["nombre"];
+					$categoriasY[] = $nombreY;
+					$opcIdY  = $opcionY["id"];
+					$pregIdY     = $opcionY["pregunta_id"];
+					$joins   = null;
+					$joins[] = array("table"=>"respuestas_opciones","alias"=>"RespuestaOpcion","type"=>"inner","conditions"=>array("RespuestaOpcion.respuesta_id = Respuesta.id","RespuestaOpcion.opcion_id = $opcIdY"));
+					if(!empty($this->data["SubReporte"]["Filtro"])){ // SIN HAY FITROS APLICADOS FILTRO X $USUARIOS_ID intersectados
+						$tmpsY = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.pregunta_id"=>$pregIdY,"Respuesta.usuario_id"=>$usuarios_id),"joins"=>$joins,"fields"=>"Respuesta.usuario_id","recursive"=>-1));
+					}
+					else{ // SI NO HAY FILTRO SOLO BUSCO LAS RESPUESTAS DE TODOS LOS USARIOS
+						$tmpsY = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.pregunta_id"=>$pregIdY),"joins"=>$joins,"fields"=>"Respuesta.usuario_id","recursive"=>-1));
+					}
+					$usuariosY = array();
+					foreach($tmpsY as $tmpY){
+						$usuariosY[] = $tmpY["Respuesta"]["usuario_id"];
+					}
+					if(!isset($totalesY[$nombreY])) $totalesY[$nombreY] = 0;
+					foreach($opcionesX as $opcionX){
+						$nombreX = $opcionX["nombre"];
+						$categoriasX[] = $nombreX;
+						$pregIdX = $opcionX["pregunta_id"];
+						$opcIdX  = $opcionX["id"];
+						$joins   = null;
+						$joins[] = array("table"=>"respuestas_opciones","alias"=>"RespuestaOpcion","type"=>"inner","conditions"=>array("RespuestaOpcion.respuesta_id = Respuesta.id","RespuestaOpcion.opcion_id = $opcIdX"));
+						$datos[$nombreX]["Resultados"][$nombreY] = $this->Respuesta->find('count',array("conditions"=>array("Respuesta.pregunta_id"=>$pregIdX,"Respuesta.usuario_id"=>$usuariosY),"joins"=>$joins));
+						$totalesY[$nombreY] += $datos[$nombreX]["Resultados"][$nombreY];
+						$datos[$nombreX]["categoriaX"] = $nombreX;
+					}
+				}
+				
+				$datosInfoEvolucion = $datos;
+				foreach($datosInfoEvolucion as $key=>$data){
+				    	$datosInfoEvolucion[$key]["Total"] = array_sum($data["Resultados"]);
+				    	$totalGeneral =+ $datosInfoStacked[$key]["Total"];
+				}
+				$this->set("totalGeneral",$totalGeneral);
+				$this->set("totalesY",$totalesY);
+								
+				
+				$datos = array_values($datos);
+				foreach($datos as $index=>$dato){
+					foreach($dato["Resultados"] as $nombreY => $valor){
+						if(!isset($datos[$index]["Total"])) $datos[$index]["Total"]= 0;
+						$datos[$index]["Total"] += $valor;
+					}
+					$offset = 0;
+					$fuck = 0;
+					foreach($dato["Resultados"] as $nombreY => $valor){
+						$datos[$index]["Resultados"][$nombreY] = null;
+						$datos[$index]["Resultados"][$nombreY]["categoriaY"] = $nombreY;
+						$datos[$index]["Resultados"][$nombreY]["offset"] = (float)$offset;
+						$datos[$index]["Resultados"][$nombreY]["altura"] = ($datos[$index]["Total"] != 0)?((float) ($valor+$fuck)  / $datos[$index]["Total"]):0 ;
+						$fuck += $valor;
+						$offset = $datos[$index]["Resultados"][$nombreY]["altura"];
+					}
+					$datos[$index]["Resultados"] = array_values($datos[$index]["Resultados"]);
+				
+				}
+                                $pruebita=array('name'=>'Bueno','data'=>array(1.0,2.0,3.0));
+                                //$pruebita=array((array('name'=>'Bueno','data'=>array(1.0,2.0,3.0))),(array('name'=>'Malo','data'=>array(3.0,2.0,1.0))));
+                                
+                                $this->set('pruebita',$pruebita);
+                                $this->set('preguntaGraficoX',$preguntaGraficoX);
+				$this->set("categoriasX",array_unique($categoriasX));
+				$this->set("categoriasY",$categoriasY);
+                                $this->set("datosInfoEvolucion",$datosInfoEvolucion);
+				$this->set("datos",$datos);
+				break; //FIN Gráfico Evolución
 		} // FIN SWITCH GRAFICO TIPO
                 
 		
@@ -302,6 +391,11 @@ class SubReportesController extends AppController{
 				$preguntas = $this->SubReporte->Reporte->Encuesta->EncuestaPregunta->find("list",array("conditions"=>array("encuesta_id"=>$encuesta_id,"tipo_id"=>array(4,6))));
 				$this->set("preguntas",$preguntas);
 				$this->render("/Elements/Reportes/tipoGrafico/pie");		
+				break;
+                        case 4:
+                                $preguntas = $this->SubReporte->Reporte->Encuesta->EncuestaPregunta->find("list",array("conditions"=>array("encuesta_id"=>$encuesta_id,"tipo_id"=>array(4,6))));
+				$this->set("preguntas",$preguntas);
+                                $this->render("/Elements/Reportes/tipoGrafico/evolucion");
 				break;
 			
 		}
