@@ -27,7 +27,7 @@ $('#graficoEvolucion').highcharts({
             }]
         },
         tooltip: {
-            valueSuffix: '%'
+            valueSuffix: ''
         },
         legend: {
             layout: 'vertical',

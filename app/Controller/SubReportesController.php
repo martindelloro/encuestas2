@@ -326,21 +326,32 @@ class SubReportesController extends AppController{
                                         
                                                                                
 				}
-                                $evolucion[]=array();
+                                
+                                
+                                
+                                
                                 $i=1;
-                                $i2=1;
+                                $i2=0;
                                 while ($i<=$iteraciones){
-                                    $cont=($i*count($pruebinha))/$iteraciones;
-                                    $evolucion[][$i-1]['name']=$categoriasY[$i-1];
-                                    while(list($clave, $valor) = each($pruebinha) && $i2<=$cont){
-                                        $evolucion[][]['data']+=$pruebinha[$valor];
-                                        $i2++;
+                                    $limite=($i*count($pruebinha))/$iteraciones;
+                                    
+                                    foreach($pruebinha as $clave=>$valor){
+                                        if($i2<$limite && $clave == $i2){
+                                            $datodato[]=$valor;
+                                            $i2++;
+                                    
+                                        }
                                     }
-                                    $i++;                                    
+                                   
+                                    $evolucion[]=array('name'=>$categoriasY[$i-1],'data'=>$datodato);
+                                    $i=$i+1;               
+                                    unset($datodato);
+                                  
                                 }
+                                
                                 $this->set('evolucion',$evolucion);
                                 $pruebita=array((array('name'=>'Bueno','data'=>array(3.0,0.0,3.0,6.0,9.0))),(array('name'=>'Malo','data'=>array(3.0,2.0,1.0))));
-                                                                
+                                //var_dump(($pruebita));                          
                                 //var_dump($evolucion);
                                 //var_dump($categoriasY);
                                 //var_dump(count($pruebinha));
@@ -375,7 +386,7 @@ class SubReportesController extends AppController{
 				
 				}
                                 //$pruebita=array('name'=>'Bueno','data'=>array(1.0,2.0,3.0));
-                                $pruebita=array((array('name'=>'Bueno','data'=>array(3.0,0.0,3.0,6.0,9.0))),(array('name'=>'Malo','data'=>array(3.0,2.0,1.0))));
+                                //$pruebita=array((array('name'=>'Bueno','data'=>array(3.0,0.0,3.0,6.0,9.0))),(array('name'=>'Malo','data'=>array(3.0,2.0,1.0))));
                                 
                                 //var_dump($datosInfoEvolucion);
                                 $this->set('pruebita',$pruebita);
