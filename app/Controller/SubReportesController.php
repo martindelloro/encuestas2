@@ -273,9 +273,12 @@ class SubReportesController extends AppController{
 			 * *************************************************************************************************/	
                         case 4:  // Gráfico de Evolución.
 				$totalesY = array();
-				$preguntaGraficoX = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_x"]),"contain"=>array("Tipo","Opcion"),"recursive"=>-1,"order"=>'Pregunta.nombre DESC'));
+				$preguntaGraficoX = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_x"]),"contain"=>array("Tipo","Opcion"),"recursive"=>-1));
 				$preguntaGraficoY = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->data["SubReporte"]["variable_y"]),"contain"=>array("Tipo","Opcion"),"recursive"=>-1));
-				
+				echo 'grafiX';
+                                print_r($preguntaGraficoX['Opcion']);
+                                echo 'grafiY';
+                                print_r($preguntaGraficoY);
 				$opcionesX = $preguntaGraficoX["Opcion"];
 				$nombrePreguntaX = $preguntaGraficoX["Pregunta"]["nombre"];
 				$opcionesY = $preguntaGraficoY["Opcion"];
