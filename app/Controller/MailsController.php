@@ -33,8 +33,9 @@ class MailsController extends AppController{
             $id_encuesta = $this->request->data["Mail"]["encuesta"];
             $this->layout='ajax';
             //CANTIDAD DE GRUPOS DE UNA ENCUESTA
-            $cantidad_grupos=$this->EncuestaGrupos->find('count',array('conditions'=>array('EncuestaGrupos.encuesta_id'=>$id_encuesta))); 
-            $grupos=$this->EncuestaGrupos->find('list',array('conditions'=>array('EncuestaGrupos.encuesta_id'=>$id_encuesta))); 
+            $grupos=$this->EncuestaGrupos->find('list',array('conditions'=>array('EncuestaGrupos.encuesta_id'=>$id_encuesta)));
+            $cantidad_grupos=count($grupos); 
+             
             //pr($grupos);
             $this->set("grupos",$grupos);
             //CANTIDAD DE USUARIOS DE UNA ENCUESTA
@@ -48,23 +49,20 @@ class MailsController extends AppController{
                     //Tiene varios grupos asignados
                     $mensaje="Esta encuesta tiene ".$cantidad_usuarios['VistaCantUsuariosEnc']['cantidad_usuarios']. " usuarios asignados y ".$cantidad_grupos. ' grupos asociados';
                 }
-                
                 $this->set("mensaje",$mensaje);
             }else{
                 $mensaje="Esta encuesta no tiene Grupo asignado";
                 $this->set("mensaje",$mensaje);
-        }
-        
-       $this->set("id_encuesta",$id_encuesta);
+        	}
+            $this->set("id_encuesta",$id_encuesta);
     }
     
     function informe_pre_mail() {
         $id_encuesta=$this->request->data['Mail']['encuesta'];
         $datos=$this->request->data;
         $nombre_encuesta=$this->Encuesta->find('first',array('fields'=>'Encuesta.nombre','conditions'=>array('Encuesta.id'=>$id_encuesta),'recursive'=>-1));
-        //pr($this->request->data['Mail']['grupos']);
-        $grupos_lista=$this->Grupo->find('list',array('conditions'=>array($this->request->data['Mail']['grupos']=>'Grupo.id')));
-        //pr($datos);
+        $grupos_id = array_values($this->request->data["Grupos"]);
+        $grupos_lista=$this->Grupo->find('list',array('conditions'=>array("id"=>$grupos_id)));
         $this->set('grupos_lista',$grupos_lista);
         $this->set("id_encuesta",$id_encuesta);
         if(!empty($nombre_encuesta)){
@@ -72,6 +70,7 @@ class MailsController extends AppController{
         }
         $this->set("datos",$datos);
     }
+    
     function enviar_mail($grupos=false, $id_encuesta=false,$tipo_envio=false){
         $grupos=array('14','15','16','17','18','19');
         //$id_encuesta='40';

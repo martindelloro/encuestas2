@@ -1,9 +1,5 @@
-<?php ?>
-
 <div class="modal-body">
-    
-    <div style="text-align: center">
-        <div id="parte_2" >
+    <div id="parte_2" >
          <div class="well contenedor-well fondo-1" id="paso_2" ">
              <div class="row-fluid">
                  <table class="table">
@@ -27,15 +23,8 @@
                      
                      </tr>              
                      <td><b>Grupos:</b>
-                       <?php //pr($grupos_lista);
-                       foreach($datos['Mail']['grupos'] as $grupo_id=>$name): 
+                       <?php foreach($datos['Grupos'] as $grupo): 
                            
-                            foreach($grupos_lista as $lista_id=>$nombre_id):
-                                    
-                                       if($lista_id==$name){
-                                            echo $nombre_id.'. ';
-                                       }
-                                   endforeach;
                         endforeach; ?>
                      </td>
                     
@@ -75,7 +64,7 @@
      //echo $this->Js->link("<i class='icon-plus'>Continuar con la carga de usuarios</i>",array("controller"=>"my_files","action"=>""),array("class"=>"btn btn-inverse","before"=>"modales('crearPregunta','modal-ficha')","complete"=>"fin_ajax('crearPregunta')","update"=>"#crearPregunta","escape"=>false)); ?>
         
         <?php // echo $this->Html->link("<i class='icon icon-times'>Cancelar</i>","#",array("class"=>"btn btn-inverse","data-dismiss"=>"modal","escape"=>false)) ?>
-    </div>
+    
     <?php $this->Js->get('#boton_continuar');
         echo $this->Js->event('click',$this->Js->request(array('controller'=>'grupos','action'=>'listar',$id_encuesta,'encuesta_grupo'),array('update'=>'#grupos_encuestas','before'=>"inicia_ajax();",'complete'=>"fin_ajax();$('#mensaje_confirmar').modal('hide');")));
     ?>

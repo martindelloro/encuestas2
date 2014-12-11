@@ -10,12 +10,14 @@
      <?php 
      echo $this->Form->Button("<i class='icon icon-check'>Continuar con el envío del mail</i>",array("class"=>"btn","id"=>"boton_continuar"));
      echo $this->Js->get("#boton_continuar")->event("click","$('#paso_2').unblock({message:null});");
-     //echo $this->Js->link("<i class='icon-plus'>Continuar con la carga de usuarios</i>",array("controller"=>"my_files","action"=>""),array("class"=>"btn btn-inverse","before"=>"modales('crearPregunta','modal-ficha')","complete"=>"fin_ajax('crearPregunta')","update"=>"#crearPregunta","escape"=>false)); ?>
-        
-        <?php echo $this->Html->link("<i class='icon icon-times'>Cancelar</i>","#",array("class"=>"btn btn-inverse","data-dismiss"=>"modal","escape"=>false)) ?>
+     //echo $this->Js->link("<i class='icon-plus'>Continuar con la carga de usuarios</i>",array("controller"=>"my_files","action"=>""),array("class"=>"btn btn-inverse","before"=>"modales('crearPregunta','modal-ficha')","complete"=>"fin_ajax('crearPregunta')","update"=>"#crearPregunta","escape"=>false));      echo $this->Html->link("<i class='icon icon-times'>Cancelar</i>","#",array("class"=>"btn btn-inverse","data-dismiss"=>"modal","escape"=>false)) ?>
     </div>
-    <?php $this->Js->get('#boton_continuar');
-        echo $this->Js->event('click',$this->Js->request(array('controller'=>'grupos','action'=>'listar',$id_encuesta,'encuesta_grupo'),array('update'=>'#grupos_encuestas','before'=>"inicia_ajax();",'complete'=>"fin_ajax();$('#mensaje_confirmar').modal('hide');")));
-    ?>
-    <?php echo $this->Js->writeBuffer(); ?>
+   	<?php 
+    	$this->Js->get('#boton_continuar');
+    	$parametros = array('update'=>'#grupos_encuestas',
+    					    'before'=>"inicia_ajax();",
+    			            'complete'=>"fin_ajax();$('#mensaje_confirmar').modal('hide');");
+        echo $this->Js->event('click',$this->Js->request(array('controller'=>'grupos','action'=>'listar',$id_encuesta,'encuesta_grupo'),$parametros));
+        echo $this->Js->writeBuffer(); 
+     ?>
 </div>
