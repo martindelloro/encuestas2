@@ -85,6 +85,10 @@ class EncuestasController extends AppController{
 				$this->paginate = array("contain"=>array("ResumenEncuesta"));
 				$this->set("encuestas",$this->paginate("Encuesta",$condiciones));
 				$this->render("resultadoBusqueda");
+				break;
+			case "autocompletar":
+				pr($this->params);
+				break;
 		}
 	}
 	

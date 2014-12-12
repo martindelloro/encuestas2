@@ -1,12 +1,12 @@
 <?php echo $this->Mensajes->mostrar();  ?>
-<div id="grupo">
-<?php echo $this->Form->create("Mail") ?>
 
+
+<div class="enviarEmail">
+<?php echo $this->Form->create("Mail") ?>
 	<div class="well titulo-general">
 		<span>Enviar Mails</span>
 	</div>
-    <br>
-    
+        
     <div id="parte_1">
 		<div class="row-fluid">
 			<div class="span6" id="paso_1">
@@ -17,30 +17,43 @@
 	        </div>
 	    </div>
     
-    	<div class="row-fluid">
-        	<div class="span6" id="paso_encuesta" style="display:none">
-                <?php echo $this->Form->input('encuesta',array("type"=>'select','options'=>$encuestas,'label'=>'Seleccione la Encuesta:','empty'=>true,'id'=>'select_encuesta')); ?>
+    	<div class="row-fluid" id="paso_encuesta" style="display:none">
+        	<div class="span6">
+                <?php echo $this->Form->input('encuesta',array("type"=>'select','options'=>$encuestas,'label'=>'Seleccione la Encuesta:','empty'=>true,'id'=>'select_encuesta2')); ?>
+            </div>
+            <div class="span6">
+                <input type="text" id="nombre_encuesta" />
+            	<?php echo $this->Form->input("encuesta_id",array("type"=>"hidden")) ?>
             </div>
    		</div>
-		
 	
    
     
-    <div id="grupos_encuestas"> </div>
-	<div id="div_cantidades"></div>
-	<div id="continuar"><i class='icon  icon-hand-o-right icon-1x btn btn-inverse'>Continuar</i></div>
+	    <div id="grupos_encuestas"> </div>
+		<div id="div_cantidades"></div>
+		<div id="continuar"><i class='icon  icon-hand-o-right icon-1x btn btn-inverse'>Continuar</i></div>
     </div> <!-- FIN DIV PARTE 1 -->
-     <?php echo $this->Form->End(); ?>
-    <?php echo $this->Js->writeBuffer() ?>
-     </div>
-             
-
+     
+    
 <div id="resultado_informe"></div>
     
+<?php echo $this->Form->End(); ?>     
+</div> <!--  FIN DIV enviarEmail -->
+            
+<?php echo $this->Js->writeBuffer() ?>
 
+    
+<?php echo $this->element("/Encuestas/buscar/autocompletar") ?>
 
 
 <script type="text/javascript">
+
+
+var JsonEncuesta = function(query,process){
+	console.log(query);
+};
+
+$("#nombre_encuesta").typeahead([{name:'Encuestas',remote:JsonEncuesta,url:'/encuestas/buscar/autocompletar',minLength:3,engine:Hogan,template:$("#autocompletarEncuesta").html(),limit:50}]);
 
         $("#select_encuesta").bind("change",function(){
             if($(this).val() != ''){

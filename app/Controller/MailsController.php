@@ -17,7 +17,7 @@ class MailsController extends AppController{
         }
         function seleccione_tipo(){
             $tipo=array('1'=>'Encuesta','2'=>'Datos de Contacto');
-            $encuestas=$this->Encuesta->find("list");
+            
             $tipo_envio=array('1'=>'Envío por primera vez','2'=>'Recordatorio');
             $grupos_total=$this->Grupo->find('list');
             //Si es para enviar a datos de contacto
