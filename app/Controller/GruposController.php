@@ -134,18 +134,36 @@ class GruposController extends AppController {
     }
     
     function listar($encuesta_id=null,$vista){ //LISTA LOS GRUPOS QUE TIENE ASOCIADA UNA ENCUESTA
-        if($encuesta_id==true){
-        $grupos=$this->GruposEncuesta->find('list',array('conditions'=>array('GruposEncuesta.encuesta_id'=>$encuesta_id)));         
-       }else{
-        $grupos=$this->Grupos->find('list',array('fields'=>'nombre'));
-       }
-        $this->autoRender=false;
+    	$this->autoRender=false;
+    	if($encuesta_id==true){
+        	$grupos=$this->GruposEncuesta->find('list',array('conditions'=>array('GruposEncuesta.encuesta_id'=>$encuesta_id)));    
+        	$cantGrupos = count($grupos);     
+        }else{
+        	$grupos=$this->Grupos->find('list',array('fields'=>'nombre'));
+       	}
+        
         switch ($vista){
             case 'encuesta_grupo':
-                
                 $this->set("grupos",$grupos);
                 $this->render('encuesta_grupo');
                 break;
+            case 'mail_grupos':
+            	$cantUsuarios = $this->Grupo->Encuesta->ResumenEncuesta->find("first",array("conditions"=>array("ResumenEncuesta.encuesta_id"=>$encuesta_id)));
+                $cantUsuarios = $cantUsuarios["ResumenEncuesta"]["usuarios"];
+                switch($cantGrupos){
+                	case 0:
+                		$mensaje="Esta encuesta no tiene Grupo asignado";
+                		break;
+                	case 1:
+                		$mensaje="Esta encuesta tiene $cantUsuarios usuarios asignados y $cantGrupos grupo asociado";
+                		break;
+                	case ($cantGrupos > 1):
+                		$mensaje="Esta encuesta tiene $cantUsuarios usuarios asignados y $cantGrupos grupos asociados";
+                		break;
+                }
+                $this->set("mensaje",$mensaje);
+                $this->set("encuesta_id",$encuesta_id);
+                $this->render('mail_grupos');
         }
         
     }
