@@ -8,8 +8,8 @@ class Pregunta extends AppModel{
 	
 	var $hasAndBelongsToMany = array("Encuestas"=>array("className"=>"Encuesta","joinTable"=>"encuestas_preguntas","foreignKey"=>"pregunta_id","associationForeignKey"=>"encuesta_id",""));
 	
-	var $hasMany = array("Opcion"=>array("className"=>"Opcion","foreignKey"=>"pregunta_id"),
-						 "Validacion"=>array("className"=>"Validacion","foreignKey"=>"pregunta_id"),
+	var $hasMany = array("Opcion"=>array("className"=>"Opcion","foreignKey"=>"pregunta_id",'order'=>'nombre ASC'),
+                                                  "Validacion"=>array("className"=>"Validacion","foreignKey"=>"pregunta_id"),
 						 "Respuesta"=>array("className"=>"Respuesta","foreignKey"=>"pregunta_id"));
 	
 	

@@ -1,4 +1,5 @@
 var barras = function(svg,x,y,xAxis,yAxis,datos,height){
+
 x.domain(datos.map(function(d) { return d.nombre; }));
   y.domain([0, d3.max(datos, function(d) { return d.contador; })]);
 

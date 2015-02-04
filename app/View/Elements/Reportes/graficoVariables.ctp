@@ -1,6 +1,6 @@
 <?php 
 $this->Form->create("Reporte"); /**** SIN ECHO SOLO INICIALIZO HELPER ****/
-$graficos = array("1"=>"Gráfico de Frecuencias","2"=>"Gráfico de Cruces","3"=>"Gráfico de Torta");
+$graficos = array("1"=>"Gráfico de Frecuencias","2"=>"Gráfico de Cruces","3"=>"Gráfico de Torta","4"=>"Gráfico de Evolución");
 	
 ?>
 <span class="label label-titular color-1">PASO 2</span>
