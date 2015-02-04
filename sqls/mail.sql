@@ -1,16 +1,18 @@
 
-CREATE TABLE encuestas.mail
+CREATE TABLE mail
 (
   id serial NOT NULL,
   grupo_id integer,
   encuesta_id integer,
-  usuario_id integer,
-  created timestamp,
-  modified timestamp  
+  owner_id integer,
+  created timestamp without time zone,
+  modified timestamp without time zone,
+  "tipoMail" integer,
+  "tipoEnvio" integer,
+  mensaje character varying
 )
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE encuestas.mail
+ALTER TABLE mail
   OWNER TO encuestas;
-
