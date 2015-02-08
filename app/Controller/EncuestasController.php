@@ -71,6 +71,13 @@ class EncuestasController extends AppController{
 			if(!empty($this->data["buscar"]["nombre"])) $condiciones["Encuesta.nombre ILIKE"] = "%".$this->data["buscar"]["nombre"]."%";
 			if(!empty($this->data["buscar"]["categoria_id"])) $condiciones["Encuesta.categoria_id"] = $this->data["buscar"]["categoria_id"];
 			if(!empty($this->data["buscar"]["subcategoria_id"])) $condiciones["Encuesta.subcategoria_id"] = $this->data["buscar"]["subcategoria_id"];
+			if(!empty($this->data["buscar"]["estado"])){
+				if($this->data["buscar"]["estado"]=="True"){
+					$condiciones["Encuesta.activada"]=1;
+				}else{
+					$condiciones["Encuesta.activada"]=0;
+				}
+			} 
 			$this->Session->write("busquedaEncuesta",$condiciones);
 		}
 		
@@ -91,6 +98,34 @@ class EncuestasController extends AppController{
 	function ver($encuesta_id = null){
 		$encuesta = $this->Encuesta->find("first",array("conditions"=>array("Encuesta.id"=>$encuesta_id),"contain"=>array("ResumenEncuesta","Categoria","Subcategoria","EncuestaPregunta")));
 		$this->set("encuesta",$encuesta);		
+	}
+	function desactivar($encuesta_id=null){
+		$this->Encuesta->read(null, $encuesta_id);
+		$this->Encuesta->set(array(
+				'activada' => false,
+		));
+		if($this->Encuesta->save()){
+			$this->Session->setFlash("Se ha desactivado la Encuesta",null,null,"mensaje_sistema");
+			$this->render("resultadoBusqueda");
+					
+		} 
+	}
+	function activar($encuesta_id=null){
+		$this->Encuesta->read(null, $encuesta_id);
+		$this->Encuesta->set(array(
+				'activada' => true,
+		));
+		if($this->Encuesta->save()){
+			$this->Session->setFlash("Se ha activado la Encuesta",null,null,"mensaje_sistema");
+			$this->render("resultadoBusqueda");
+			
+		}
+	}
+	
+	function borrar($encuesta_id=null){
+		//Buscar encuesta (preguntas y respuestas) buscar usuarios asociados, 
+		$encuesta=$this->find("first");
+		$this->set("encuesta",$encuesta);
 	}
 	
 	function completar($encuesta_id = null, $parte = 1,$partes = null,$cantXpag = null){
