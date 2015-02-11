@@ -15,12 +15,6 @@
 		</div>
 	</div>
         <div class="row-fluid">
-                <div class="span4">
-			<div class="label">Estado</div>
-			<?php echo $this->Form->input("estado",array("type"=>"select","options"=>array("True"=>"Activada","False"=>"Desactivada"),"label"=>false,"empty"=>true)) ?>
-		</div>
-        </div>
-	<div class="row-fluid">
 	<div class="span4">
 			<div class="label">Estado</div>
 			<?php echo $this->Form->input("estado",array("type"=>"select","options"=>array("True"=>"Activada", "False"=>"Desactivada"),"label"=>false,"empty"=>true)) ?>
