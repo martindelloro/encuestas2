@@ -1,4 +1,4 @@
-<?php echo $this->Mensajes->mostrar();  ?>
+
 <div id="grupo">
     	<?php echo $this->Form->create("Mail") ?>
 	<div class="well titulo-general">
