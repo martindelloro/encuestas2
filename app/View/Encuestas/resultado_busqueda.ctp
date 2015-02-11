@@ -47,7 +47,7 @@
 			<div class="span3 centrado"><span><?php echo $encuesta["Encuesta"]["created"] ?></span></div>
 			<div class="span3 botones">
 				<?php echo $this->Js->link("<i class='icon icon-eye'></i>",array("controller"=>"Encuestas","action"=>"ver",$encuesta["Encuesta"]["id"]),array("title"=>"Ver Encuesta","update"=>"#verEncuesta","class"=>"btn btn-inverse btn-small","before"=>"modales('verEncuesta','modal-ficha')","complete"=>"fin_ajax('verEncuesta')","escape"=>false)); ?>
-				<?php echo $this->Js->link("<i class='icon icon-edit'></i>",array("controller"=>"Encuestas","action"=>"editar",$encuesta["Encuesta"]["id"]),array("title"=>"Editar Encuesta","update"=>"#editarEncuesta","class"=>"btn btn-inverse btn-small","before"=>"modales('editarEncuesta','modal-ficha')","complete"=>"fin_ajax('editarrEncuesta')","escape"=>false)); ?>
+				<?php echo $this->Js->link("<i class='icon icon-edit'></i>",array("controller"=>"Encuestas","action"=>"editar",$encuesta["Encuesta"]["id"]),array("title"=>"Editar Encuesta","update"=>"#editarEncuesta","class"=>"btn btn-inverse btn-small","before"=>"modales('editarEncuesta','modal-ficha')","complete"=>"fin_ajax('editarEncuesta')","escape"=>false)); ?>
 				<?php //si esta activada le doy la opcion de desactivar
 					if ($encuesta["Encuesta"]["activada"]==1){?> 
 				<?php echo $this->Js->link("<i class='icon icon-power-off'></i>",array("controller"=>"Encuestas","action"=>"desactivar",$encuesta["Encuesta"]["id"]),array("title"=>"Desactivar Encuesta","update"=>"#exec_js","class"=>"btn btn-inverse btn-small","before"=>"inicia_ajax()","complete"=>"fin_ajax()","escape"=>false,"confirm"=>"Está seguro que desea desactivar la Encuesta ".$encuesta["Encuesta"]["nombre"]."?"." No podrá enviar mails")); ?>
