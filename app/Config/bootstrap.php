@@ -107,6 +107,7 @@ CakeLog::config('error', array(
 ));
 
 CakePlugin::load('DebugKit');
+CakePlugin::load('MustacheCake');
 
 App::uses('AppError', 'Lib');
 
