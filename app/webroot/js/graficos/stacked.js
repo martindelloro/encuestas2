@@ -34,7 +34,7 @@ var color = d3.scale.ordinal()
       .style("fill", function(d) {return color(d.categoriaY); })
       .attr("alt",function(d){return d.categoriaY;});
   
-  EjeX.selectAll(".contenedorBarra").data(function(d){return d.Resultados})append("text").attr("x",20).attr("y",20).attr("dy", ".35em").style("text-anchor","end").text("33");;
+  EjeX.selectAll(".contenedorBarra").data(function(d){return d.Resultados}).append("text").attr("x",20).attr("y",20).attr("dy", ".35em").style("text-anchor","end").text("33");;
 
   
   j = 0;

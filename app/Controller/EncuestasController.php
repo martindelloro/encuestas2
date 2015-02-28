@@ -123,9 +123,18 @@ class EncuestasController extends AppController{
 	}
 	
 	function borrar($encuesta_id=null){
-		//Buscar encuesta (preguntas y respuestas) buscar usuarios asociados, 
-		$encuesta=$this->find("first");
+                $this->loadModel("EncuestaPregunta","Pregunta");
+                //Borra encuesta y toda asociaciòn. Para eliminar los usuarios ir a grupo/eliminar grupo.
+		$encuesta=$this->Encuesta->find("list",array("conditions"=>array("Encuesta.id"=>$encuesta_id)));
+                $preguntas=$this->Encuesta->find("first",array("conditions"=>array("Encuesta.id"=>$encuesta_id)));
+                $this->Encuesta->bindModel(array('hasMany'=>array('Respuesta'=>array('dependent'=>true,array("conditions"=>array($encuesta_id=>"encuesta_id"))))));
+                if ($this->Encuesta->delete(array("Encuesta.id"=>$encuesta_id),true)){
+                    echo "se elimino";
+                }
 		$this->set("encuesta",$encuesta);
+                
+                $this->set("preguntas",$preguntas);
+                
 	}
 	
 	function completar($encuesta_id = null, $parte = 1,$partes = null,$cantXpag = null){

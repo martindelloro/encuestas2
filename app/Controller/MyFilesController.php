@@ -24,8 +24,8 @@ class MyFilesController extends AppController {
             $fileData = fread(fopen($this->data['MyFile']['file']['tmp_name'], "r"), 
                                     $this->data['MyFile']['file']['size']); 
           
-            $puntero2 = fopen('/var/www/encuestas/app/webroot/excels/'.$this->data['MyFile']['file']['name'],'w+');
-            chmod('/var/www/encuestas/app/webroot/excels/'.$this->data['MyFile']['file']['name'], 0775);
+            $puntero2 = fopen(WWW_ROOT."/excels/".$this->data['MyFile']['file']['name'],'w+');
+            chmod(WWW_ROOT."/excels/".$this->data['MyFile']['file']['name'], 0775);
             fwrite($puntero2,$fileData,$this->data["MyFile"]["file"]["size"]);
             
             //fclose($puntero);

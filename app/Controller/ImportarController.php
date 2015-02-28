@@ -151,13 +151,17 @@ class ImportarController extends AppController{
 	}
 
 	function cargarContenido($excelName=null,$encuesta_id=null,$offset=null,$size=null,$loop=null){
-		$this->autoRender = false;
+                $offset = $this->params["named"]["offset"];
+                $size = $this->params["named"]["size"];
+                $loop = $this->params["named"]["loop"];
+                $this->autoRender = false;
 		$remplazar = array('à'=>'a','á'=>'a','è'=>'e','é'=>'e','ì'=>'i','í'=>'i','ò'=>'o','ó'=>'o','ù'=>'u','ú'=>'u');
 		$ajaxInception = false;
 		if($loop != 1){
-			$usuarios = $this->Session->read("UsuariosCache");
+                        $usuarios = $this->Session->read("UsuariosCache");
 		}else{
-			$usuarios = array();
+                        $this->Session->delete("UsuariosCache");
+                        $usuarios = array();
 		}
 		
 		if($excelName == null){
@@ -205,7 +209,7 @@ class ImportarController extends AppController{
 			if(!in_array($usuario_id, $usuarios)){
 				$usuarios[] = $usuario_id;
 			}else{
-				// ya fue procesado... repetido en la planilla excell.
+                          // ya fue procesado... repetido en la planilla excell.
 				continue;
 			}
 			
@@ -228,7 +232,7 @@ class ImportarController extends AppController{
 												
 						if($pregunta == null) {
 							$resultado["PreguntaInexistente"][] = $nombrePregunta;
-							continue;
+                                                        continue;
 						}
 							switch($pregunta["Pregunta"]["tipo_id"]){
 								case 1:
@@ -296,7 +300,8 @@ class ImportarController extends AppController{
 
 
         function importarUsuarios($excelName=null,$grupo_id = null,$offset = null,$size = null,$loop=1){
-    		$this->autoRender = false;
+                        
+                        $this->autoRender = false;
 			$ajaxInception    = false;
 			$excelName = isset($excelName)?$excelName:null;
 			if($excelName == null){

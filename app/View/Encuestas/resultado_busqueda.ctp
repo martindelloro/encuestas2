@@ -54,7 +54,7 @@
 				<?php }else{ //sino le doy la opcion de activar?>
 				<?php echo $this->Js->link("<i class='icon icon-check'></i>",array("controller"=>"Encuestas","action"=>"activar",$encuesta["Encuesta"]["id"]),array("title"=>"Activar Encuesta","update"=>"#exec_js","class"=>"btn btn-inverse btn-small","before"=>"inicia_ajax()","complete"=>"fin_ajax()","escape"=>false,"confirm"=>"Está seguro que desea activar la Encuesta ".$encuesta["Encuesta"]["nombre"]."?")); ?>
 				<?php }?>
-				<?php echo $this->Js->link("<i class='icon icon-times'></i>",array("controller"=>"Encuestas","action"=>"ver",$encuesta["Encuesta"]["id"]),array("title"=>"Borrar Encuesta","update"=>"#exec_js","class"=>"btn btn-inverse btn-small","before"=>"inicia_ajax()","complete"=>"fin_ajax()","escape"=>false,"confirm"=>"Está seguro que desea eliminar la Encuesta ".$encuesta["Encuesta"]["nombre"]."?")); ?>
+				<?php echo $this->Js->link("<i class='icon icon-times'></i>",array("controller"=>"Encuestas","action"=>"borrar",$encuesta["Encuesta"]["id"]),array("title"=>"Borrar Encuesta","update"=>"#exec_js","class"=>"btn btn-inverse btn-small","before"=>"inicia_ajax()","complete"=>"fin_ajax()","escape"=>false,"confirm"=>"Está seguro que desea eliminar la Encuesta ".$encuesta["Encuesta"]["nombre"]."?")); ?>
 			</div>
 		</div>
 	</div>
