@@ -5,17 +5,22 @@
     <div id="parte_1">
 		<div class="row-fluid">
 			<div class="span6"><?php echo $this->Form->input("tipoEmail",array("type"=>'select','options'=>$tipoMail,"label"=>"Seleccionar Tipo de Mail a Enviar:","id"=>'tipoMail','empty'=>true)); ?> </div>
-	        <div class="span6"><?php echo $this->Form->input('tipoEnvio',array("type"=>'select','options'=>$tipoEnvio,'label'=>'Seleccione el Tipo de Envío:','empty'=>true)); ?></div>
+	        <div class="span6"><?php echo $this->Form->input('tipoEnvio',array("type"=>'select','options'=>$tipoEnvio,'label'=>'Seleccione el Tipo de Envío:','empty'=>true,"id"=>"tipoEnvio")); ?></div>
 		</div>
     	<div class="row-fluid" id="pasoEncuesta" style="display:none">
-        	<div class="span6"><?php echo $this->Form->input('encuesta',array("type"=>'select','options'=>$encuestas,'label'=>'Seleccione la Encuesta:','empty'=>true,'id'=>'selectEncuesta')); ?></div>
+        	<div class="span6"><?php echo $this->Form->input('encuesta_id',array("type"=>'select','options'=>$encuestas,'label'=>'Seleccione la Encuesta:','empty'=>true,'id'=>'selectEncuesta')); ?></div>
     	</div>
 	
 		<div class="row-fluid">        
             <div class="span6" id="pasoGrupo" style="display: none"></div>
     	</div>
+    	<div class="row-fluid">
+    		<div class="span12"><?php echo $this->Form->input("mensaje",array("type"=>"textarea","id"=>"pasoMensaje")); ?></div>
+    	</div>
+    	    	
     	<div id="continuar"><i class='icon  icon-hand-o-right icon-1x btn btn-inverse'>Continuar</i></div>
    </div> <!-- FIN DIV PARTE_1 -->
+   <div id="debugMail"></div>
   
    <div id="parte_2" style="display:none"></div>
           
@@ -31,13 +36,15 @@
            <tr><td><b>Encuesta:</b> {{nombreEncuesta}}</td></tr>
            {{/esEncuesta}}
            <tr><td><b>Grupos:</b>{{#grupos}}<span>{{grupoNombre}}</span>{{/grupos}}</td></tr>
+           <tr><td><b>Mensaje:</b>{{mensaje}}</td></tr>
        </table>
     </div>
     <div>
         <i class="btn btn-inverse icon" id="volver">Volver</i>
-    	<?php echo $this->Js->link("<i class='icon icon-envelope-o'>Enviar</i>",array('url'=>array('controller'=>'mails','action'=>'enviar')),array('update'=>'#resultado_busqueda2','before'=>'inicia_ajax()','complete'=>'fin_ajax()',"with"=>"$(this).parents('form:first').serialize()",'method'=>'POST','dataExpression'=>true,"class"=>"btn btn-inverse span2","escape"=>false));  ?>
+    	<?php echo $this->Js->link("<i class='icon icon-envelope-o'>Enviar</i>",array('controller'=>'mails','action'=>'enviar'),array('update'=>'#debugMail','before'=>'inicia_ajax()','complete'=>'fin_ajax()',"data"=>"$(this).parents('form:first').serialize()",'method'=>'POST','dataExpression'=>true,"class"=>"btn btn-inverse span2","escape"=>false));  ?>
+    	<?php echo $this->Js->writeBuffer() ?>
     </div>
- </div>
+</div> <!-- FIN DIV templateInforme -->
          
 <?php echo $this->Form->end() ?>
 
@@ -126,7 +133,8 @@
          });
          tipoMail  = $("#tipoMail option:selected").text();
          tipoEnvio = $("#tipoEnvio option:selected").text();
-		 switch($("#tipoMail").val()){
+         mensaje   = $("#pasoMensaje").val();
+         switch($("#tipoMail").val()){
 		 	case '1':
 			 	esEncuesta = true;
 			 	nombreEncuesta = $("#selectEncuesta option:selected").text();
@@ -136,7 +144,7 @@
 			 	
 		 }	
          
-         datos = {'tipoMail':tipoMail,'tipoEnvio':tipoEnvio,'esEncuesta':esEncuesta,'nombreEncuesta':nombreEncuesta,'grupos':grupos};
+         datos = {'mensaje':mensaje,'tipoMail':tipoMail,'tipoEnvio':tipoEnvio,'esEncuesta':esEncuesta,'nombreEncuesta':nombreEncuesta,'grupos':grupos};
          template = $("#templateInforme").html();
          inicializa = Hogan.compile(template);
          informe = inicializa.render(datos);

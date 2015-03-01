@@ -21,6 +21,7 @@
 
 App::import('Vendor', 'excel_reader2');
 App::uses('Controller', 'Controller');
+App::uses('CakeEmail', 'Network/Email');
 
 /**
  * Application Controller

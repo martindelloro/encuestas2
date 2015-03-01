@@ -1254,3 +1254,13 @@ border-radius: 2px;
 .contenedor-opciones .checkbox input{
 	width:22px !important;
 }
+
+/*************************************************/
+/******************    EMAIL   *******************/
+/*************************************************/
+
+
+#pasoMensaje {
+	width:100% !important;
+	height:45px !important;
+}

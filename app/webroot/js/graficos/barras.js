@@ -12,7 +12,7 @@ x.domain(datos.map(function(d) { return d.nombre; }));
       .attr("dx", "-.8em")
       .attr("dy", ".15em")
       .attr("transform", function(d) {
-          return "rotate(-65)" 
+          return "rotate(-65)";
           });;
 
   svg.append("g")

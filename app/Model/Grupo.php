@@ -3,6 +3,8 @@
 class Grupo extends AppModel{
     var $useTable = "grupos";
     var $displayField = "nombre";
+    var $actsAs = "Containable";
+    
    var $hasAndBelongsToMany = array('Usuarios' =>
                         array(
                             'className' => 'Usuario',
