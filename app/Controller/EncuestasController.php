@@ -123,17 +123,24 @@ class EncuestasController extends AppController{
 	}
 	
 	function borrar($encuesta_id=null){
-                $this->loadModel("EncuestaPregunta","Pregunta");
                 //Borra encuesta y toda asociaciòn. Para eliminar los usuarios ir a grupo/eliminar grupo.
-		$encuesta=$this->Encuesta->find("list",array("conditions"=>array("Encuesta.id"=>$encuesta_id)));
-                $preguntas=$this->Encuesta->find("first",array("conditions"=>array("Encuesta.id"=>$encuesta_id)));
-                $this->Encuesta->bindModel(array('hasMany'=>array('Respuesta'=>array('dependent'=>true,array("conditions"=>array($encuesta_id=>"encuesta_id"))))));
-                if ($this->Encuesta->delete(array("Encuesta.id"=>$encuesta_id),true)){
+		//$encuesta=$this->Encuesta->find("list",array("conditions"=>array("Encuesta.id"=>$encuesta_id)));
+                // $preguntas=$this->Encuesta->find("first",array("conditions"=>array("Encuesta.id"=>$encuesta_id)));
+                //$this->Encuesta->unBindModel(array("hasMany"=>array("EncuestaPregunta"),"hasAndBelongsToMany"=>array("Preguntas")),false);
+                
+                $this->Encuesta->bindModel(array('hasMany' => array('Respuesta' => array('dependent'=>true,'exclusive'=>true,'foreignKey'=>"encuesta_id"))),false);
+                $this->Encuesta->Respuesta->unBindModel(array('hasAndBelongsToMany'=>array("Opciones"),"belongsTo"=>array("Usuario","Pregunta")),false);
+               //  $encuesta=$this->Encuesta->find("first",array("limit"=>1));
+                
+                if ($this->Encuesta->delete($encuesta_id,true)){
                     echo "se elimino";
                 }
-		$this->set("encuesta",$encuesta);
+
+                $log = $this->Encuesta->getDataSource()->getLog(false, false);
+                pr($log);
+		//$this->set("encuesta",$encuesta);
                 
-                $this->set("preguntas",$preguntas);
+               
                 
 	}
 	

@@ -6,7 +6,7 @@ class Respuesta extends AppModel{
 	
 	var $belongsTo = array("Usuario"=>array("className"=>"Usuario"),
 						   "Pregunta"=>array("className"=>"Pregunta"));
-	var $hasAndBelongsToMany = array("Opciones"=>array("className"=>"Opcion","foreignKey"=>"respuesta_id","associationForeignKey"=>"opcion_id","joinTable"=>"respuestas_opciones","dependent"=>true));
+	var $hasAndBelongsToMany = array("Opciones"=>array("className"=>"Opcion","foreignKey"=>"respuesta_id","associationForeignKey"=>"opcion_id","joinTable"=>"respuestas_opciones"));
 
 	var $validate = array("respuesta_sino"=>array("rule"=>"RespuestaSiNo","message"=>""));
 
