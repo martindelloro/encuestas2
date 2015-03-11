@@ -159,6 +159,17 @@
      }
    
  });
+
+    $().ready(function() {
+		var opts = {
+			url:'telle',
+			cssClass : 'el-rte',
+			// lang     : 'ru',
+			height   : 450,
+			toolbar  : 'complete'
+		}
+		$('#pasoMensaje').elrte(opts);
+	})
   
  </script>
  <?php echo $this->Js->writeBuffer() ?>
