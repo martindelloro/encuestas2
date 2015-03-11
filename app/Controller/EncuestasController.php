@@ -130,15 +130,16 @@ class EncuestasController extends AppController{
                 
                 $this->Encuesta->bindModel(array('hasMany' => array('Respuesta' => array('dependent'=>true,'exclusive'=>true,'foreignKey'=>"encuesta_id"))),false);
                 $this->Encuesta->Respuesta->unBindModel(array('hasAndBelongsToMany'=>array("Opciones"),"belongsTo"=>array("Usuario","Pregunta")),false);
+                $this->Encuesta->Preguntas->Opcion->bindModel(array('hasMany' => array('RespuestaOpcion'=>array('dependent'=>true,'exclusive'=>true,'foreignKey'=>'opcion_id'))),false);
+                //$encuesta=$this->Encuesta->findById($encuesta_id);
                //  $encuesta=$this->Encuesta->find("first",array("limit"=>1));
-                
                 if ($this->Encuesta->delete($encuesta_id,true)){
                     echo "se elimino";
                 }
 
                 $log = $this->Encuesta->getDataSource()->getLog(false, false);
                 pr($log);
-		//$this->set("encuesta",$encuesta);
+		$this->set("encuesta",$encuesta);
                 
                
                 
