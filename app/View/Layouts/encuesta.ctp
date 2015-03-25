@@ -23,6 +23,7 @@ echo $this->Helpers->Html->css('bootstrap-modal');
 echo $this->Helpers->Html->css('bootstrap-modal-bs3patch');
 echo $this->Helpers->Html->css('blueimp/jquery.fileupload.css');
 echo $this->Helpers->Html->css('blueimp/jquery.fileupload-noscript.css');
+echo $this->Helpers->Html->css('elrte.full.css');
 
 
 
@@ -51,6 +52,7 @@ echo $this->Helpers->Html->script("jquery.validate.min.js");
 echo $this->Helpers->Html->script("jshc/highcharts.js");
 echo $this->Helpers->Html->script("modules/exporting.js");
 echo $this->Helpers->Html->script("d3.min");
+echo $this->Helpers->Html->script("elrte.min.js");
  
 ?>
 
