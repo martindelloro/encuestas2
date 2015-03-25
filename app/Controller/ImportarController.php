@@ -18,7 +18,7 @@ class ImportarController extends AppController{
 	
 	
 	function agregar_excel() {
-		$grupos=$this->Grupo->find('list', array('fields'=>'Grupo.nombre'));
+		$grupos=$this->Encuesta->Grupos->find('list', array('fields'=>'Grupos.nombre'));
 		$this->set('grupos',$grupos);
 	}
 	
@@ -69,8 +69,7 @@ class ImportarController extends AppController{
 	}
 	
 	function steps(){
-		$this->loadModel("Grupo");
-		$grupos = $this->Grupo->find("list");
+		$grupos = $this->Encuesta->Grupos->find("list");
 		$this->set("grupos",$grupos);
 	}
 
