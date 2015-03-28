@@ -246,6 +246,10 @@ body .mensaje-contenido{
 	 margin-left:0;
 }
 
+.fuente-mediana{
+	font-size:12px !important;
+}
+
 /***************************************************************/
 /****************** USUARIOS INDEX/LISTADO *********************/
 /***************************************************************/
@@ -618,9 +622,10 @@ body .mensaje-contenido{
 }
 
 .botones input[type="checkbox"]{
-	float:right;
-	margin-top:4px;
-	margin-left:4px;
+	float: right;
+    margin-left: 4px;
+    margin-top: 7px;
+    width: 12px !important;
 }
 
 /*************************************************/

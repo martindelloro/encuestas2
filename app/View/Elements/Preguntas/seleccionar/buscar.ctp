@@ -53,9 +53,9 @@
 			</div>
 			<div class="span2 botones">
 				<input type="checkbox" 	value="<?php echo $pregunta["Pregunta"]["id"] ?>" />
-				<?php echo $this->Js->link("<i class='icon icon-edit'></i>",array('controller'=>'preguntas','action'=>'editar',$pregunta["Pregunta"]["id"]),array('escape'=>false,'class'=>'btn-mini btn-inverse','before'=>"modales('editarPregunta','modal-ficha')",'complete'=>"fin_ajax('editarPregunta')",'update'=>'#editarPregunta')) ?>
-				<?php echo $this->Js->link("<i class='icon icon-eye'></i>",array('controller'=>'preguntas','action'=>'ver',$pregunta["Pregunta"]["id"]),array('escape'=>false,'class'=>'btn-mini btn-inverse','before'=>"modales('verPregunta','modal-ficha')",'complete'=>"fin_ajax('verPregunta')",'update'=>'#verPregunta')) ?>
-				<?php echo $this->Js->link("<i class='icon icon-remove'>x</i>",array('controller'=>'preguntas','action'=>'borrar',$pregunta["Pregunta"]["id"]),array('escape'=>false,'class'=>'btn-mini btn-inverse','before'=>'inicia_ajax()','complete'=>'fin_ajax()','update'=>'#exec_js')) ?>
+				<?php echo $this->Js->link("<i class='icon icon-edit'></i>",array('controller'=>'preguntas','action'=>'editar',$pregunta["Pregunta"]["id"]),array('escape'=>false,'class'=>'btn btn-inverse','before'=>"modales('editarPregunta','modal-ficha')",'complete'=>"fin_ajax('editarPregunta')",'update'=>'#editarPregunta')) ?>
+				<?php echo $this->Js->link("<i class='icon icon-eye'></i>",array('controller'=>'preguntas','action'=>'ver',$pregunta["Pregunta"]["id"]),array('escape'=>false,'class'=>'btn btn-inverse','before'=>"modales('verPregunta','modal-ficha')",'complete'=>"fin_ajax('verPregunta')",'update'=>'#verPregunta')) ?>
+				<?php echo $this->Js->link("<i class='icon icon-remove'>x</i>",array('controller'=>'preguntas','action'=>'borrar',$pregunta["Pregunta"]["id"]),array('escape'=>false,'class'=>'btn btn-inverse','before'=>'inicia_ajax()','complete'=>'fin_ajax()','update'=>'#exec_js')) ?>
 			</div>
                 </div>
 		<?php endforeach; ?>

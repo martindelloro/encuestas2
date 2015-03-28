@@ -15,7 +15,8 @@ var preguntasPre = templateP.render(datum);
 $(preguntasPre).appendTo("#preguntasPre");
 if(typeof(preSeleccionadas == 'Undefined'))
 preSeleccionadas[datum.pregunta_id] = datum;
-datum.preseleccion = false;
+datum.preseleccion = true;
+datum.newAsk = true;
 var preguntaListado = templateP.render(datum)
 $(preguntaListado).appendTo("#preguntasListado");
 

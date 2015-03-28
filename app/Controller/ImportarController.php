@@ -1,5 +1,6 @@
 <?php
 
+
 class ImportarController extends AppController{
 	var $uses = array("Pregunta","Usuario","Encuesta");
 	
@@ -79,8 +80,10 @@ class ImportarController extends AppController{
 		$replace = array('à'=>'a','á'=>'a','è'=>'e','é'=>'e','ì'=>'i','í'=>'i','ò'=>'o','ó'=>'o','ù'=>'u','ú'=>'u');
 		$data = new Spreadsheet_Excel_Reader($importInfo["path"], false);
 		$rows  = $data->rowcount(0);
-				
+
 		if($loop == 1){
+			$this->Pregunta->query("BEGIN;"); // EMPIEZO TRANSACCION GENERAL PARA TODAS LOS DEMAS LOOPS
+			$this->Pregunta->query("SAVEPOINT preguntas;");
 			$cachedAnswers    = array();
 			$this->Session->write("cachedAnswers",$cachedAnswers);
 			$preguntasCreadas = array();
@@ -90,7 +93,7 @@ class ImportarController extends AppController{
 			$preguntasCreadas = $this->Session->read("preguntasCreadas");
 			$preguntasError   = $this->Session->read("preguntasError");
 		}
-	
+	    $this->Pregunta->query("BEGIN;");
 		$encuesta_id = $importInfo["survey_id"];
 		for($col = $offset + 13; $col<= $size+13;$col++){
 			$pregunta = array();
@@ -143,9 +146,14 @@ class ImportarController extends AppController{
 			}
 				
 		} // fin For preguntas
+		$this->Pregunta->query("COMMIT;");
 		$loop += 1;
 		$this->set("loop",$loop);
-		if($importInfo["colsChunks"] < $loop) $this->set("endLoop",true);
+		if($importInfo["colsChunks"] < $loop){
+			 $this->set("endLoop",true);
+			 $this->Pregunta->query("ROLLBACK TO SAVEPOINT preguntas;"); // FINALIZO TRANSACCION PARA EL LOOP GENERAL QUE ANIDA TODAS LAS DEMAS TRANSACCIONES DEL LOOP
+		}	 
+			 
 		$this->render("/Elements/Importar/Encuesta/create_answers");
 	}
 

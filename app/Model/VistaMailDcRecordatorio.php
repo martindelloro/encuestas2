@@ -6,7 +6,8 @@ class VistaMailDcRecordatorio extends AppModel{
            Y todos los usuarios que hace 6 meses no completan sus datos.
          */ 
 	var $useTable = "v_email_dc_recordatorio";
-        var $primaryKey='id';
+    var $primaryKey='id';
+   
         
         
 }
