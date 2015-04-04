@@ -8,15 +8,16 @@ $elemento = str_replace($specialChars,$replace, $this->element("Preguntas/pregTe
 <script type="text/javascript">
 var datum = {pregunta_id:<?php echo $pregunta["Pregunta"]["id"] ?>,
 			 orden:contPreguntas, nombre: "<?php echo $pregunta["Pregunta"]["nombre"] ?>",
-			 tipo:"<?php echo $pregunta["Tipo"]["nombre"] ?>",preseleccion:true};
+			 tipo:"<?php echo $pregunta["Tipo"]["nombre"] ?>",deleteSelection:true};
 var templatePregunta = '<?php echo trim($elemento); ?>';		 
 var templateP = Hogan.compile(templatePregunta);
 var preguntasPre = templateP.render(datum);
 $(preguntasPre).appendTo("#preguntasPre");
 if(typeof(preSeleccionadas == 'Undefined'))
 preSeleccionadas[datum.pregunta_id] = datum;
-datum.preseleccion = true;
-datum.newAsk = true;
+datum.deleteSelection = false;
+datum.deleteAsk = true;
+datum.checked = true;
 var preguntaListado = templateP.render(datum)
 $(preguntaListado).appendTo("#preguntasListado");
 

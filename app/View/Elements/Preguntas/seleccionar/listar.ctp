@@ -35,22 +35,25 @@ $pregTemplate = trim(str_replace("\"","'",preg_replace('/\s+/', ' ', $pregTempla
         pregTemplate = Hogan.compile(pregTemplate);
 
 	$.each(seleccionadas,function(index){
-		id = seleccionadas[index].pregunta_id;
-		$("#preguntasListado #Pregunta"+id).find("input:checkbox").attr("disabled","disabled");
+		questionId = seleccionadas[index].pregunta_id;
+		console.log(questionId);
+		$("#preguntasListado "+questionId).find("input:checkbox").attr("disabled","disabled");
 	});    
 
 	$(".btnGuardarSelecc").bind("click",function(){
 		$('#listarPreguntas').modalmanager('loading');
 		$.each(preSeleccionadas,function(index){
 			preSeleccionadas[index].orden = contPreguntas;
-			preSeleccionadas[index].listado = false;
-			preSeleccionadas[index].preseleccion = false;
-			preSeleccionadas[index].seleccion = true;
-			contPreguntas += 1;
-			procesado = pregTemplate.render(preSeleccionadas[index]);
-			$(procesado).appendTo("#encuesta .contenedor-preguntas");
+			preSeleccionadas[index].checked = false; 
+			preSeleccionadas[index].selected = true;
+			seleccionadas.push(preSeleccionadas[index]);
+			
 		});
-		seleccionadas = preSeleccionadas;
+		$("#encuesta .contenedor-preguntas").html();
+		$(seleccionadas).each(function(){
+
+
+		});
 		$("#listarPreguntas").modal("hide");
 		
 	});

@@ -41,7 +41,7 @@ for($i=1;$i <= 100;$i++){
 		</div>
 	</div>
 	
-	<div class="contenedor-preguntas well  top-5">
+	<div class="contenedor-preguntas well top-5 idle">
 		<div style="position: absolute; bottom: 0px;"></div>
 	</div>
 	<?php echo $this->Js->link("<i class='icon icon-save icon-white'> Guardar</i>",array("controller"=>"encuestas","action"=>"crear"),array("class"=>"btn btn-inverse","update"=>"#exec_js","before"=>"inicia_ajax()","complete"=>"fin_ajax()","data"=>"$(this).parents('form:first').serialize()","escape"=>false,"method"=>"POST","dataExpression"=>true)) ?>
@@ -49,43 +49,44 @@ for($i=1;$i <= 100;$i++){
 </div>
 
 <script type="text/javascript">
-	seleccionadas = {};
-	var contPreguntas = 1;
+	var seleccionadas = [];
+	$(".contenedor-preguntas").on("DOMNodeInserted",function(event){ 
+		if($(this).hasClass('idle')){ /* If class idle is active then order question selections */
+			$(this).removeClass('idle'); /* Remove class idle to prevent infite recursion */
+			seleccionadas = [];
+			$(this).find(".pregunta").each(function(index){
+				questionId = $(this).attr("id");	
+				data = {pregunta_id:"#"+questionId};
+				seleccionadas[index] = data;
+				$(this).find(".positionDisplay").html(index+1); /* +1 becouse index start at 0 */
+				$(this).find(".formData").find(".position").attr("value",index+1); /* +1 becouse index start at 0 */
+			});
+			$(this).addClass("idle"); /* Once finishing sorting add class idle to indicate process as finish "infinite recursion problem" */
+		}
+	});
+
+	var contPreguntas = 0;
 	$(".contenedor-preguntas").on("click",".icon-arrow-up",function(){
-          var preguntaCambiar = $(this).parents('.pregunta');
-		  var preguntaRemplazar = $(preguntaCambiar).prev('.pregunta');
-		  if(preguntaRemplazar != null){
-			pos = $(preguntaRemplazar).find('.orden').val();
-			$(preguntaCambiar).find('.orden').val(pos);
-			$(preguntaCambiar).find('.posicion').html(pos);
-			$(preguntaRemplazar).before(preguntaCambiar);
-			$(preguntaRemplazar).find('.orden').val(++pos);
-			$(preguntaRemplazar).find('.posicion').html(pos);		
-		  }	
-    });
+		  questionId = $(this).data('questionid');
+          var questionUp = $(questionId);
+          var questionDown =  $(questionUp).prev('.pregunta');
+		  if(questionDown !=0){ /* Check if question selected for bring up is not already the first question of the whole selection */	
+		  	$(questionDown).before(questionUp);		  
+		  }
+	});
 
 	$(".contenedor-preguntas").on("click",".icon-arrow-down",function(){
-       	  var preguntaCambiar = $(this).parents('.pregunta');
-		  var preguntaRemplazar = $(preguntaCambiar).next('.pregunta');
-		  if(preguntaRemplazar != null){
-			pos = $(preguntaRemplazar).find('.orden').val();
-			$(preguntaCambiar).find('.orden').val(pos);
-			$(preguntaCambiar).find('.posicion').html(pos);
-			$(preguntaRemplazar).after(preguntaCambiar);
-			$(preguntaRemplazar).find('.orden').val(--pos);
-			$(preguntaRemplazar).find('.posicion').html(pos); 		
-		  }	
-    });
+		  questionId = $(this).data('questionid');
+          var questionDown = $(questionId);
+          var questionUp =  $(questionDown).next('.pregunta');
+		  if(questionUp !=0){ /* Check if question selected for bring up is not already the first question of the whole selection */	
+		  	$(questionUp).after(questionDown);		  
+		  }
+	});
 
-    $(".contenedor-preguntas").on("click",".icon-remove",function(){
-       	  actualizarPos = $(this).parents(".pregunta").nextAll(".pregunta");	
-		  $(this).parents(".pregunta").remove();
-		  --contPreguntas;
-		  $(actualizarPos).each(function(){
-				orden = $(this).find(".orden").val();
-				$(this).find(".orden").val(--orden);
-				$(this).find(".posicion").html(orden);
-		  });
+    $(".contenedor-preguntas").on("click",".icon-times",function(){
+          questionId = $(this).data('questionId');
+       	  $(questionId).remove();
         });
 
 </script>

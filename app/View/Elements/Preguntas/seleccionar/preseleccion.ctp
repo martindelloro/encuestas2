@@ -15,8 +15,7 @@
 	?>
 
 	<script type="text/javascript">
-
-	$.each(preSeleccionadas,function(index){
+    $.each(preSeleccionadas,function(index){
 		preSeleccionadas[index].listado	  = false;
 		preSeleccionadas[index].seleccion    = false;
 		preSeleccionadas[index].preseleccion = true;
@@ -24,9 +23,8 @@
 	    $("#preguntasPre").append(procesado);
 	});    
 	
-	$("#preguntasPre").on("click",".icon-remove",function(){
+	$("#preguntasPre").on("click",".icon-times",function(){
 		preguntaId = $(this).parents(".pregunta").data("id");
-		alert(preguntaId);
 		$(this).parents(".pregunta").remove();
 		delete preSeleccionadas.preguntaId;
 		$("#preguntasListado input[value='"+preguntaId+"']").prop("checked",false);
