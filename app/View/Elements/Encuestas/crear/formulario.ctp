@@ -1,6 +1,7 @@
 <?php 
 $anios = array("2010"=>"2010","2011"=>"2011","2012"=>"2012","2013"=>"2013","2014"=>"2014","2015"=>"2015","2016"=>"2016");
 $rango = array();
+$fuente=array("Universo"=>"Universo","Muestra"=>"Muestra");
 for($i=1;$i <= 100;$i++){
 	$rango[$i] = $i;
 }
@@ -27,7 +28,16 @@ for($i=1;$i <= 100;$i++){
 			<?php echo $this->Form->input("cantXpag",array("type"=>"select","options"=>$rango,"label"=>false,"empty"=>true)); ?>
 		</div>
 	</div>
-
+    <div class="row-fluid">
+        <div class="span2">
+			<div class="label label-general">Fuente:</div>
+			<?php echo $this->Form->input("fuentes1",array("type"=>"select","options"=>$fuente,"label"=>false,"empty"=>true)); ?>
+        </div>
+        <div class="span4">
+                        <div class="label"> </div>
+			<?php echo $this->Form->input("fuentes2",array("type"=>"text","label"=>false)); ?>
+        </div>
+    </div>
 
 	<div class="well titulo-general">
 		<span>Preguntas</span>

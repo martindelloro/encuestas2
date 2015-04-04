@@ -1,6 +1,7 @@
 <?php
 
 class Pregunta extends AppModel{
+        var $useTable='preguntas';
 	var $actsAs = array("Containable");
             
 	var $belongsTo = array("Usuario"=>array("className"=>"Usuario","foreignKey"=>"owner_id"),

@@ -1,16 +1,12 @@
 <?php
 
-class Departamento extends AppModel{
-    var $useDbConfig = 'gis';
-    var $name =  "Departamento";
-    var $useTable = "departamentos_g";
-    var $primaryKey = "cod_depto";
-    var $order = "nom_depto ASC";
-    var $displayField = "nom_depto";
-
-    var $belongsTo = array('Provincia'=>array('className'=>'Provincia','foreignKey'=>'cod_prov'));
-    var $hasMany = array('Localidad'=>array('className'=>'Localidad','foreignKey'=>'cod_depto'));
-
+class DepartamentoUnla extends AppModel{
+    var $name =  "DepartamentoUnla";
+    var $useTable = "departamentos_unla";
+    var $primaryKey = "id";
+    var $displayField = "nombre";
+    var $hasMany = array('CarrerasUnla'=>array('className'=>'CarrerasUnla','foreignKey'=>'id_departamento'));
+    
 }
 
 

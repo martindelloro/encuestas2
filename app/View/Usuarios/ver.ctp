@@ -1,6 +1,6 @@
 <div class="modal-header header-ficha azul">
    <div class="botonera-header">
-      <?php echo $this->Html->link("<i class='icon-white icon-remove-sign'></i>","#",array("class"=>"btn btn-inverse","data-dismiss"=>"modal","escape"=>false)) ?>
+      <?php echo $this->Html->link("<i class='icon-white icon-remove-sign'>X</i>","#",array("class"=>"btn btn-inverse","data-dismiss"=>"modal","escape"=>false)) ?>
    </div>
 </div>
 
@@ -45,13 +45,15 @@
 	<div class="row-fluid">
 		<div class="span3">
 			<span class="label">Provincia</span>
-			
+			<span><?php echo ($provincia['Provincia']['nom_prov']); ?></span>
 		</div>
 		<div class="span3">
 			<span class="label">Departamento</span>
+                        <span><?php echo ($departamento['Departamento']['nom_depto']); ?></span>
 		</div>
 		<div class="span3">
-			<span class="label">Localidades</span>
+			<span class="label">Localidad</span>
+                        <span><?php echo ($localidad['Localidad']['nom_loc']); ?></span>
 		</div>
 		<div class="span3">
 			<span class="label">Calle</span>

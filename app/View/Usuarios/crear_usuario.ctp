@@ -37,6 +37,9 @@
 			<?php echo $this->Form->input("rol",array("type"=>'select',"options"=>$roles, "label"=>"Rol")); ?>
 		</div>
 	</div>
+    <div class="row-fluid" >
+        
+    </div>
 	
 	<div class="well titulo-general">
 		<span>Lugar de Residencia</span>
@@ -89,18 +92,19 @@
 	</div>
 	
 	<div class="row-fluid">
-		<div class="span3">
-			<?php echo $this->Form->input("carrera_id",array("type"=>'text',"label"=>"Carrera:")); ?>
+                <div class="span3">
+                    <?php echo $this->Form->input("departamentoUnla",array("type"=>'select',"options"=>$departamentosUnla,"label"=>"Departamento","empty"=>true)); ?>
+                </div>
+                <div class="span3">
+                    <?php echo $this->Form->input("carreraUnla",array("type"=>'select',"options"=>$carreraUnla,"label"=>"Carrera",'empty'=>true)); ?>
+                </div>
+                <div class="span3">
+			<?php echo $this->Form->input("tiulo",array("type"=>'text',"label"=>"Titulo")); ?>
 		</div>
 		<div class="span3">
 			<?php echo $this->Form->input("nivel_id",array("type"=>'text',"label"=>"Nivel")); ?>
 		</div>
-		<div class="span3">
-			<?php echo $this->Form->input("tiulo",array("type"=>'text',"label"=>"Titulo")); ?>
-		</div>
-		<div class="span3">
-			<?php echo $this->Form->input("departamento_id",array("type"=>'text',"label"=>"Departamento:")); ?>
-		</div>
+		
 	</div>
 	<div class="row-fluid">
 		
@@ -169,6 +173,20 @@
                         'method'=>'post',
                         'data'=>$js->serializeForm(array('isForm' => false, 'inline' => true))
           )));
+        
+        echo $this->Js->get('#UsuarioDepartamentoUnla')->event('change',
+              $this->Js->request(
+                    array('controller'=>'usuarios', 'action'=>'updateCarreras'),
+                    array('update'=>'#UsuarioCarreraUnla',
+                        'frequency'=>'1',
+                        'async'=>true,
+                        'dataExpression'=>true,
+                        'before'=>'$("body").modalmanager("loading")',
+                        'complete'=>'$("body").modalmanager("loading")',
+                        'method'=>'post',
+                        'data'=>$js->serializeForm(array('isForm' => false, 'inline' => true))
+          )));
       
       ?>
+ 
 </div>
