@@ -36,17 +36,17 @@ class MailsController extends AppController{
         	$tipoEnvio   = $this->request->data["Mail"]["tipoEnvio"];
         	$enviados=array();
         	$sin_enviar=array();
-               	
+        	$Email = new CakeEmail('gmail');
+        	$Email->from(array('eltelle@gmail.com' => 'Test'));
+        	$Template = new MustacheStringView();
+        	$Template->layout = false;
+        	
         	//Si es una encuesta a enviar --> Si trae el id de la encuesta entra
         	if ($encuesta_id !=false){
            	 switch ($tipoEnvio){
            	     case 1: //Envío por primera vez
            	     	    //Recorro los grupos que seleccionaron
-           	     		$Email = new CakeEmail('gmail');
-           	     		$Email->from(array('eltelle@gmail.com' => 'Test'));
-           	     		$Template = new MustacheStringView();
-           	     		$Template->layout = false;
-           	     	   	foreach($grupos as $grupo_id){
+           	     		foreach($grupos as $grupo_id){
            	     	   		$this->Mail->Encuesta->Grupos->Behaviors->load('Containable');
                     	    $tmpUsuarios = $this->Mail->Encuesta->Grupos->find("first",array("conditions"=>array("Grupos.id"=>$grupo_id),"contain"=>array("Usuarios"=>array("limit"=>2))));
                             foreach($tmpUsuarios["Usuarios"] as $tmpUsuario){
@@ -67,15 +67,21 @@ class MailsController extends AppController{
                             }
                             } // end foreach Usuarios
                         } // END FOREACH GRUPOS
-                                              
-                    	$usuarios = array();
-                    	foreach($enviados as $grupo_id=>$nada){
-                    		$usuarios = array_merge($usuarios,$enviados[$grupo_id]);
+						// BUSCO LOS DATOS DE USUARIOS PARA EL RESUMEN DE ENVIO DE EMAILS
+						
+                        
+                        // AGRUPO TODOS LOS USUARIO_ID PARA GUARDAR LUEGO EN LA RELACION MAIL->USUARIOS HASANDBELONGSTOMANY 
+                        // SE LE PASA UN SEGUNDO PARAMETRO QUE ES EL ESTADO 1->ENVIADO 2->NO-ENVIADO
+                        $usuarios = array();
+                        foreach($enviados as $grupo_id=>$nada){
+                    		$usuarios = array_merge($usuarios,$enviados[$grupo_id]); // HACIENDO UN ARRAY_MERGE SACO LOS POSIBLES USUARIOS REPETIDOS EN LOS GRUPOS AGREGADOS
                     	}
                     	
+                    	// UNA VEZ PROCESADO TODOS LOS USUARIO_ID LOS GUARDO EN $THIS->DATA PARA LUEGO PASARLO AL PARAMETRO SAVE
                     	foreach($usuarios as $usuario_id){
                     		$this->request->data["Usuarios"][$usuario_id] = array("usuario_id"=>$usuario_id,"estado"=>1);
                     	}
+                    	// MISMO CODIGO DE ARRIBA PERO AGRUPO SOLO LOS QUE NO FUERON ENVIADOS
                     	$usuarios = array();
                     	foreach($sin_enviar as $grupo_id=>$nada){
                     		$usuarios = array_merge($usuarios,$sin_enviar[$grupo_id]);
@@ -83,51 +89,76 @@ class MailsController extends AppController{
                     	foreach($usuarios as $usuario_id){
                     		$this->request->data["Usuarios"][$usuario_id] = array("usuario_id"=>$usuario_id,"estado"=>2);
                     	}
+                    	
+                    	// GUARDO EL NUEVO EMAIL Y SUS CORRESPONDIENTES RELACIONES
                     	if($this->Mail->save($this->data)){
                     		$this->Session->setFlash("Email enviado con exito",null,null,"mensaje_sistema");
                     	}else{
                     		$this->Session->setFlash("Ocurrio un error al intentar guardar ");
                     	}
+                    	$this->set("Enviados",$enviados);
+                    	$this->set("SinEnviar",$sin_enviar);
+                    	
                     	break; //TERMINA CASE DE ENVÍO POR PRIMERA VEZ
                 
                 /* Recordatorio -->Todos los usuarios que no hayan completado la encuesta
                  * Mandar mail a los usuarios que tienen menos del 90% (rango de 0 a 90)
                  * completada la encuesta */
                 case '2': 
-                    foreach($grupos as $id_cake=>$id_grupo): 
-                    pr($id_grupo);
-                        /*Traigo los usuarios de las encuestas que el porcentaje sea menor al 90 %
-                         *Son a todos los usuarios que se les ha enviado el mail pero no respondieron
-                         * o les falta completar.                         */
-                        $datos=$this->VistaRecordatorio->find('all',array('conditions'=>array('VistaRecordatorio.encuesta_id'=>$id_encuesta,'VistaRecordatorio.grupo_id'=>$id_grupo)));
-                        //pr($datos);
-                            foreach($datos as $usuario):
-                                //Acá estoy trayendo todos los datos de el usuario
-                                //que paso por la condición del grupo y de la encuesta
-                                //No existe en la tabla mail
-                                pr($usuario);
-                                $this->Email->reset();
-                                $this->Email->from='elpitialvarez@gmail.com';
-                                //$this->Email->to=$usuario['VistaMail']['email_1'];
-                                //$this->Email->to='esunapruebaigual@outlook.com';
-                                $this->Email->subject  =  'Universidad Nacional de Lanús' ;
-                                $this->Email->sendAs   = 'html';
+                		foreach($grupos as $cake_id=>$grupo_id){ 
+                        	/*Traigo los usuarios de las encuestas que el porcentaje sea menor al 90 %
+                        	*Son a todos los usuarios que se les ha enviado el mail pero no respondieron
+                        	* o les falta completar. */
+                        	$condiciones = array("ResumenUsuario.encuesta_id"=>$encuesta_id,
+                        						 "ResumenUsuario.grupo_id"=>$grupo_id,
+                        						 "ResumenUsuario.porcentaje"=>"<= 90");
+                        	$usuarios = $this->Mail->Usuarios->ResumenUsuario->find('all',array("conditions"=>$condiciones,"contain"=>array("Usuario")));
+                	    
+                	   		foreach($usuarios["Usuario"] as $usuario){
+                    	    	$Email->to('eltelle@gmail.com');
+                       			$Email->emailFormat("html");
+                        		$Email->subject('Test prueba conexion gmail');
+                        		$Template->set("usuario",$tmpUsuario["usuario"]);
+                        		$Template->set("nombre",$tmpUsuario["nombre"]);
+                        		$Template->set("apellido",$tmpUsuario["apellido"]);
+                        		$Template->set("dni",$tmpUsuario["dni"]);
+                        		$out = $Template->render($this->request->data["Mail"]["mensaje"]);
                                 //Quiere decir que mando todo ok
-                                if ($this->Email->send('body')) {
-                                    $enviados[]=$usuario;
-                                    //Hago un update de la tabla de mails
-                                    $temp_mail['Mail']['id']=$usuario['VistaRecordatorio']['id'];
-                                    $temp_mail['Mail']['grupo_id']=$usuario['VistaRecordatorio']['grupo_id'];
-                                    $temp_mail['Mail']['encuesta_id']=$usuario['VistaRecordatorio']['encuesta_id'];
-                                    $temp_mail['Mail']['usuario_id']=$usuario['VistaRecordatorio']['usuario_id'];
-                                    $temp_mail['Mail']['tipo_envio']=1;
-                                    $this->Mail->save($temp_mail);
-                                    
-                                } else {
-                                    $sin_enviar[]=$usuario;
-                                }
-                            endforeach;                            
-                    endforeach;
+                        		if ($Email->send($out)) {
+                        			$enviados[$grupo_id][]   = $tmpUsuario["id"];
+                        		} else {
+                        			$sin_enviar[$grupo_id][] = $tmpUsuario["id"];
+                        		}
+                	   		}                            
+                		}
+                		// AGRUPO TODOS LOS USUARIO_ID PARA GUARDAR LUEGO EN LA RELACION MAIL->USUARIOS HASANDBELONGSTOMANY
+                		// SE LE PASA UN SEGUNDO PARAMETRO QUE ES EL ESTADO 1->ENVIADO 2->NO-ENVIADO
+                		$usuarios = array();
+                		foreach($enviados as $grupo_id=>$nada){
+                			$usuarios = array_merge($usuarios,$enviados[$grupo_id]); // HACIENDO UN ARRAY_MERGE SACO LOS POSIBLES USUARIOS REPETIDOS EN LOS GRUPOS AGREGADOS
+                		}
+                		 
+                		// UNA VEZ PROCESADO TODOS LOS USUARIO_ID LOS GUARDO EN $THIS->DATA PARA LUEGO PASARLO AL PARAMETRO SAVE
+                		foreach($usuarios as $usuario_id){
+                			$this->request->data["Usuarios"][$usuario_id] = array("usuario_id"=>$usuario_id,"estado"=>1);
+                		}
+                		// MISMO CODIGO DE ARRIBA PERO AGRUPO SOLO LOS QUE NO FUERON ENVIADOS
+                		$usuarios = array();
+                		foreach($sin_enviar as $grupo_id=>$nada){
+                			$usuarios = array_merge($usuarios,$sin_enviar[$grupo_id]);
+                		}
+                		foreach($usuarios as $usuario_id){
+                			$this->request->data["Usuarios"][$usuario_id] = array("usuario_id"=>$usuario_id,"estado"=>2);
+                		}
+                		 
+                		// GUARDO EL NUEVO EMAIL Y SUS CORRESPONDIENTES RELACIONES
+                		if($this->Mail->save($this->data)){
+                			$this->Session->setFlash("Email enviado con exito",null,null,"mensaje_sistema");
+                		}else{
+                			$this->Session->setFlash("Ocurrio un error al intentar guardar ");
+                		}
+                		$this->set("Enviados",$enviados);
+                		$this->set("SinEnviar",$sin_enviar);
                     break; //Termina Case de Recordatorio.
             }
         } // END IF ENCUESTA_ID NO ES FALSO
@@ -140,8 +171,7 @@ class MailsController extends AppController{
                      *Usuario que completó la encuesta pero que
                      *no completó los datos de contacto */
                     foreach($grupos as $id_cake=>$id_grupo): 
-                    pr($id_grupo);
-                        /*Traigo los usuarios de las encuestas que el porcentaje sea menor al 90 %
+                       /*Traigo los usuarios de las encuestas que el porcentaje sea menor al 90 %
                          *Son a todos los usuarios que se les ha enviado el mail pero no respondieron
                          * o les falta completar.                         */
                         $datos=$this->VistaMailDcRecordatorio->find('all',array('conditions'=>array('VistaMailDcRecordatorio.grupo_id'=>$id_grupo)));

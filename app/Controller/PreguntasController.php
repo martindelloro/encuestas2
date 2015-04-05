@@ -41,11 +41,17 @@ class PreguntasController extends AppController{
 	}
 	
 	function crear(){
+		pr($this->request->data);
 		$tipos  = $this->Pregunta->Tipo->find("list");
 		$reglas = $this->Pregunta->Validacion->Regla->find("list"); 
 		if(!empty($this->data)){
+<<<<<<< HEAD
 			if($this->Pregunta->save($this->request->data)){
 				$pregunta = $this->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->Pregunta->getInsertId())));
+=======
+			if($this->Pregunta->save($this->data)){
+				$pregunta = $this->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->Pregunta->getInsertId()),"contain"=>array("Encuesta","Tipo")));
+>>>>>>> 10f564a6272ccb7ec4a34e662965c687bbb7a9fa
 				$this->set("pregunta",$pregunta);
 				$this->Session->setFlash("Pregunta agregada con exito",null,null,"mensaje_sistema");
 				$this->render("agregarMenu");			

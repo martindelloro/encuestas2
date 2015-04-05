@@ -9,7 +9,6 @@ for($i=2000;$i <= 2030;$i++){
 	$years[$i] = $i;
 }
 
-
 ?>
 
 <?php echo $this->Form->create("Encuesta"); ?> 
