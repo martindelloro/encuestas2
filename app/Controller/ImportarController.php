@@ -82,8 +82,8 @@ class ImportarController extends AppController{
 		$rows  = $data->rowcount(0);
 
 		if($loop == 1){
-			$this->Pregunta->query("BEGIN;"); // EMPIEZO TRANSACCION GENERAL PARA TODAS LOS DEMAS LOOPS
-			$this->Pregunta->query("SAVEPOINT preguntas;");
+			//$this->Pregunta->query("BEGIN;"); // EMPIEZO TRANSACCION GENERAL PARA TODAS LOS DEMAS LOOPS
+			//$this->Pregunta->query("SAVEPOINT preguntas;");
 			$cachedAnswers    = array();
 			$this->Session->write("cachedAnswers",$cachedAnswers);
 			$preguntasCreadas = array();
@@ -93,7 +93,7 @@ class ImportarController extends AppController{
 			$preguntasCreadas = $this->Session->read("preguntasCreadas");
 			$preguntasError   = $this->Session->read("preguntasError");
 		}
-	    $this->Pregunta->query("BEGIN;");
+	    //$this->Pregunta->query("BEGIN;");
 		$encuesta_id = $importInfo["survey_id"];
 		for($col = $offset + 13; $col<= $size+13;$col++){
 			$pregunta = array();
@@ -146,13 +146,15 @@ class ImportarController extends AppController{
 			}
 				
 		} // fin For preguntas
-		$this->Pregunta->query("COMMIT;");
+                
+		//$this->Pregunta->query("COMMIT;");
 		$loop += 1;
 		$this->set("loop",$loop);
-		if($importInfo["colsChunks"] < $loop){
+                if($importInfo["colsChunks"] < $loop) $this->set("endLoop",true);
+		/*if($importInfo["colsChunks"] < $loop){
 			 $this->set("endLoop",true);
 			 $this->Pregunta->query("ROLLBACK TO SAVEPOINT preguntas;"); // FINALIZO TRANSACCION PARA EL LOOP GENERAL QUE ANIDA TODAS LAS DEMAS TRANSACCIONES DEL LOOP
-		}	 
+		}*/	 
 			 
 		$this->render("/Elements/Importar/Encuesta/create_answers");
 	}
@@ -522,20 +524,22 @@ class ImportarController extends AppController{
 			$usuario = null;
 			for($j = 2; $j <= 13; $j++){
 				switch($j-1){
+                                
 					case 1:
 						$usuario["Usuario"]["nombre"] = @utf8_encode(trim($data->val($i,$j)));
+                                            
 						break;
                     case 2:
                     	$usuario["Usuario"]["apellido"] = @utf8_encode(trim($data->val($i,$j)));		
                         break;
                     case 3:
-                		$usuario["Usuario"]["sexo"] = @strtolower($data->val($i,$j));		
+                		$usuario["Usuario"]["sexo"] = @utf8_encode(@strtolower($data->val($i,$j)));		
                     	break;
 					case 4:
 						$usuario["Usuario"]["dni"] =  @utf8_encode(trim(preg_replace( '/[^0-9]/', '', $data->val($i,$j))));
 						break;
 					case 5:
-						$fecha_nac = @$data->val($i,$j);
+						$fecha_nac = @utf8_encode($data->val($i,$j));
 						if(substr_count($fecha_nac,"/") == 2){
 							$fecha_separada = explode("/",$fecha_nac);
 							if($fecha_separada[1] > 12){
@@ -547,7 +551,7 @@ class ImportarController extends AppController{
 						}
 						break;
 					case 6:
-						$usuario["Usuario"]["estado_civil"] = $data->val($i,$j);
+						$usuario["Usuario"]["estado_civil"] = @utf8_encode($data->val($i,$j));
 						break;
 					case 7:
 						$usuario["Usuario"]["calle"] = @utf8_encode($data->val($i,$j));
@@ -562,10 +566,10 @@ class ImportarController extends AppController{
 						$usuario["Usuario"]["tel_fijo"] = @$data->val($i,$j);
 						break;
 					case 11:        
-						$usuario["Usuario"]["celular"] = $data->val($i,$j);
+						$usuario["Usuario"]["celular"] = @$data->val($i,$j);
 						break;
 					case 12:
-						$usuario["Usuario"]["email_1"] = utf8_encode(strtolower(trim($data->val($i,$j))));
+						$usuario["Usuario"]["email_1"] = @utf8_encode(strtolower(trim($data->val($i,$j))));
 						break;
 					} // FIN IF SWTICH
 				} // FIN FOR COLUMNAS 

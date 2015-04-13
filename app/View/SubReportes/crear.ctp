@@ -145,8 +145,12 @@
         <?php echo $preguntaX ?>
     </div>
 <?php endif; ?>
-<!-- ***** FIN IF RESULTADOS GRAFICO DE TORTA ***** -->
-
+<!-- ***** FIN IF RESULTADOS GRAFICO DE TORTA ***** --><br>
+<?php if(isset($fuentes)): ?>
+    <div class="well label-titular color-3">
+        <?php echo 'Fuente: '.$fuentes ?>
+    </div>
+<?php endif; ?>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 
 <?php echo $this->Html->script("/js/graficos/barras.js"); ?>

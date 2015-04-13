@@ -47,12 +47,12 @@ class EmailConfig {
 	);
 	
 	public $gmail = array(
-			'host' => 'smtp.gmail.com',
-			'port' => 587,
-			'username' => 'eltelle@gmail.com',
-			'password' => 'aethyr1742',
-			'transport' => 'Smtp',
-			'tls' => true
+			'host' => 'ssl://smtp.gmail.com', //smtp.gmail.com
+			'port' => 465,//587
+			'username' => '',
+			'password' => '',
+			'transport' => 'Smtp'//,
+			//'tls' => true
 	);
 
 	public $smtp = array(

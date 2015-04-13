@@ -37,8 +37,13 @@
 			<?php echo $this->Form->input("rol",array("type"=>'select',"options"=>$roles, "label"=>"Rol")); ?>
 		</div>
 	</div>
-    <div class="row-fluid" >
-        
+    <div class="row-fluid" id="departamentoycarrera">
+                <div class="span3">
+                    <?php echo $this->Form->input("departamentoUnla",array("type"=>'select',"options"=>$departamentosUnla,"label"=>"Departamento","empty"=>true)); ?>
+                </div>
+                <div class="span3">
+                    <?php echo $this->Form->input("carreraUnla",array("type"=>'select',"options"=>$carreraUnla,"label"=>"Carrera",'empty'=>true)); ?>
+                </div>
     </div>
 	
 	<div class="well titulo-general">
@@ -92,12 +97,12 @@
 	</div>
 	
 	<div class="row-fluid">
-                <div class="span3">
-                    <?php echo $this->Form->input("departamentoUnla",array("type"=>'select',"options"=>$departamentosUnla,"label"=>"Departamento","empty"=>true)); ?>
+                <!-- <div class="span3">
+                    <?php //echo $this->Form->input("departamentoUnla",array("type"=>'select',"options"=>$departamentosUnla,"label"=>"Departamento","empty"=>true)); ?>
                 </div>
                 <div class="span3">
-                    <?php echo $this->Form->input("carreraUnla",array("type"=>'select',"options"=>$carreraUnla,"label"=>"Carrera",'empty'=>true)); ?>
-                </div>
+                    <?php //echo $this->Form->input("carreraUnla",array("type"=>'select',"options"=>$carreraUnla,"label"=>"Carrera",'empty'=>true)); ?>
+                </div> -->
                 <div class="span3">
 			<?php echo $this->Form->input("tiulo",array("type"=>'text',"label"=>"Titulo")); ?>
 		</div>
@@ -190,3 +195,14 @@
       ?>
  
 </div>
+<script>
+    $("#departamentoycarrera").hide(); 
+$( "#UsuarioRol" ).click(function() {
+   var name = $("#UsuarioRol option:selected").text();
+    if(name==="Secretarías"){
+        $("#departamentoycarrera").show();  
+    }else{
+        $("#departamentoycarrera").hide();  
+    }
+});
+</script>
