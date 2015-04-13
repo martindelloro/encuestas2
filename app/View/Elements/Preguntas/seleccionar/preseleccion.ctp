@@ -14,22 +14,25 @@
 	echo $this->Js->writeBuffer();
 	?>
 
-	<script type="text/javascript">
-    $.each(preSeleccionadas,function(index){
+<script type="text/javascript">
+	$("#preguntasPre").on("click",".icon-times",function(){
+		questionID = $(this).closest('.pregunta').data('questionid');
+		$(this).closest(".pregunta").remove();
+		$(tmpSelection).each(function(index){
+			if(tmpSelection[index].questionID == questionID) delete tmpSelection[index];
+		});
+		$("#preguntasListado input[value='"+questionID+"']").prop("checked",false);
+	});
+
+	/*
+	$.each(preSeleccionadas,function(index){
 		preSeleccionadas[index].listado	  = false;
 		preSeleccionadas[index].seleccion    = false;
 		preSeleccionadas[index].preseleccion = true;
 	    procesado = pregTemplate.render(preSeleccionadas[index]);
 	    $("#preguntasPre").append(procesado);
 	});    
-	
-	$("#preguntasPre").on("click",".icon-times",function(){
-		preguntaId = $(this).parents(".pregunta").data("id");
-		$(this).parents(".pregunta").remove();
-		delete preSeleccionadas.preguntaId;
-		$("#preguntasListado input[value='"+preguntaId+"']").prop("checked",false);
-	});
-	
+	*/
 </script>
 
 </div>

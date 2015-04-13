@@ -40,12 +40,13 @@
 		
 		
 		<?php foreach($preguntas as $pregunta): ?>
-		<div class="row-fluid pregunta"
-			id="Pregunta<?php echo $pregunta["Pregunta"]["id"] ?>"
-			data-nombre="<?php echo $pregunta["Pregunta"]["nombre"] ?>"
-			data-tipo="<?php echo $pregunta["Tipo"]["nombre"] ?>"
-			data-id="<?php echo $pregunta["Pregunta"]["id"] ?>">
-			<div class="span8" style="text-align: left">
+		<div class="row-fluid pregunta" 
+			id="#Question<?php echo $pregunta["Pregunta"]["id"] ?>" 
+			data-questionID="<?php echo $pregunta["Pregunta"]["id"] ?>" 
+			data-questionDivID = "#Question<?php echo $pregunta["Pregunta"]["id"] ?>" 
+			data-questionName="<?php echo $pregunta["Pregunta"]["nombre"] ?>"  
+			data-questionType="<?php echo $pregunta["Tipo"]["nombre"] ?>" > 
+			<div class="span8" style="text-align: left"> 
 				<span><?php echo $pregunta["Pregunta"]["nombre"] ?></span>
 			</div>
 			<div class="span2" style="text-align: left">
@@ -63,25 +64,5 @@
 
 
 	<?php echo $this->Js->writeBuffer(); ?>
-
-<script type="text/javascript">
-	$("#preguntasListado").on("click",":checkbox",function(){
-		
-		idPregunta = $(this).val();
-		if($(this).prop("checked") != false){
-			nombre = $(this).parents(".pregunta").data("nombre");
-			tipo   = $(this).parents(".pregunta").data("tipo");
-			preSeleccionadas[idPregunta]  = null;
-			preSeleccionadas[idPregunta]  = {id:idPregunta,pregunta_id:idPregunta, nombre:nombre, tipo:tipo,preseleccion:true};
-			procesado = pregTemplate.render(preSeleccionadas[idPregunta]);
-			$("#preguntasPre").append(procesado);
-		}
-		else{
-			$("#preguntasPre").find("#Pregunta"+idPregunta).remove();
-			$(this).prop("checked",false);
-			delete preSeleccionadas.idPregunta;
-			}
-		});
-</script>
 
 </div>
