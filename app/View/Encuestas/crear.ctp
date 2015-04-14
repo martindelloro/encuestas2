@@ -35,12 +35,17 @@
 			$(this).removeClass('idle'); /* Remove class idle to prevent infite recursion */
 			selected = []; /* Cleans selected global variable, to be reloaded from all the answers contained in DIV .contenedor-preguntas if an answer is deleted from the containing div the above code will delete it to from global selected to not be show as selected when an user wants to do another search of answers for the survey */
 			$(this).find(".pregunta").each(function(index){
-				questionId = $(this).data('questionid'); /* data attribute do not distinct camel cased */
+				questionId = 	$(this).data('questionid'); /* data attribute do not distinct camel cased */
 				questionDivID = $(this).data('questiondivid');/* data attribute do not distinct camel cased */
-				questionName = $(".questionName").html();
-				questionType = $(".questionType").html();
-				data = {questionId:questionId,questionDivID:questionDivID,questionName:questionName,questionType:questionType,showPosition:true,position:index+1,btnDeleteQuestion:true,formData:true};
+				questionName = 	$(this).find(".questionName").html();
+				questionType = 	$(this).find(".questionType").html();
+				data = {questionId:questionId,questionDivID:questionDivID,questionName:questionName,questionType:questionType,showPosition:true,showUpDownBtn:true,position:index+1,btnDeleteQuestion:true,formData:true};
 				selected[index] = data;
+			});
+			$(".contenedor-preguntas.main").html("");
+			$(selected).each(function(index){
+				tmpRendered = questionTemplate.render(selected[index]);
+				$(".contenedor-preguntas.main").append(tmpRendered);
 			});
 			$(this).addClass("idle"); /* Once finishing sorting add class idle to indicate process as finish "infinite recursion problem" */
 		}
