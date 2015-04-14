@@ -1,6 +1,6 @@
 <?php 
 	$tipos = array("1"=>"Texto","2"=>"Select","3"=>"Multiple Select","4"=>"Checkbox","5"=>"Area de texto") ;
-	$this->Paginator->options(array("update"=>"#listarPreguntas","before"=>"$('body').modalmanager('loading')","complete"=>"$('body').modalmanager('loading');actualizarCheckbox()","evalScripts"=>true,"url"=>array("controller"=>"Preguntas","action"=>"listar","seleccionar")));
+	$this->Paginator->options(array("update"=>"#listarPreguntas","before"=>"$('body').modalmanager('loading')","complete"=>"$('body').modalmanager('loading')","evalScripts"=>true,"url"=>array("controller"=>"Preguntas","action"=>"listar","seleccionar")));
 ?>
 
 <div class="tab-pane active" id="preguntas">
@@ -44,8 +44,8 @@
 			id="#Question<?php echo $pregunta["Pregunta"]["id"] ?>" 
 			data-questionID="<?php echo $pregunta["Pregunta"]["id"] ?>" 
 			data-questionDivID = "#Question<?php echo $pregunta["Pregunta"]["id"] ?>" 
-			data-questionName="<?php echo $pregunta["Pregunta"]["nombre"] ?>"  
-			data-questionType="<?php echo $pregunta["Tipo"]["nombre"] ?>" > 
+			data-questionName="<?php echo htmlentities($pregunta["Pregunta"]["nombre"]) ?>"  
+			data-questionType="<?php echo htmlentities($pregunta["Tipo"]["nombre"]) ?>" > 
 			<div class="span8" style="text-align: left"> 
 				<span><?php echo $pregunta["Pregunta"]["nombre"] ?></span>
 			</div>
@@ -66,3 +66,41 @@
 	<?php echo $this->Js->writeBuffer(); ?>
 
 </div>
+
+<script type="text/javascript">
+
+	function updateCheckbox(questionList){
+		console.log("Entered update question checkbox state");
+		$(questionList).each(function(index){
+			$("#preguntasListado").find("*[data-questionid='"+questionList[index].questionId+"']").find(":checkbox").prop("checked",true);
+		});
+	}
+
+	/* Executed function when opens window to select questions for the survey */
+	/* Add previous selected question to tmp selection DIV in case the user decides to add another question to the survey */
+			
+	if(selected.length != 0){
+		$(selected).each(function(index){
+			console.log("Entered to fill preseleccionadas with already selected question in the main survey window");
+			tmp = selected[index];
+			tmp.selected = 			 false; /*  */
+			tmp.checked  =			 false; /* do not show checkbox */
+			tmp.btnDeleteSelected =  true; /* show button delete question from selection */
+			tmp.btnDeleteQuestion =  false; /* do not show delete question from database */
+			tmp.showUpDownBtn = 	 false; /* do not show Up and Down position buttons */
+			tmpRendered = questionTemplate.render(tmp);
+			$("#tmpSelection").append(tmpRendered);
+		});
+		updateCheckbox(selected);
+	}
+
+	if(tmpSelection.length != 0){
+		$(tmpSelection).each(function(index){
+			console.log("Entered to fill preseleccionadas with temporary selected question not in the main window yet");
+			tmpRendered = questionTemplate.render(tmpSelection[index]);
+			$("#tmpSelection").append(tmpRendered);
+		});
+		updateCheckbox(tmpSelection);
+	}	
+
+</script>

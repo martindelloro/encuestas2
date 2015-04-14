@@ -43,19 +43,6 @@ function isInArray(needle, haystack) {
     return false;
 }
 
-function actualizarCheckbox(){
-	preguntas = $("#preguntasListado").find(".pregunta");
-	preguntas.each(function(index){
-		Pregunta = this;
-		idPregunta = $(this).find(":checkbox").val();
-		$.each(preSeleccionadas,function(index){
-			if(preSeleccionadas[index].id == idPregunta){
-				$(Pregunta).find(":checkbox").prop("checked",true);				
-			}	
-		});
-	});
-}
-
 
 function armar_ajax(evento,elemento){
 	controller = $(elemento).data('controller');

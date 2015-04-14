@@ -8,31 +8,23 @@
 		<div class="span2 preguntas-label"><div class="label">Tipo de la pregunta</div></div>
 		<div class="span2"></div>
 	</div>
-	<div id="preguntasPre" class="contenedor-preguntas"></div>
+	<div id="tmpSelection" class="contenedor-preguntas"></div>
 	
 	<?php 
 	echo $this->Js->writeBuffer();
 	?>
 
 <script type="text/javascript">
-	$("#preguntasPre").on("click",".icon-times",function(){
-		questionID = $(this).closest('.pregunta').data('questionid');
+	$("#tmpSelection").on("click",".icon-times",function(){
+		console.log("Entered delete question from temporary selected");
+		questionId = $(this).closest('.pregunta').data('questionid');
 		$(this).closest(".pregunta").remove();
 		$(tmpSelection).each(function(index){
-			if(tmpSelection[index].questionID == questionID) delete tmpSelection[index];
+			if(tmpSelection[index].questionId == questionId){ tmpSelection.splice(index,1);  console.log("Found questionID to delete"); return false;}
 		});
-		$("#preguntasListado input[value='"+questionID+"']").prop("checked",false);
+		$("#preguntasListado input[value='"+questionId+"']").prop("checked",false);
 	});
-
-	/*
-	$.each(preSeleccionadas,function(index){
-		preSeleccionadas[index].listado	  = false;
-		preSeleccionadas[index].seleccion    = false;
-		preSeleccionadas[index].preseleccion = true;
-	    procesado = pregTemplate.render(preSeleccionadas[index]);
-	    $("#preguntasPre").append(procesado);
-	});    
-	*/
+	
 </script>
 
 </div>

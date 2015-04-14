@@ -37,11 +37,11 @@ for($i=1;$i <= 100;$i++){
 		<div class="span2 preguntas-label"><div class="label">Tipo de la pregunta</div></div>
 		<div class="span2">
 			<input id="EncuestaPreguntas" type="hidden" name="data[Preguntas]"	value="" />
-			<?php echo $this->Js->link("<i class='icon icon-plus fuente-mediana'> Agregar Pregunta</i>",array("controller"=>"preguntas","action"=>"listar","seleccionar"),array("class"=>"btn btn-inverse","before"=>"modales('listarPreguntas','modal-ficha');preSeleccionadas={}","complete"=>"fin_ajax('listarPreguntas')","update"=>"#listarPreguntas","escape"=>false)); ?>
+			<?php echo $this->Js->link("<i class='icon icon-plus fuente-mediana'> Agregar Pregunta</i>",array("controller"=>"preguntas","action"=>"listar","seleccionar"),array("class"=>"btn btn-inverse","before"=>"modales('listarPreguntas','modal-ficha');var tmpSelection=[]","complete"=>"fin_ajax('listarPreguntas')","update"=>"#listarPreguntas","escape"=>false)); ?>
 		</div>
 	</div>
 	
-	<div class="contenedor-preguntas well top-5 idle">
+	<div class="contenedor-preguntas main well top-5 idle">
 		<div style="position: absolute; bottom: 0px;"></div>
 	</div>
 	<?php echo $this->Js->link("<i class='icon icon-save icon-white'> Guardar</i>",array("controller"=>"encuestas","action"=>"crear"),array("class"=>"btn btn-inverse","update"=>"#exec_js","before"=>"inicia_ajax()","complete"=>"fin_ajax()","data"=>"$(this).parents('form:first').serialize()","escape"=>false,"method"=>"POST","dataExpression"=>true)) ?>
