@@ -86,15 +86,16 @@
 		  orderMainQuestions();
 	});
 
-    $(".contenedor-preguntas.main").on("click",".icon-times",function(){
-          console.log("Entered delete question from main create survey");
-		  questionId = $(this).data('questionid'); /* data attribute do not distinct camel cased */	
-          selected.each(function(index){
+	$(".contenedor-preguntas.main").on("click",".icon-times",function(){
+        console.log("Entered delete question from main create survey");
+		questionId = $(this).closest(".pregunta").data('questionid'); /* data attribute do not distinct camel cased */	
+        $(selected).each(function(index){
 				if(selected[index].questionId == questionId) delete selected[index]; 
-          });
-          $(".contenedor-preguntas.main").find("*[data-questionid='"+questionId+"]").remove();
-          orderMainQuestions();
-     });
-	
+        });
+        $(".contenedor-preguntas.main").find("*[data-questionid='"+questionId+"']").remove();
+        orderMainQuestions();
+   });
+
+    	
 </script>
 </div>

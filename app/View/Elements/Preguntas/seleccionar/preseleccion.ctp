@@ -16,17 +16,6 @@
 
 <script type="text/javascript">
 		
-	$("#tmpSelection").on("click",".icon-times",function(){
-		console.log("Entered delete question from temporary selected");
-		questionId = $(this).closest('.pregunta').data('questionid');
-		$(this).closest(".pregunta").remove();
-		$(tmpSelection).each(function(index){
-			if(tmpSelection[index].questionId == questionId){ tmpSelection.splice(index,1);  console.log("Found questionID to delete"); return false;}
-		});
-		$("#preguntasListado input[value='"+questionId+"']").prop("checked",false);
-		orderTmpQuestions();
-	});
-  	
 	/* On question inserted or removed actualize question position number */
 	
 	$("#tmpSelection").on("click",".icon-arrow-up",function(){

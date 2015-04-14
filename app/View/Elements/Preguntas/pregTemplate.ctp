@@ -28,10 +28,9 @@
 		<?php echo $this->Js->link('<i class="icon icon-edit"></i>',array('controller'=>'preguntas','action'=>'editar','{{questionId}}'),array('escape'=>false,'class'=>'btn btn-inverse btn-small','before'=>'modales("editarPregunta","modal-ficha")','complete'=>'fin_ajax("editarPregunta")','update'=>'#editarPregunta')) ?>
 		<?php echo $this->Js->link('<i class="icon icon-eye"></i>',array('controller'=>'preguntas','action'=>'ver','{{questionId}}'),array('escape'=>false,"safe"=>false,'class'=>'btn btn-inverse btn-small','before'=>'modales("verPregunta","modal-ficha")','complete'=>'fin_ajax("verPregunta")','update'=>'#verPregunta')) ?>		
 				
-		{{#btnDeleteSelected}} <!-- Delete answer only from pre selected answers, code for delete answer from preselection is on elements/Preguntas/seleccionar/preseleccion -->
-			<a href="#" class="btn btn-inverse btn-small"><i class="icon icon-times"></i></a>
-		{{/btnDeleteSelected}}
-			
+	    <!-- Delete answer only from pre selected answers, code for delete answer from preselection is on elements/Preguntas/seleccionar/preseleccion -->
+		<i class="icon icon-times btn btn-inverse btn-small"></i>
+					
 		{{#btnDeleteQuestion}} <!-- Delete answer from the system -->
 			<?php echo $this->Js->link('<i class="icon icon-times"></i>',array('controller'=>'preguntas','action'=>'borrar','{{questionId}}'),array('escape'=>false,'class'=>'btn btn-inverse btn-small','before'=>'inicia_ajax()','complete'=>'fin_ajax()','update'=>'#exec_js')) ?>
 		{{/btnDeleteQuestion}}

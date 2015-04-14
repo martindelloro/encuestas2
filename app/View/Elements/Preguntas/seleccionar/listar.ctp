@@ -45,9 +45,9 @@
 			});
 			}
 		orderTmpQuestions();
-	});  
+	}); 
 
-	
+		
 	/* Executed function when btnGuardarSelecc is clicked */
 	/* Process temporary selected question add them to the bottom of previously selected question, blank .contenedor-preguntas and reprocess the new selected array and add them to main form window */
 	$(".btnGuardarSelecc").bind("click",function(){
@@ -67,4 +67,16 @@
 		tmpSelection = []; /* Empty tmpSelection for the next search for question  */
 		$("#listarPreguntas").modal("hide");
   	});
+
+	$("#tmpSelection").on("click",".icon-times",function(){
+		console.log("Entered delete question from temporary selected");
+		questionId = $(this).closest('.pregunta').data('questionid');
+		$(this).closest(".pregunta").remove();
+		$(tmpSelection).each(function(index){
+			if(tmpSelection[index].questionId == questionId){ tmpSelection.splice(index,1);  console.log("Found questionID to delete"); return false;}
+		});
+		$("#preguntasListado input[value='"+questionId+"']").prop("checked",false);
+		orderTmpQuestions();
+	});
+
 </script>
