@@ -54,9 +54,9 @@
 			</div>
 			<div class="span2 botones">
 				<input type="checkbox" 	value="<?php echo $pregunta["Pregunta"]["id"] ?>" />
-				<?php echo $this->Js->link("<i class='icon icon-edit'></i>",array('controller'=>'preguntas','action'=>'editar',$pregunta["Pregunta"]["id"]),array('escape'=>false,'class'=>'btn btn-inverse','before'=>"modales('editarPregunta','modal-ficha')",'complete'=>"fin_ajax('editarPregunta')",'update'=>'#editarPregunta')) ?>
-				<?php echo $this->Js->link("<i class='icon icon-eye'></i>",array('controller'=>'preguntas','action'=>'ver',$pregunta["Pregunta"]["id"]),array('escape'=>false,'class'=>'btn btn-inverse','before'=>"modales('verPregunta','modal-ficha')",'complete'=>"fin_ajax('verPregunta')",'update'=>'#verPregunta')) ?>
-				<?php echo $this->Js->link("<i class='icon icon-remove'>x</i>",array('controller'=>'preguntas','action'=>'borrar',$pregunta["Pregunta"]["id"]),array('escape'=>false,'class'=>'btn btn-inverse','before'=>'inicia_ajax()','complete'=>'fin_ajax()','update'=>'#exec_js')) ?>
+				<?php echo $this->Js->link("<i class='icon icon-edit'></i>",array('controller'=>'preguntas','action'=>'editar',$pregunta["Pregunta"]["id"]),array('escape'=>false,'class'=>'btn btn-inverse btn-small','before'=>"modales('editarPregunta','modal-ficha')",'complete'=>"fin_ajax('editarPregunta')",'update'=>'#editarPregunta')) ?>
+				<?php echo $this->Js->link("<i class='icon icon-eye'></i>",array('controller'=>'preguntas','action'=>'ver',$pregunta["Pregunta"]["id"]),array('escape'=>false,'class'=>'btn btn-inverse btn-small','before'=>"modales('verPregunta','modal-ficha')",'complete'=>"fin_ajax('verPregunta')",'update'=>'#verPregunta')) ?>
+				<?php echo $this->Js->link("<i class='icon icon-times'></i>",array('controller'=>'preguntas','action'=>'borrar',$pregunta["Pregunta"]["id"]),array('escape'=>false,'class'=>'btn btn-inverse btn-small','before'=>'inicia_ajax()','complete'=>'fin_ajax()','update'=>'#exec_js')) ?>
 			</div>
                 </div>
 		<?php endforeach; ?>
@@ -68,7 +68,7 @@
 </div>
 
 <script type="text/javascript">
-
+	
 	function updateCheckbox(questionList){
 		console.log("Entered update question checkbox state");
 		$(questionList).each(function(index){
@@ -78,23 +78,9 @@
 
 	/* Executed function when opens window to select questions for the survey */
 	/* Add previous selected question to tmp selection DIV in case the user decides to add another question to the survey */
-			
-	if(selected.length != 0){
-		$(selected).each(function(index){
-			console.log("Entered to fill preseleccionadas with already selected question in the main survey window");
-			tmp = selected[index];
-			tmp.selected = 			 false; /*  */
-			tmp.checked  =			 false; /* do not show checkbox */
-			tmp.btnDeleteSelected =  true; /* show button delete question from selection */
-			tmp.btnDeleteQuestion =  false; /* do not show delete question from database */
-			tmp.showUpDownBtn = 	 false; /* do not show Up and Down position buttons */
-			tmpRendered = questionTemplate.render(tmp);
-			$("#tmpSelection").append(tmpRendered);
-		});
-		updateCheckbox(selected);
-	}
-
+		
 	if(tmpSelection.length != 0){
+		console.log("aca el problema");
 		$(tmpSelection).each(function(index){
 			console.log("Entered to fill preseleccionadas with temporary selected question not in the main window yet");
 			tmpRendered = questionTemplate.render(tmpSelection[index]);

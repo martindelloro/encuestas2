@@ -1,4 +1,4 @@
-<div class="row-fluid pregunta" id="Question{{questionId}}" data-questionDivID="{{questionDivID}}" data-questionID="{{questionId}}">
+<div class="row-fluid pregunta" id="Question{{questionId}}" data-questionDivID="{{questionDivID}}" data-questionID="{{questionId}}" data-questionName="{{questionName}}" data-questionType="{{questionType}}">
 	<div class="span8">
 		{{#showPosition}}
 		<span class="positionDisplay">{{position}}</span>
@@ -18,22 +18,22 @@
 				<input type="checkbox" 	value="{{questionId}}" disabled="disabled" />
 			{{/enableCheckBox}}
 		{{/showCheckBox}}
-						
-		<!-- The buttons for view and edit are the same for listed,selected and pre selected -->		
-		<?php echo $this->Js->link('<i class="icon icon-edit"></i>',array('controller'=>'preguntas','action'=>'editar','{{questionId}}'),array('escape'=>false,'class'=>'btn btn-inverse','before'=>'modales("editarPregunta","modal-ficha")','complete'=>'fin_ajax("editarPregunta")','update'=>'#editarPregunta')) ?>
-		<?php echo $this->Js->link('<i class="icon icon-eye"></i>',array('controller'=>'preguntas','action'=>'ver','{{questionId}}'),array('escape'=>false,"safe"=>false,'class'=>'btn btn-inverse','before'=>'modales("verPregunta","modal-ficha")','complete'=>'fin_ajax("verPregunta")','update'=>'#verPregunta')) ?>		
 		
 		{{#showUpDownBtn}}
-			<div class="btn btn-inverse icon icon-arrow-up" data-questionDivID="#Question{{questionId}}"></div>
-			<div class="btn btn-inverse icon icon-arrow-down" data-questionDivID="#Question{{questionId}}"></div>
+			<div class="btn btn-inverse btn-small icon icon-arrow-up" data-questionDivID="#Question{{questionId}}"></div>
+			<div class="btn btn-inverse btn-small icon icon-arrow-down" data-questionDivID="#Question{{questionId}}"></div>
 		{{/showUpDownBtn}}
-		
+						
+		<!-- The buttons for view and edit are the same for listed,selected and pre selected -->		
+		<?php echo $this->Js->link('<i class="icon icon-edit"></i>',array('controller'=>'preguntas','action'=>'editar','{{questionId}}'),array('escape'=>false,'class'=>'btn btn-inverse btn-small','before'=>'modales("editarPregunta","modal-ficha")','complete'=>'fin_ajax("editarPregunta")','update'=>'#editarPregunta')) ?>
+		<?php echo $this->Js->link('<i class="icon icon-eye"></i>',array('controller'=>'preguntas','action'=>'ver','{{questionId}}'),array('escape'=>false,"safe"=>false,'class'=>'btn btn-inverse btn-small','before'=>'modales("verPregunta","modal-ficha")','complete'=>'fin_ajax("verPregunta")','update'=>'#verPregunta')) ?>		
+				
 		{{#btnDeleteSelected}} <!-- Delete answer only from pre selected answers, code for delete answer from preselection is on elements/Preguntas/seleccionar/preseleccion -->
-			<a href="#" class="btn btn-inverse"><i class="icon icon-times"></i></a>
+			<a href="#" class="btn btn-inverse btn-small"><i class="icon icon-times"></i></a>
 		{{/btnDeleteSelected}}
 			
 		{{#btnDeleteQuestion}} <!-- Delete answer from the system -->
-			<?php echo $this->Js->link('<i class="icon icon-times"></i>',array('controller'=>'preguntas','action'=>'borrar','{{questionId}}'),array('escape'=>false,'class'=>'btn btn-inverse','before'=>'inicia_ajax()','complete'=>'fin_ajax()','update'=>'#exec_js')) ?>
+			<?php echo $this->Js->link('<i class="icon icon-times"></i>',array('controller'=>'preguntas','action'=>'borrar','{{questionId}}'),array('escape'=>false,'class'=>'btn btn-inverse btn-small','before'=>'inicia_ajax()','complete'=>'fin_ajax()','update'=>'#exec_js')) ?>
 		{{/btnDeleteQuestion}}
 	</div>
 	{{#formData}}

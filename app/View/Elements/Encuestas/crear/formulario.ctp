@@ -37,7 +37,7 @@ for($i=1;$i <= 100;$i++){
 		<div class="span2 preguntas-label"><div class="label">Tipo de la pregunta</div></div>
 		<div class="span2">
 			<input id="EncuestaPreguntas" type="hidden" name="data[Preguntas]"	value="" />
-			<?php echo $this->Js->link("<i class='icon icon-plus fuente-mediana'> Agregar Pregunta</i>",array("controller"=>"preguntas","action"=>"listar","seleccionar"),array("class"=>"btn btn-inverse","before"=>"modales('listarPreguntas','modal-ficha');var tmpSelection=[]","complete"=>"fin_ajax('listarPreguntas')","update"=>"#listarPreguntas","escape"=>false)); ?>
+			<?php echo $this->Js->link("<i class='icon icon-plus fuente-mediana'> Agregar Pregunta</i>",array("controller"=>"preguntas","action"=>"listar","seleccionar"),array("class"=>"btn btn-inverse","before"=>"modales('listarPreguntas','modal-ficha');tmpSelection=selected","complete"=>"fin_ajax('listarPreguntas')","update"=>"#listarPreguntas","escape"=>false)); ?>
 		</div>
 	</div>
 	

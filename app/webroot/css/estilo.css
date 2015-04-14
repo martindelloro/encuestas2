@@ -615,7 +615,7 @@ body .mensaje-contenido{
 	cursor:pointer;
 }
 
-.botones a{
+.botones .btn{
 	float:right;
 	margin-top:4px;
 	margin-left:4px;

@@ -23,9 +23,8 @@
 
 <script type="text/javascript">
 	
-	
 	/* Code executed when an checkbox is clicked on the search questions window */
-	
+		
 	$("#preguntasListado").on("click",":checkbox",function(){
 		questionId = $(this).val(); /* no need to use data attribute because value of checkbox equals to the question ID number  */
 		questionDivID = $(this).closest(".pregunta").data("questiondivid");
@@ -33,18 +32,19 @@
 			questionName   = $(this).closest(".pregunta").data("questionname");
 			questionType   = $(this).closest(".pregunta").data("questiontype");
 			questionDivId  = $(this).closest(".pregunta").data("questiondivid");
-			data 		   = {questionId:questionId, questionDivId: questionDivId, questionName:questionName, questionType:questionType,formData:false,showCheckBox:false,btnDeleteSelected:true};
+			data 		   = {questionId:questionId, questionDivId: questionDivId, questionName:questionName, questionType:questionType,formData:true,showCheckBox:false,btnDeleteSelected:true,showUpDownBtn:true,showPosition:true};
 			tmpSelection.push(data);
 			processed = questionTemplate.render(data);
 			$("#tmpSelection").append(processed);
 		}
 		else{
-			$("#tmpSelection").find(questionDivId).remove();
+			$("#tmpSelection").find("*[data-questionid='"+questionId+"']").remove();
 			$(this).prop("checked",false);
-			$(tmpSelected).each(function(index){
-				if(tmpSelected[index].questionId == questionId) tmpSelected[index].remove;
+			$(tmpSelection).each(function(index){
+				if(tmpSelection[index].questionId == questionId) tmpSelection[index].remove;
 			});
 			}
+		orderTmpQuestions();
 	});  
 
 	
@@ -53,28 +53,18 @@
 	$(".btnGuardarSelecc").bind("click",function(){
 		console.log("Entered save question selection to main survey");
 		$('#listarPreguntas').modalmanager('loading');
-		$(tmpSelection).each(function(index){
-			tmp = tmpSelection[index];
-			tmp.formData		  = true;  		/* add form meta data */
-			tmp.showUpDownBtn 	  = true;  		/* show position buttons */
-			tmp.showPosition 	  = true;  		/* show question position */
-			tmp.showCheckBox	  = false; 		/* do not show checked input box */
-			tmp.btnDeleteQuestion = true;
-			tmp.btnDeleteSelected = false;
-			selected.push(tmp);  /* push new selected question to the bottom of the previouly selected questions */
-		});
-		$("#encuesta .contenedor-preguntas.main").html(); /* Empty all questions from main survey window  */
+		if(tmpSelection.length != 0){
+		$("#encuesta .contenedor-preguntas.main").html(""); /* Empty all questions from main survey window  */
 		$("#encuesta .contenedor-preguntas.main").removeClass("idle"); /* Remove class idle to prevent incesary execution of event DOMNodeInserted */
-		
-		/* Add all the selected question to the main survey window */
-  		if(selected.length != 0){
-	  		$(selected).each(function(index){
-				selected[index].position = index + 1;
-				tmpRendered = questionTemplate.render(selected[index]);
-				$("#encuesta .contenedor-preguntas.main").append(tmpRendered);
-			});	
-	  		$("#encuesta .contenedor-preguntas.main").addClass("idle"); /* Once finishing of adding the new questions add class idle so event DOMNodeInserted is fired when an question is moved up and down or removed  */
+		$(tmpSelection).each(function(index){
+			tmpSelection[index].position = index + 1;
+			tmpRendered = questionTemplate.render(tmpSelection[index]);
+			$("#encuesta .contenedor-preguntas.main").append(tmpRendered);
+		});	
+		$("#encuesta .contenedor-preguntas.main").addClass("idle"); /* Once finishing of adding the new questions add class idle so event DOMNodeInserted is fired when an question is moved up and down or removed  */
 		}
-  		$("#listarPreguntas").modal("hide");
+		selected = tmpSelection; /* Before close of select question save tmpSelection to selected */
+		tmpSelection = []; /* Empty tmpSelection for the next search for question  */
+		$("#listarPreguntas").modal("hide");
   	});
 </script>

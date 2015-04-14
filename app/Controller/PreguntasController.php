@@ -40,7 +40,6 @@ class PreguntasController extends AppController{
 	}
 	
 	function crear(){
-		pr($this->request->data);
 		$tipos  = $this->Pregunta->Tipo->find("list");
 		$reglas = $this->Pregunta->Validacion->Regla->find("list"); 
 		if(!empty($this->data)){
