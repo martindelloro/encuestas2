@@ -1,7 +1,8 @@
 <?php
 
 class SubReportesController extends AppController{
-	var $uses = array("SubReporte","Respuesta","Opcion");
+	var $uses = array("SubReporte","Respuesta","Opcion",'CarrerasUnla','Encuesta');
+        var $OUsuario=null;
 	function beforeFilter() {
             parent::beforeFilter();
             $sesion=$this->Session->Read();
@@ -16,9 +17,21 @@ class SubReportesController extends AppController{
         }
 
 	function crear(){
-		
-		$encuesta_id = $this->data["Reporte"]["encuesta_id"];
-		
+		$sesion=$this->Session->Read();
+                if($sesion['OUsuario']!=null){
+                    //Si tiene una carrera asignada, quiere decir que en la búsqueda tengo
+                    //que restringirle los resultados solo para esa carrera
+                    if($sesion['OUsuario']['Usuario']['carreraUnla']!=null){
+                        $nombre_carrera=$this->CarrerasUnla->find('first',array('conditions'=>(array('CarrerasUnla.id'=>$sesion['OUsuario']['Usuario']['carreraUnla']))));
+                        //pr($nombre_carrera);
+                        
+                    }
+                }
+                 
+		$fuentes = $this->Encuesta->find('first',array('conditions'=>array('Encuesta.id'=>$this->data["Reporte"]["encuesta_id"])));//$this->data["Reporte"]["encuesta_id"];
+		$fuentes=$fuentes['Encuesta']['fuentes'];
+                $this->set("fuentes",$fuentes);
+                
 		// PROCESO FILTROS
 		$resultados = array();
 		$filtrosInfo = array();
@@ -26,10 +39,27 @@ class SubReportesController extends AppController{
 		$cont_opciones = array();
 		$datos = array();
 		$datosInfoStacked = null;
-		if(!empty($this->data["SubReporte"]["Filtro"])){
-		foreach($this->data["SubReporte"]["Filtro"] as $index=>$filtro){
+                /*if($sesion['OUsuario']['Usuario']['carreraUnla']!=null){
+                                            $carrera_preg= $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.nombre"=>"Carrera"),"contain"=>array("Tipo"),"recursive"=>-1));
+                                            pr($carrera_preg);
+                                            $resultados[] = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.encuesta_id"=>$this->data["Reporte"]["encuesta_id"],"Respuesta.pregunta_id"=>$carrera_preg["Pregunta"]["pregunta_id"]),"recursive"=>-1,"fields"=>array("Respuesta.usuario_id")));
+                                            $opcionesNombres = $this->Respuesta->Pregunta->Opcion->find("list",array("conditions"=>array("Opcion.nombre ilike"=>$nombre_carrera["CarrerasUnla"]['nombre'])));
+                                            pr($opcionesNombres);
+                                            $filtrosInfo[] = array("Pregunta"=>array("nombre"=>$carrera_preg["Pregunta"]["nombre"],"tipo"=>$carrera_preg["Tipo"]["nombre"]),"opciones"=>$opcionesNombres);
+                                            //pr($filtrosInfo);
+                }*/
+               
+                ///ACA VEO SI ES DIRECTOR DE UNA CARRERA UNLA Y RESTRINJO
+                /*                if($sesion['OUsuario']['Usuario']['carreraUnla']!=null){
+                   $carrera_preg= $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.nombre"=>"Carrera"),"contain"=>array("Tipo"),"recursive"=>-1));
+                   $opcionesNombres = $this->Respuesta->Pregunta->Opcion->find("first",array("conditions"=>array("Opcion.nombre ilike"=>$nombre_carrera["CarrerasUnla"]['nombre'])));
+                   $variable=array(array('pregunta_id'=>$opcionesNombres['Pregunta']['id'],'FiltrosOpciones'=>array('0'=>$opcionesNombres['Opcion']['id']),'tipo'=>4));
+                   //pr($variable);
+                    foreach($variable as $index=>$filtro){
 			$pregunta_id = $filtro["pregunta_id"];
 			$pregunta = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$pregunta_id),"contain"=>array("Tipo"),"recursive"=>-1));
+                        //pr('apa');
+                        //pr($filtro);
 			switch($filtro["tipo"]){
 				case 4:
 					if(empty($filtro["FiltrosOpciones"])) break;
@@ -38,10 +68,68 @@ class SubReportesController extends AppController{
 					$resultados[$index] = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.encuesta_id"=>$this->data["Reporte"]["encuesta_id"],"Respuesta.pregunta_id"=>$filtro["pregunta_id"]),"joins"=>$joins,"recursive"=>-1,"fields"=>array("Respuesta.usuario_id")));
 					$opcionesNombre = $this->Respuesta->Pregunta->Opcion->find("list",array("conditions"=>array("Opcion.id"=>$filtro["FiltrosOpciones"])));
 					$filtrosInfo[$index] = array("Pregunta"=>array("nombre"=>$pregunta["Pregunta"]["nombre"],"tipo"=>$pregunta["Tipo"]["nombre"]),"opciones"=>$opcionesNombre);	
+                                        break;
+				case 6:
+					$resultados[$index] = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.pregunta_id"=>$filtro["pregunta_id"],"Respuesta.respuesta_sino"=>$filtro["boolean"]),"recursive"=>-1,"fields"=>array("Respuesta.usuario_id")));
+					$filtrosInfo[$index] = array("Pregunta"=>array("nombre"=>$pregunta["Pregunta"]["nombre"],"tipo"=>$pregunta["Tipo"]["nombre"]),"boolean"=>$filtro["boolean"]);
+                                        
+					break;
+			}
+		} // FIN FOREACH FILTROS
+		$resultados = array_values($resultados); // RESETEO EL INDEX DEL ARRAY YA QUE EL INDEX DE FILTROS PUEDE CAMBIAR DEPENDIENDO DE SI SE BORRAR UN FILTRO 
+		// pr($resultados);
+		
+		// ORDENO LOS USUARIO_ID EN UN ARRAY X CADA RESULTADO DE FILTRO APLICADO
+		$tmp  = array();
+		$tmp2 = array();
+		foreach($resultados as $index=>$resultado){
+			foreach($resultado as $index2 =>$tmpResultado){
+				$tmp2[$index2] = $tmpResultado["Respuesta"]["usuario_id"];
+			}
+			$tmp[$index] = array_unique($tmp2); // FILTRO POR SI QUEDARON USUARIOS_ID DUPLICADOS, PROBABLE EN UNA PREGUNTA DE TIPO MULTIPLECHOICE
+			$tmp2 = array();
+		}
+				
+		$loops = count($tmp); // LOOPS = CANTIDAD DE FILTROS APLICADOS
+		switch(true){
+			case ($loops == 1):
+				  $usuarios_id = $tmp[0]; // SI SOLO HAY 1 FILTRO NO HAY QUE INTERSECTAR NADA..
+				  break;
+			case ($loops == 2):
+				  $usuarios_id = array_intersect($tmp[0],$tmp[1]);
+				  break;
+			case ($loops >= 3):
+				  for($i=0; $i < ($loops-1);$i++){
+					if($i==0){ // INICIALIZO TMP3
+						$tmp3 =   array_intersect($tmp[$i], $tmp[$i+1]); // INTERSECTO LOS VALORES DE FILTRO 1 CON LOS DEL FILTRO 2, INICIALIZADO TMP3 CON EL RESULTADOS PARA EL SIGUIENTE BUCLE
+					}else{
+						$tmp3 =   array_intersect($tmp3, $tmp[$i+1]); // INTERSECTO LOS VALORES RESULTANTES DE TMP3 CON EL SIGUIENTE FILTRO SIN PROCESAR EJ: $I = 2 intersecta TMP3 con FILTRO 3;
+					}
+				  }
+				  $usuarios_id = $tmp3;
+		}
+                }///FIN IF SI ES DIRECTOR DE UNA CARRERA*/
+                
+		if(!empty($this->data["SubReporte"]["Filtro"])){
+                   // pr($this->data["SubReporte"]["Filtro"]);
+		foreach($this->data["SubReporte"]["Filtro"] as $index=>$filtro){
+			$pregunta_id = $filtro["pregunta_id"];
+			$pregunta = $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$pregunta_id),"contain"=>array("Tipo"),"recursive"=>-1));
+                        
+			switch($filtro["tipo"]){
+				case 4:
+					if(empty($filtro["FiltrosOpciones"])) break;
+					$opciones_id = implode(',',$filtro["FiltrosOpciones"]);
+					$joins[0] = array("table"=>"respuestas_opciones","alias"=>"Opciones","type"=>"right","conditions"=>"Opciones.respuesta_id = Respuesta.id AND Opciones.opcion_id IN ($opciones_id) ");
+					$resultados[$index] = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.encuesta_id"=>$this->data["Reporte"]["encuesta_id"],"Respuesta.pregunta_id"=>$filtro["pregunta_id"]),"joins"=>$joins,"recursive"=>-1,"fields"=>array("Respuesta.usuario_id")));
+					$opcionesNombre = $this->Respuesta->Pregunta->Opcion->find("list",array("conditions"=>array("Opcion.id"=>$filtro["FiltrosOpciones"])));
+					$filtrosInfo[$index] = array("Pregunta"=>array("nombre"=>$pregunta["Pregunta"]["nombre"],"tipo"=>$pregunta["Tipo"]["nombre"]),"opciones"=>$opcionesNombre);	
+                                        
 					break;
 				case 6:
 					$resultados[$index] = $this->Respuesta->find("all",array("conditions"=>array("Respuesta.pregunta_id"=>$filtro["pregunta_id"],"Respuesta.respuesta_sino"=>$filtro["boolean"]),"recursive"=>-1,"fields"=>array("Respuesta.usuario_id")));
 					$filtrosInfo[$index] = array("Pregunta"=>array("nombre"=>$pregunta["Pregunta"]["nombre"],"tipo"=>$pregunta["Tipo"]["nombre"]),"boolean"=>$filtro["boolean"]);
+                                        
 					break;
 			}
 		} // FIN FOREACH FILTROS
@@ -410,6 +498,7 @@ class SubReportesController extends AppController{
 		$this->set("cont_opciones",$cont_opciones);
 		$this->set("datosInfo",$datosInfo);
 		$this->set("datosInfoStacked",$datosInfoStacked);
+                
 		$this->set("filtrosInfo",$filtrosInfo);
  	}
 	

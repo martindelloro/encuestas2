@@ -1,10 +1,10 @@
-<div class="well span12">
+<div class="well">
 	<?php echo $this->Form->create('buscar'); ?>
 	<div class="well titulo-general">
-		<span class='span12'>Buscar Grupo</span>
+		<span>Buscar Grupo</span>
 	</div>
 	<div class="row-fluid">
-		<div class="span10">
+		<div >
 			<?php echo $this->Form->input("nombre",array("type"=>'text',"label"=>"Nombre de grupo:","empty"=>true)); ?>
 		</div>
 		

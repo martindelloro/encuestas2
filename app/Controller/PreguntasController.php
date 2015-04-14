@@ -25,17 +25,18 @@ class PreguntasController extends AppController{
 	
 	function buscar(){
 		$this->paginate = array("order"=>"Pregunta.nombre ASC",'recursive' => 0);
-						
-		if(empty($this->data)) {
-			$this->data = $this->Session->read("busqueda");
+                
+                if(!empty($this->request->data)){
+                    $condiciones=null;
+                    if(!empty($this->request->data["Buscar"]["nombre"])) $condiciones["Pregunta.nombre ILIKE"]="%".$this->request->data["Buscar"]["nombre"]."%";
+                    $this->Session->write("busqueda", $condiciones);
+                    $this->set("preguntas",$this->Paginator->paginate("Pregunta"));
+                }else{
+                    
+			$this->request->data = $this->Session->read("busqueda");
+                        pr("bolsa de guampa");
 		}
-		else {
-			$this->Session->write("busqueda", $this->data);
-		}
-		
-		if(!empty($this->data["Buscar"]["nombre"])) $condiciones["Pregunta.nombre ILIKE"]="%".$this->data["Buscar"]["nombre"]."%";
-		
-		$this->Paginator->settings = array("conditions"=>$condiciones);
+                $this->Paginator->settings = array("conditions"=>$condiciones);
 		$this->set("preguntas",$this->Paginator->paginate("Pregunta"));
 	}
 	
@@ -44,8 +45,13 @@ class PreguntasController extends AppController{
 		$tipos  = $this->Pregunta->Tipo->find("list");
 		$reglas = $this->Pregunta->Validacion->Regla->find("list"); 
 		if(!empty($this->data)){
+
+			/*if($this->Pregunta->save($this->request->data)){
+				$pregunta = $this->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->Pregunta->getInsertId())));*/
+
 			if($this->Pregunta->save($this->data)){
 				$pregunta = $this->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->Pregunta->getInsertId()),"contain"=>array("Encuesta","Tipo")));
+
 				$this->set("pregunta",$pregunta);
 				$this->Session->setFlash("Pregunta agregada con exito",null,null,"mensaje_sistema");
 				$this->render("agregarMenu");			

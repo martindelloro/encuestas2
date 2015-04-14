@@ -21,9 +21,11 @@ class EncuestasController extends AppController{
 			case "Encuesta":
 				if(!empty($this->data)){
 					$cantPreg = count($this->data["Preguntas"]);
-					if($this->data["Encuesta"]["cantXpag"] != null){
+					if($this->request->data["Encuesta"]["cantXpag"] != null){
 						$this->request->data["Encuesta"]["partes"] = ceil($cantPreg / $this->data["Encuesta"]["cantXpag"]);
 					}
+                                        $fuentes= $this->request->data["Encuesta"]["fuentes1"].' '.$this->request->data["Encuesta"]["fuentes2"];
+                                        $this->request->data['Encuesta']['fuentes']=$fuentes;
 					if($this->Encuesta->saveAll($this->data)){
 						$this->Session->setFlash("Encuesta creada con exito",null,null,"mensaje_sistema");
 						$this->render("/Elements/guardo_ok");
@@ -137,8 +139,8 @@ class EncuestasController extends AppController{
                     echo "se elimino";
                 }
 
-                $log = $this->Encuesta->getDataSource()->getLog(false, false);
-                pr($log);
+                /*$log = $this->Encuesta->getDataSource()->getLog(false, false);
+                pr($log);*/
 		$this->set("encuesta",$encuesta);
                 
                

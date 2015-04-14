@@ -1,7 +1,7 @@
 <?php 
 
 class UsuariosController extends AppController {
-    var $uses = array("Usuario","Provincia","Localidad","Departamento","Encuesta","Grupo","GruposUsuarios",'EncuestaGrupos','VistaUsuarios');
+    var $uses = array("Usuario","Provincia","Localidad","Departamento","Encuesta","Grupo","GruposUsuarios",'EncuestaGrupos','VistaUsuarios','DepartamentoUnla');
     var $helpers= array('Js'=>array('Jquery'));
     var $userData = array();
     var $OUsuario=null;
@@ -43,6 +43,18 @@ class UsuariosController extends AppController {
 	}
         $this->set('data',$datos);
         $this->render("/Elements/update_select","ajax");
+        pr($datos);
+    }
+    function updateCarreras(){
+        if(!empty($this->data["Usuario"]["departamentoUnla"])){        
+            $cod_depto=$this->data['Usuario']['departamentoUnla'];
+            $datos=$this->DepartamentoUnla->CarrerasUnla->find('list',array('order'=>'nombre ASC', 'conditions'=>"CarrerasUnla.id_departamento= '$cod_depto'"));
+	}
+	else{
+            $datos = null;	
+	}
+        $this->set('data',$datos);
+        $this->render("/Elements/update_select","ajax");
     }
        function  crear_usuario(){
            parent::beforeFilter();
@@ -54,6 +66,9 @@ class UsuariosController extends AppController {
                             . "               El administrador ha sido notificado del error",null,null,"mensaje_sistema");
                 $this->redirect(array('controller'=>'pages','action'=>'display','inicio'));
             }else{
+                $departamentosUnla=$this->DepartamentoUnla->find('list');
+                $this->set("departamentosUnla",$departamentosUnla);
+                
                 $provincias=$this->Provincia->find('list');
                      $this->set("provincias", $provincias);
                  $keys = array_keys($provincias);
@@ -74,6 +89,11 @@ class UsuariosController extends AppController {
                      )
                  );
                  $this->set("localidades",$localidades); 
+                 $carreraUnla=$this->DepartamentoUnla->CarrerasUnla->find('list',array(
+                         'conditions'=>array(
+                             'CarrerasUnla.id_departamento'=>$keys[0]
+                         )));
+                 $this->set("carreraUnla",$carreraUnla);
              if(!empty($this->request->data)){
                  if($this->request->data['Usuario']['password']==$this->request->data['Usuario']['password_rep']){
                      $this->request->data['Usuario']['password']=md5($this->request->data['Usuario']['password']); //lo seteo para que lo guarde con seguridad md5
@@ -207,6 +227,21 @@ class UsuariosController extends AppController {
      }
      function ver($id){
          $usuario=$this->Usuario->findById($id);
+         $provincia=$this->Provincia->find('first',array('conditions'=>array('cod_prov'=>$usuario['Usuario']['cod_prov'])));
+         if (empty($provincia)){
+             $provincia=null;
+         }
+         $departamento=$this->Departamento->find('first',array('conditions'=>array('cod_depto'=>$usuario['Usuario']['cod_depto'])));
+         if (empty($departamento)){
+             $departamento=null;
+         }
+         $localidad=$this->Localidad->find('first',array('conditions'=>array('cod_loc'=>$usuario['Usuario']['cod_loc'])));
+         if (empty($localidad)){
+             $localidad=null;
+         }
+         $this->set("provincia",$provincia);
+         $this->set("departamento",$departamento);
+         $this->set("localidad",$localidad);
          $this->set("usuario",$usuario);
      }
      function editar($id){
@@ -264,19 +299,30 @@ class UsuariosController extends AppController {
                             . "               El administrador ha sido notificado del error",null,null,"mensaje_sistema");
                 $this->redirect(array('controller'=>'pages','action'=>'display','inicio'));
             }else{
-                $provincias=$this->Provincia->find('list');
+                if(empty($sesion['OUsuario']['cod_prov'])){
+                    $provincias=$this->Provincia->find('list');
                      $this->set("provincias", $provincias);
-                 $keys = array_keys($provincias);
-
-                 $departamentos=$this->Provincia->Departamento->find('list',array(
-                     'conditions'=>array(
-                         'Departamento.cod_prov'=>$keys[0]
-                         )
-                     )
-                 );
-                 $this->set("departamentos",$departamentos);
-                 $keys = array_keys($departamentos);
-
+                     $keys = array_keys($provincias);
+                }else{
+                    $provincias=$this->Provincia->find('first',array('conditions'=>array('cod_prov'=>$sesion['OUsuario']['cod_prov'])));
+                    $this->set("provincias", $provincias);
+                }
+                
+                if(empty($sesion['OUsuario']['cod_depto'])){
+                    $departamentos=$this->Provincia->Departamento->find('list',array(
+                        'conditions'=>array(
+                            'Departamento.cod_prov'=>$keys[0]
+                            )
+                        )
+                    );
+                    $this->set("departamentos",$departamentos);
+                    $keys = array_keys($departamentos);
+                 }else{
+                     $departamentos=$this->Departamento->find('first',array('conditions'=>array('cod_depto'=>$sesion['OUsuario']['cod_depto'])));
+                     $this->set("departamentos",$departamentos);
+                 }
+                 
+                 if(empty($sesion['OUsuario']['cod_depto'])){
                  $localidades= $this->Provincia->Departamento->Localidad->find('list',array(
                      'conditions'=>array(
                          'Localidad.cod_depto'=>$keys[0]
@@ -284,6 +330,9 @@ class UsuariosController extends AppController {
                      )
                  );
                  $this->set("localidades",$localidades); 
+                 }else{
+                     $localidades=$this->Localidad->find('first',array('conditions'=>array('cod_loc'=>$usuario['Usuario']['cod_loc'])));
+                 }
                 if(!empty($this->data)){
                        if($this->Usuario->save($this->data)){
                                $this->Session->setFlash("Usuario editado con exito",null,null,"mensaje_sistema");

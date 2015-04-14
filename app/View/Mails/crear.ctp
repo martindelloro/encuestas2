@@ -1,6 +1,9 @@
 <?php echo $this->Mensajes->mostrar();  ?>
 <?php echo $this->Form->create("Mail") ?>
-	<div class="well titulo-general"><span>Enviar Mails</span></div>
+	<div class="well titulo-general">
+            <span id="titulomail">Enviar Mails</span>
+            <span id="titulocambiante" style="display: none">Resultados </span>
+        </div>
     <br>
     <div id="parte_1">
 		<div class="row-fluid">
@@ -12,8 +15,13 @@
     	</div>
 	
 		<div class="row-fluid">        
-            <div class="span6" id="pasoGrupo" style="display: none"></div>
-    	</div>
+                    <div class="span6" id="pasoGrupo" style="display: none"></div>
+                </div>
+                <div class="row-fluid">        
+                    <div class="span12" id="asunto">
+                        <div class="span6"><?php echo $this->Form->input('asunto',array("type"=>'text','label'=>'Asunto:','empty'=>true)); ?></div>
+                    </div>
+                </div>
     	<div class="row-fluid">
     		<div class="span12"><?php echo $this->Form->input("mensaje",array("type"=>"textarea","id"=>"pasoMensaje")); ?></div>
     	</div>
@@ -39,15 +47,17 @@
            <tr><td><b>Mensaje:</b>{{mensaje}}</td></tr>
        </table>
     </div>
-    <div>
+    
+    <div id="botonesEnvio">
         <i class="btn btn-inverse icon" id="volver">Volver</i>
-    	<?php echo $this->Js->link("<i class='icon icon-envelope-o'>Enviar</i>",array('controller'=>'mails','action'=>'enviar'),array('update'=>'#debugMail','before'=>'inicia_ajax()','complete'=>'fin_ajax()',"data"=>"$(this).parents('form:first').serialize()",'method'=>'POST','dataExpression'=>true,"class"=>"btn btn-inverse span2","escape"=>false));  ?>
+    	<?php echo $this->Js->link("<i class='icon icon-envelope-o'>Enviar</i>",array('controller'=>'mails','action'=>'enviar'),array('update'=>'#resultados','before'=>'inicia_ajax()','complete'=>'fin_ajax();$("#botonesEnvio").remove();$("#titulomail").hide();$("#titulocambiante").show();',"data"=>"$(this).parents('form:first').serialize()",'method'=>'POST','dataExpression'=>true,"class"=>"btn btn-inverse span2","escape"=>false));  ?> <!--'update'=>'#debugMail-->
     	<?php echo $this->Js->writeBuffer() ?>
     </div>
+    
 </div> <!-- FIN DIV templateInforme -->
          
 <?php echo $this->Form->end() ?>
-
+<div id="resultados"></div>
 <script type="text/javascript">
    $("#selectEncuesta").bind("change",function(){
       if($(this).val() != ''){

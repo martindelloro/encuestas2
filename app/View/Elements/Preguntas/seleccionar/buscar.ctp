@@ -11,10 +11,10 @@
 				<?php echo $this->Form->input("nombre",array("type"=>"text","label"=>"Nombre")); ?>
 			</div>
 			<div class="span4">
-				<?php echo $this->Form->input("tipo_id",array("type"=>"select","options"=>$tipos,"label"=>"Tipo pregunta")) ?>
+				<?php echo $this->Form->input("tipo_id",array("type"=>"select","options"=>$tipos,"label"=>"Tipo pregunta","empty"=>true)) ?>
 			</div>
 		</div>
-		<?php echo $this->Js->link("Buscar",array("controller"=>"preguntas","action"=>"buscar"),array("before"=>"inicia_ajax()","update"=>"#preguntasListado","data"=>"$(this).parents('form:first').serialize()","method"=>"post","dataExpression"=>true,"complete"=>"fin_ajax()")) ?>
+		<?php echo $this->Js->link("<i class='icon icon-search icon-white'> Buscar</i>",array("controller"=>"preguntas","action"=>"buscar"),array("before"=>"inicia_ajax()","update"=>"#preguntasListado","data"=>"$(this).parents('form:first').serialize()","method"=>"post","dataExpression"=>true,"complete"=>"fin_ajax()","escape"=>false,"class"=>"btn btn-inverse")) ?>
 
 		<?php echo $this->Form->end(); ?>
 	</div>

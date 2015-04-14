@@ -15,8 +15,8 @@ class GruposController extends AppController {
         
     }  
     function crear_grupo(){
-           $grupos=$this->Grupo->find('list');
-        $this->set("grupos",$grupos);
+        $grupos=$this->Grupo->find('list');
+        
         if(!empty($this->data)){
              if($this->Grupo->save($this->data)){ //SI GUARDA
                         $this->Session->setFlash("Se ha creado un nuevo Grupo",null,null,"mensaje_sistema");
@@ -24,7 +24,9 @@ class GruposController extends AppController {
              }else{ //SI NO GUARDA AL USUARIO
                         $this->Session->setFlash("El nuevo grupo NO se ha creado",null,null,"mensaje_sistema");
              }
+             
         }
+        $this->set("grupos",$grupos);
     }
     
     function asignar_usuario_a_grupo(){
