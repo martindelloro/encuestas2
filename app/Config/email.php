@@ -40,13 +40,6 @@
 class EmailConfig {
 
 	public $default = array(
-		'transport' => 'Mail',
-		'from' => 'you@localhost',
-		//'charset' => 'utf-8',
-		//'headerCharset' => 'utf-8',
-	);
-	
-	public $gmail = array(
 			'host' => 'ssl://smtp.gmail.com', //smtp.gmail.com
 			'port' => 465,//587
 			'username' => '',
@@ -54,7 +47,15 @@ class EmailConfig {
 			'transport' => 'Smtp'//,
 			//'tls' => true
 	);
-
+	public $gmail = array(
+			'host' => 'ssl://smtp.gmail.com', //smtp.gmail.com
+			'port' => 465,//587
+			'username' => 'martindell.oro@gmail.com',
+			'password' => 'siburu1989',
+			'transport' => 'Smtp'//,
+			//'tls' => true
+	);
+/*
 	public $smtp = array(
 		'transport' => 'Smtp',
 		'from' => array('site@localhost' => 'My Site'),
@@ -98,6 +99,6 @@ class EmailConfig {
 		'log' => true,
 		//'charset' => 'utf-8',
 		//'headerCharset' => 'utf-8',
-	);
+	);*/
 
 }
