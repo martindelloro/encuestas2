@@ -350,10 +350,9 @@ class UsuariosController extends AppController {
          }
          function chequeo_de_encuestas($id_usuario){
              $encuesta=$this->VistaUsuarios->find('first', array('conditions'=>array('VistaUsuarios.usuario_id'=>$id_usuario)));
-             //pr($encuesta);
-             //17/1/1/20
-             //enc/1/1/canxpag
-             $this->redirect(array('controller'=>'encuestas','action'=>'completar',$encuesta['VistaUsuarios']['encuesta_id'],1,1,20));
+             $datos=$this->Encuesta->find('first',array('conditions'=>array('Encuesta.id'=>$encuesta['VistaUsuarios']['encuesta_id'])));
+             //pr($datos);
+             $this->redirect(array('controller'=>'encuestas','action'=>'completar',$encuesta['VistaUsuarios']['encuesta_id'],1,$datos['Encuesta']['partes'],$datos['Encuesta']['cantXpag']));
              //$this->render('completar/'.$encuesta['VistaUsuarios']['encuesta_id']."/"."1"."1"."316");
              
          }

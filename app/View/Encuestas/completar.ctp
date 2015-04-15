@@ -1,6 +1,10 @@
 <div id="completarEncuesta">
 <?php echo $this->Form->create("Usuario"); ?>
 <?php echo $this->Form->input("Usuario.id",array("type"=>"hidden","value"=>$OUsuario["Usuario"]["id"])) ?>
+<div class="well titulo-general">
+            <span><?php echo $encuesta['Encuesta']['nombre']; ?></span>
+</div>
+<br>
 <?php foreach($encuesta["Preguntas"] as $indice=>$pregunta): ?>
 <div id="pregunta<?php echo $pregunta["id"] ?>">
 	<div class="label label-pregunta"><?php echo $pregunta["nombre"] ?></div>

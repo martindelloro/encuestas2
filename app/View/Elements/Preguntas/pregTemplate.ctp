@@ -37,7 +37,7 @@
 	</div>
 	{{#formData}}
 		<div class="formData"> <!-- hidden form data contain question info and position of question  -->
-				<input type="hidden" id="EncuestaPreguntas{{questionId}}" value={{questionId}} name="data[Preguntas][{{questionId}}][questionId]"  /> 
+				<input type="hidden" id="EncuestaPreguntas{{questionId}}" value={{questionId}} name="data[Preguntas][{{questionId}}][pregunta_id]"  /> 
 				<input type="hidden" value={{position}} name="data[Preguntas][{{questionId}}][orden]" />
 		</div>
 	{{/formData}}	

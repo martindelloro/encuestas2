@@ -50,8 +50,8 @@ class EmailConfig {
 	public $gmail = array(
 			'host' => 'ssl://smtp.gmail.com', //smtp.gmail.com
 			'port' => 465,//587
-			'username' => 'martindell.oro@gmail.com',
-			'password' => 'siburu1989',
+			'username' => '',
+			'password' => '',
 			'transport' => 'Smtp'//,
 			//'tls' => true
 	);

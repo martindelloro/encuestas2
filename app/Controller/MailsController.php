@@ -34,13 +34,13 @@ class MailsController extends AppController{
     		$Email = new CakeEmail();
                 
         	
-        	$Template = new MustacheStringView();
+        	
                 $grupos		 = $this->request->data["Grupos"];
         	$encuesta_id = $this->request->data["Mail"]["encuesta_id"];
         	$tipoEnvio   = $this->request->data["Mail"]["tipoEnvio"];
         	$enviados=array();
         	$sin_enviar=array();
-        	$Template->layout = false;
+        	
         	
         	//Si es una encuesta a enviar --> Si trae el id de la encuesta entra
         	if ($encuesta_id !=false){
@@ -53,11 +53,12 @@ class MailsController extends AppController{
                                         $tmpUsuarios = $this->Mail->Encuesta->Grupos->find("first",array("conditions"=>array("Grupos.id"=>$grupo_id),"contain"=>array("Usuarios"=>array("limit"=>4))));
                             foreach($tmpUsuarios["Usuarios"] as $tmpUsuario){
                                 //pr($tmpUsuario);
+                                $Template = new MustacheStringView();
+                                $Template->layout = false;
                                 $Email->reset();
                                 //$Template->start($tmpUsuario["usuario"]);
-                                reset($Template);
                                 $Email->config('gmail');
-                                //$Email->transport('Smtp');
+                                //$Email->transport('Debug');
                                 $Email->from(array('martindell.oro@gmail.com' => 'Test'));
                                 //$Email->to($tmpUsuario["email_1"]);
                                 $Email->to('martindell.oro@gmail.com');

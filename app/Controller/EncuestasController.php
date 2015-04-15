@@ -19,8 +19,9 @@ class EncuestasController extends AppController{
 		$this->set("grupos",$grupos);
 		switch($seccion){
 			case "Encuesta":
-				if(!empty($this->data)){
-					$cantPreg = count($this->data["Preguntas"]);
+				if(!empty($this->request->data)){
+                                    pr($this->request->data);
+                                    $cantPreg = count($this->data["Preguntas"]);
 					if($this->request->data["Encuesta"]["cantXpag"] != null){
 						$this->request->data["Encuesta"]["partes"] = ceil($cantPreg / $this->data["Encuesta"]["cantXpag"]);
 					}
@@ -33,8 +34,9 @@ class EncuestasController extends AppController{
 					else{
 						$this->Session->setFLash("Ocurrio un error al intentar guardar la encuesta",null,null,"mensaje_sistema");
 					}
-						
+					
 				}
+                                
 				break;
 			case "Importar":
 				$this->Encuesta->set($this->data);
@@ -149,25 +151,27 @@ class EncuestasController extends AppController{
 	
 	function completar($encuesta_id = null, $parte = 1,$partes = null,$cantXpag = null){
 		
-		if(!empty($this->data)){
-			$this->loadModel("Usuario");
+		if(!empty($this->request->data)){
+                    
+                        $this->loadModel("Usuario");
 			$OUsuario=$this->Session->read('OUsuario');
 			$this->request->data["Usuario"]["id"]= $OUsuario["Usuario"]["id"];		
 			
 			$guardar = true;
-			$encuesta = $this->Session->read($encuesta_id."Parte".$parte);
+			$encuesta = $this->Session->read('encuesta'); //estaba: $encuesta_id."Parte".$parte ??
+                        
 			if($encuesta != null){
 				if(strcmp(serialize($encuesta),serialize($this->data)) == 0){
 					$guardar = false;
 				}
 			
 			if($guardar){
-				if($this->Usuario->saveAssociated($this->data,array("deep"=>true))){
-					$inserted_ids = $this->Usuario->Respuesta->inserted_ids;
-					foreach($this->data["Respuesta"] as $index=>$respuesta){
+				if($this->Usuario->saveAssociated($this->request->data,array("deep"=>true))){ //saveAssociated
+                                        $inserted_ids = $this->Usuario->Respuesta->inserted_ids;
+					foreach($this->request->data["Respuesta"] as $index=>$respuesta){
 						$this->request->data["Respuesta"][$index]["id"] = $inserted_ids[$index];					
 					}
-					$this->Session->write("EncuestaParte$parte",$this->data);
+					$this->Session->write("EncuestaParte$parte",$this->request->data);
 					$offset = $parte * $cantXpag;
 					$limit = ($parte + 1) * $cantXpag;
 					$this->Encuesta->hasAndBelongsToMany["Preguntas"]["offset"] = $offset;
@@ -177,9 +181,11 @@ class EncuestasController extends AppController{
 				}else{
 					$this->Session->setFlash("Ocurrio un error de validacion",null,null,"mensaje_sistema");
 				}
-		   }
-		}else{
+                        }
+                       }
+                }else{
 			if($parte == 1 && $partes == null && $cantXpag == null){
+                            
 			$datos    = $this->Encuesta->find("first",array("conditions"=>array("Encuesta.id"=>$encuesta_id),"recursive"=>-1));
 			$cantXpag = $datos["Encuesta"]["cantXpag"];
 			$partes   = $datos["Encuesta"]["partes"];
@@ -211,7 +217,7 @@ class EncuestasController extends AppController{
 		$this->set("cantXpag",$cantXpag);
 		$this->set("encuesta",$encuesta);
 		$this->set("encuesta_id",$encuesta_id);
-	}
+	
 	
 	}
 }

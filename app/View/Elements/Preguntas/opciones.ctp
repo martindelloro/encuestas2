@@ -2,7 +2,7 @@
 	<div class='well titulo-opciones'>
 		<span>Opciones Select/MultipleSelect</span> <a href='#'
 			class='btn btn-inverse btn-mini boton-agregar'><i
-			class='icon-plus icon-white'> Agregar opcion</i>
+			class='icon-plus icon-white'> Agregar opción</i>
 		</a>
 	</div>
 	<div class='row-fluid'>
