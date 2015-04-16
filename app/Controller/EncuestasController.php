@@ -20,7 +20,7 @@ class EncuestasController extends AppController{
 		switch($seccion){
 			case "Encuesta":
 				if(!empty($this->request->data)){
-                                    pr($this->request->data);
+                                    //pr($this->request->data);
                                     $cantPreg = count($this->data["Preguntas"]);
 					if($this->request->data["Encuesta"]["cantXpag"] != null){
 						$this->request->data["Encuesta"]["partes"] = ceil($cantPreg / $this->data["Encuesta"]["cantXpag"]);
@@ -39,7 +39,10 @@ class EncuestasController extends AppController{
                                 
 				break;
 			case "Importar":
-				$this->Encuesta->set($this->data);
+				$fuentes= $this->request->data["Encuesta"]["fuentes1"].' '.$this->request->data["Encuesta"]["fuentes2"];
+                                $this->request->data['Encuesta']['fuentes']=$fuentes;
+                                $this->Encuesta->set($this->request->data);
+                                
 				if($this->Encuesta->validates()){
 					if($this->Encuesta->saveAssociated()){
 						$this->set("survey_id",$this->Encuesta->getInsertId());

@@ -8,7 +8,7 @@ $years = array();
 for($i=2000;$i <= 2030;$i++){
 	$years[$i] = $i;
 }
-
+$fuente=array("Universo"=>"Universo","Muestra"=>"Muestra");
 ?>
 
 <?php echo $this->Form->create("Encuesta"); ?> 
@@ -33,11 +33,22 @@ for($i=2000;$i <= 2030;$i++){
 			<span class="label label-1">Grupo</span>
 			<?php echo $this->Form->input("Grupos.Grupos",array("type"=>"select","options"=>$grupos,"label"=>false,"div"=>false,"empty"=>true)); ?>
 		</div>
-		<div class="span4">
+		
+	</div>
+        <div class="row-fluid">
+        <div class="span2">
+			<div class="label label-general">Fuente:</div>
+			<?php echo $this->Form->input("fuentes1",array("type"=>"select","options"=>$fuente,"label"=>false,"empty"=>true)); ?>
+        </div>
+        <div class="span4">
+                        <div class="label"> </div>
+			<?php echo $this->Form->input("fuentes2",array("type"=>"text","label"=>false)); ?>
+        </div>
+            <div class="span4">
 			<?php  echo $this->Js->submit("Crear encuesta",array("url"=>array("controller"=>"encuestas","action"=>"crear","Importar"),"update"=>"#step1")); ?>
 		
-		</div>
-	</div>
+            </div>
+    </div>
 	
 	<div style="clear:both"></div>
 <?php echo $this->Form->end(); ?>
