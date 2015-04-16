@@ -347,7 +347,7 @@ class SubReportesController extends AppController{
                                                 foreach($datos_x as $dato){
                                                         
                                                         $boolean = $dato["Respuesta"]["respuesta_sino"]?"SI":"NO";
-                                                        pr($boolean);
+                                                        //pr($boolean);
                                                         $cont_opciones[$boolean]["contador"] += 1;
                                                         $contenido[]=array('label'=>$cont_opciones[$boolean]['nombre'],'value'=>$cont_opciones[$boolean]['contador']);
                                                         
