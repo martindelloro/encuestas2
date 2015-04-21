@@ -37,37 +37,20 @@
 			<div class="span2 preguntas-label"><div class="label">Tipo de la pregunta</div>
 			</div><div class="span2"></div>
 		</div>
-		
-		
-		<?php foreach($preguntas as $pregunta): ?>
-		<div class="row-fluid pregunta" 
-			id="#Question<?php echo $pregunta["Pregunta"]["id"] ?>" 
-			data-questionID="<?php echo $pregunta["Pregunta"]["id"] ?>" 
-			data-questionDivID = "#Question<?php echo $pregunta["Pregunta"]["id"] ?>" 
-			data-questionName="<?php echo htmlentities($pregunta["Pregunta"]["nombre"]) ?>"  
-			data-questionType="<?php echo htmlentities($pregunta["Tipo"]["nombre"]) ?>" > 
-			<div class="span8" style="text-align: left"> 
-				<span><?php echo $pregunta["Pregunta"]["nombre"] ?></span>
-			</div>
-			<div class="span2" style="text-align: left">
-				<span><?php echo $pregunta["Tipo"]["nombre"] ?></span>
-			</div>
-			<div class="span2 botones">
-				<input type="checkbox" 	value="<?php echo $pregunta["Pregunta"]["id"] ?>" />
-				<?php echo $this->Js->link("<i class='icon icon-edit'></i>",array('controller'=>'preguntas','action'=>'editar',$pregunta["Pregunta"]["id"]),array('escape'=>false,'class'=>'btn btn-inverse btn-small','before'=>"modales('editarPregunta','modal-ficha')",'complete'=>"fin_ajax('editarPregunta')",'update'=>'#editarPregunta')) ?>
-				<?php echo $this->Js->link("<i class='icon icon-eye'></i>",array('controller'=>'preguntas','action'=>'ver',$pregunta["Pregunta"]["id"]),array('escape'=>false,'class'=>'btn btn-inverse btn-small','before'=>"modales('verPregunta','modal-ficha')",'complete'=>"fin_ajax('verPregunta')",'update'=>'#verPregunta')) ?>
-				<?php echo $this->Js->link("<i class='icon icon-times'></i>",array('controller'=>'preguntas','action'=>'borrar',$pregunta["Pregunta"]["id"]),array('escape'=>false,'class'=>'btn btn-inverse btn-small','before'=>'inicia_ajax()','complete'=>'fin_ajax()','update'=>'#exec_js')) ?>
-			</div>
-                </div>
-		<?php endforeach; ?>
 	</div>
-
-
-	<?php echo $this->Js->writeBuffer(); ?>
-
 </div>
 
 <script type="text/javascript">
+
+	<?php foreach($preguntas as $pregunta): ?>
+			data = {questionId:<?php echo $pregunta["Pregunta"]["id"] ?>,
+				 questionDivID:"<?php echo "#Question".$pregunta["Pregunta"]["id"] ?>",
+				  questionName:"<?php echo addslashes(($pregunta["Pregunta"]["nombre"])) ?>",
+				  questionType:"<?php echo $pregunta["Tipo"]["nombre"] ?>",
+		     btnDeleteQuestion:true,showCheckBox:true,actionDiv:"#preguntasListado"};
+		     rendered = questionTemplate.render(data);
+			 $("#preguntasListado").append(rendered);
+	<?php endforeach; ?>		
 	
 	function updateCheckbox(questionList){
 		console.log("Entered update question checkbox state");
@@ -80,7 +63,6 @@
 	/* Add previous selected question to tmp selection DIV in case the user decides to add another question to the survey */
 		
 	if(tmpSelection.length != 0){
-		console.log("aca el problema");
 		$(tmpSelection).each(function(index){
 			console.log("Entered to fill preseleccionadas with temporary selected question not in the main window yet");
 			tmpRendered = questionTemplate.render(tmpSelection[index]);

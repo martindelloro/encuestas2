@@ -578,26 +578,32 @@ body .mensaje-contenido{
 	border-bottom: 2px solid #702834;
 	}
 
-.contenedor-preguntas .positionDisplay{
-	float: left; 
-	margin-left: 5px; 
-	border-right:2px solid #702834;
-	padding:0px 4px 0px 0px;
-	min-width:16px;
-}
+
 
 .contenedor-preguntas .pregunta{
+	cursor:pointer; 
 	margin-top:4px;
 	border-bottom: 1px solid #702834;
 }
 
-.contenedor-preguntas .pregunta span{
+.contenedor-preguntas .pregunta .questionName{
 	text-align:center;
 	margin-top:3px;
-	font-weight:bold;
 	color:#702834;
-	display:block;
+	display:inline;
 }
+
+.contenedor-preguntas .pregunta .positionDisplay{
+	background-color:#DBECFD;
+	color:black;
+}
+
+.contenedor-preguntas .btnUpDown{
+	float: right;
+    padding-left: 3px;
+    width: 33px;
+}
+
 
 .contenedor-preguntas .pregunta:nth-child(odd){
 	background-color:#F5F5F5;

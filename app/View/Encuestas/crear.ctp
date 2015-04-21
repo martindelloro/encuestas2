@@ -36,7 +36,8 @@
 			questionDivID = $(this).data('questiondivid');/* data attribute do not distinct camel cased */
 			questionName = 	$(this).find(".questionName").html();
 			questionType = 	$(this).find(".questionType").html();
-			data = {questionId:questionId,questionDivID:questionDivID,questionName:questionName,questionType:questionType,showPosition:true,showUpDownBtn:true,position:index+1,btnDeleteSelection:true,formData:true};
+			actionDiv    =  "#preSeleccionadas";
+			data = {questionId:questionId,questionDivID:questionDivID,questionName:questionName,questionType:questionType,showPosition:true,btnUnselect:true,showUpDownBtn:true,position:index+1,btnDeleteSelection:true,formData:true};
 			tmpSelection[index] = data;
 		});
 		$("#tmpSelection").html("");
@@ -64,7 +65,7 @@
 		});
 	}
  		
-	$(".contenedor-preguntas.main").on("click",".icon-arrow-up",function(){
+	$(".contenedor-preguntas").on("click","btnMoveUp",function(){
 		  console.log("Entered move question Up");  
 		  questionId = $(this).closest(".pregunta").data('questionid'); /* data attribute do not distinct camel cased */
           var questionUp = $(".contenedor-preguntas.main").find("*[data-questionid='"+questionId+"']"); 
@@ -75,7 +76,7 @@
 		  orderMainQuestions();
 	});
 
-	$(".contenedor-preguntas.main").on("click",".icon-arrow-down",function(){
+	$(".contenedor-preguntas.main").on("click",".btnMoveDown",function(){
 		  console.log("Entered move question down");
 		  questionId = $(this).closest(".pregunta").data('questionid'); /* data attribute do not distinct camel cased */
 		  var questionDown = $(".contenedor-preguntas.main").find("*[data-questionid='"+questionId+"']"); 

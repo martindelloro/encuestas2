@@ -48,7 +48,8 @@ class PreguntasController extends AppController{
 			/*if($this->Pregunta->save($this->request->data)){
 				$pregunta = $this->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->Pregunta->getInsertId())));*/
 
-			if($this->Pregunta->save($this->data)){
+			if($this->Pregunta->saveAssociated($this->data)){
+				pr($this->data);
 				$pregunta = $this->Pregunta->find("first",array("conditions"=>array("Pregunta.id"=>$this->Pregunta->getInsertId()),"contain"=>array("Encuesta","Tipo")));
 
 				$this->set("pregunta",$pregunta);

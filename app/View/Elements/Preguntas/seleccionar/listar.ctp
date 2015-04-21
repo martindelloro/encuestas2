@@ -24,28 +24,33 @@
 <script type="text/javascript">
 	
 	/* Code executed when an checkbox is clicked on the search questions window */
-		
-	$("#preguntasListado").on("click",":checkbox",function(){
-		questionId = $(this).val(); /* no need to use data attribute because value of checkbox equals to the question ID number  */
-		questionDivID = $(this).closest(".pregunta").data("questiondivid");
-		if($(this).prop("checked") != false){
-			questionName   = $(this).closest(".pregunta").data("questionname");
-			questionType   = $(this).closest(".pregunta").data("questiontype");
-			questionDivId  = $(this).closest(".pregunta").data("questiondivid");
-			data 		   = {questionId:questionId, questionDivId: questionDivId, questionName:questionName, questionType:questionType,formData:true,showCheckBox:false,btnDeleteSelected:true,showUpDownBtn:true,showPosition:true};
+	
+	questionSelected = function(){
+		question = this;
+		questionId = $(question).val(); /* no need to use data attribute because value of checkbox equals to the question ID number  */
+		questionDivID = $(question).closest(".pregunta").data("questiondivid");
+		if($(question).prop("checked") != false){
+			questionName   = $(question).closest(".pregunta").data("questionname");
+			questionType   = $(question).closest(".pregunta").data("questiontype");
+			questionDivId  = $(question).closest(".pregunta").data("questiondivid");
+			data 		   = {questionId:questionId, questionDivId: questionDivId, questionName:questionName, questionType:questionType,formData:true,
+							  btnUnselect:true,showCheckBox:false,btnDeleteSelected:true,showUpDownBtn:true,showPosition:true};
 			tmpSelection.push(data);
 			processed = questionTemplate.render(data);
 			$("#tmpSelection").append(processed);
 		}
 		else{
 			$("#tmpSelection").find("*[data-questionid='"+questionId+"']").remove();
-			$(this).prop("checked",false);
+			$(question).prop("checked",false);
 			$(tmpSelection).each(function(index){
 				if(tmpSelection[index].questionId == questionId) tmpSelection[index].remove;
 			});
 			}
 		orderTmpQuestions();
-	}); 
+		$("#tmpSelection").sortable({axis:"y",update:function(event,ui){orderTmpQuestions();},cursor:"move"});
+	};
+		
+	$("#preguntasListado").on("click",":checkbox",questionSelected); 
 
 		
 	/* Executed function when btnGuardarSelecc is clicked */
@@ -68,7 +73,7 @@
 		$("#listarPreguntas").modal("hide");
   	});
 
-	$("#tmpSelection").on("click",".icon-times",function(){
+	$("#preSeleccionadas").on("click",".btnUnselect",function(){
 		console.log("Entered delete question from temporary selected");
 		questionId = $(this).closest('.pregunta').data('questionid');
 		$(this).closest(".pregunta").remove();
