@@ -256,6 +256,7 @@ class SubReportesController extends AppController{
 				
 				$datosInfo = array("Pregunta"=>array("nombre"=>$preguntaGrafico["Pregunta"]["nombre"],"tipo"=>$preguntaGrafico["Tipo"]["nombre"]));
 				switch($preguntaGrafico["Pregunta"]["tipo_id"]){
+                                    
 					case 4:
 						$opciones = $this->Opcion->find("list",array("conditions"=>array("Opcion.pregunta_id"=>$this->data["SubReporte"]["variable_x"])));
 						foreach($opciones as $opcion_id => $nombre){
@@ -274,28 +275,35 @@ class SubReportesController extends AppController{
                                                          $contenido[]=array('label'=>$tmp['nombre'],'value'=>$tmp['contador']);
                                                          
 						}
+                                                
 						$datosInfo["Resultados"]["total"] = count($datos_x);
                                                
                                                 $this->set('contenido',$contenido);
 						break;
 					case 6:
-						$cont_opciones["SI"]["contador"] = 0;
+                                                $cont_opciones["SI"]["contador"] = 0;
 						$cont_opciones["SI"]["nombre"] = "SI";
 						$cont_opciones["NO"]["contador"] = 0;
 						$cont_opciones["NO"]["nombre"] = "NO";
-						foreach($datos_x as $dato){
-							$boolean = $dato["Respuesta"]["respuesta_sino"]?"SI":"NO";
-							$cont_opciones[$boolean]["contador"] += 1;
-						}
+                                                
+                                                foreach($datos_x as $dato){
+                                                        
+                                                        $boolean = $dato["Respuesta"]["respuesta_sino"]?"SI":"NO";
+                                                        //pr($boolean);
+                                                        $cont_opciones[$boolean]["contador"] += 1;
+                                                        $contenido[]=array('label'=>$cont_opciones[$boolean]['nombre'],'value'=>$cont_opciones[$boolean]['contador']);
+                                                        
+                                                }
+                                                
+                                                pr($contenido);
 						$datosInfo["Resultados"]["Opciones"]["NO"] = $cont_opciones["NO"]["contador"];
 						$datosInfo["Resultados"]["Opciones"]["SI"] = $cont_opciones["SI"]["contador"];
 						$datosInfo["Resultados"]["total"] = $cont_opciones["NO"]["contador"] + $cont_opciones["SI"]["contador"];
-                                                $contenido=array('label'=>$cont_opciones['nombre'],'value'=>$cont_opciones['contador']);
+                                                
+                                                
+                                                
                                                 $this->set('contenido',$contenido);
-                                                /*$miArray = array("manzana"=>"verde", "uva"=>"Morada", "fresa"=>"roja");
-                                                print_r(json_encode($miArray));
-
-                                                {"manzana":"verde","uva":"Morada","fresa":"roja"} */
+                                                
 				} // fin switch pregunta tipo_id
                                 
                                 break; //FIN GRÀFICO TORTA
@@ -389,6 +397,7 @@ class SubReportesController extends AppController{
                                 //var_dump($iteraciones);
 				
 				$datosInfoEvolucion = $datos;
+                                
 				foreach($datosInfoEvolucion as $key=>$data){
 				    	$datosInfoEvolucion[$key]["Total"] = array_sum($data["Resultados"]);
 				    	$totalGeneral =+ $datosInfoStacked[$key]["Total"];
