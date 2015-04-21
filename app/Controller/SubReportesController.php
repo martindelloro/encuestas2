@@ -45,13 +45,10 @@ class SubReportesController extends AppController{
 		$this->set("fuentes",$fuentes);
                 
 		if(!empty($this->data["SubReporte"]["Filtro"])){
-				   $carrera_preg= $this->Respuesta->Pregunta->find("first",array("conditions"=>array("Pregunta.nombre ILIKE"=>"Carrera"),"contain"=>array("Opcion"),"recursive"=>0));
-				   $PreguntaCarrera_id = $carrera_preg["Pregunta"]["id"];
-				   foreach($carrera_preg["Opcion"] as $opcion){
-				   		if(strtolower($opcion["nombre"]) == strtolower($sesion['OUsuario']['Usuario']['carreraUnla'])){
-				   			$carrera_id = $opcion["id"];
-				   		}				   	
-				   }
+				   $carreraUnla = strtolower($sesion['OUsuario']['Usuario']['carreraUnla']);
+				   $carrera_preg= $this->Respuesta->Encuesta->find("first",array("conditions"=>array("Encuesta.id"=>$encuesta_id),"contain"=>array("Pregunta"=>array("conditions"=>array("Pregunta.nombre ILIKE"=>"Carrera"),"Opcion"=>array("conditions"=>array("Opcion.nombre"=>$carreraUnla)))),"recursive"=>1));
+				   $PreguntaCarrera_id = $carrera_preg["Pregunta"][0]["id"];
+				   $carrera_id = $carrera_preg["Pregunta"][0]["Opcion"][0]["id"];
 				   $this->data["SubReporte"]["Filtro"][]= array("pregunta_id"=>$PreguntaCarrera_id,"tipo"=>4,"FiltrosOpciones"=>array($carrera_id));
                    // pr($this->data["SubReporte"]["Filtro"]);
 		foreach($this->data["SubReporte"]["Filtro"] as $index=>$filtro){
